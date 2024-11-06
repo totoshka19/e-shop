@@ -1,0 +1,31 @@
+@use 'variables';
+
+html {
+  scroll-behavior: smooth;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  background-color: variables.$background-color;
+  overflow-x: hidden;
+  min-width: 320px;
+}
+header,
+footer{
+  background-color: variables.$primary-color;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+.container {
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 0 20px;
+}

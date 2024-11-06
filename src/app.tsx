@@ -1,15 +1,17 @@
-import Header from './components/header';
-import Footer from './components/footer';
+import { HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import CatalogPage from './pages/catalog-page';
+import { AppRoute } from './conts';
 
 function App() {
   return (
-    <div>
-      <Header />
-      <main>
-        <h2>Main Content</h2>
-      </main>
-      <Footer />
-    </div>
+    <HelmetProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path={AppRoute.Catalog} element={<CatalogPage />} />
+        </Routes>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

@@ -1,26 +1,4 @@
-@import 'variables';
-
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: $background-color;
-  text-align: center;
-}
-
-header {
-  background-color: $primary-color;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-}
-
-footer {
-  background-color: $secondary-color;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
+@use 'variables';
+@use 'reset';
+@use 'global';
+@use 'media';
