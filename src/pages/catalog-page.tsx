@@ -5,7 +5,7 @@ import CatalogCards from '../components/catalog-cards';
 /*!TODO поменять на картинку без надписи и доделать верстку баннера*/
 function CatalogPage() {
   return (
-    <>
+    <div className="wrapper">
       <Helmet>
         <title>E-shop</title>
       </Helmet>
@@ -26,7 +26,7 @@ function CatalogPage() {
           </div>
         </main>
       </Layout>
-    </>
+    </div>
   );
 }
 

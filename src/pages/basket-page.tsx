@@ -3,7 +3,7 @@ import Layout from '../components/layout';
 
 function BasketPage() {
   return (
-    <>
+    <div className="wrapper">
       <Helmet>
         <title>Корзина - E-shop</title>
       </Helmet>
@@ -19,7 +19,7 @@ function BasketPage() {
           </div>
         </main>
       </Layout>
-    </>
+    </div>
   );
 }
 
