@@ -51,4 +51,17 @@
     font-weight: 600;
     padding-left: 17px;
   }
+  &__cart-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 81px;
+    height: 54px;
+    background-color: variables.$background-color;
+    border-radius: 8px;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.26);
+  }
+  &__contacts {
+    margin-left: 58px;
+  }
 }
