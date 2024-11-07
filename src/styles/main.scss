@@ -2,3 +2,53 @@
 @use 'reset';
 @use 'global';
 @use 'media';
+
+/*---------- header ----------*/
+.header {
+  &__inner {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__block {
+    display: flex;
+    align-items: center;
+  }
+  &__block-drop-down-list {
+    background-color: variables.$background-color;
+    border-radius: 8px;
+    margin: 16px 0;
+    padding: 6px 18px 6px 13px;
+  }
+  &__logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo__title {
+    font-size: 24px;
+  }
+  &__catalog-btn {
+    width: 141px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.26);
+    background-color: variables.$primary-color;
+    border-radius: 8px;
+    margin-left: 37px;
+    padding: 7px 15px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    &:hover {
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+    }
+    &:active {
+      transform: translateY(2px);
+    }
+  }
+  .catalog-btn__title {
+    font-size: 14px;
+    font-weight: 600;
+    padding-left: 17px;
+  }
+}
