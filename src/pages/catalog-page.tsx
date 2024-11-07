@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
+import CatalogCards from '../components/catalog-cards';
 
 function CatalogPage() {
   return (
@@ -13,12 +14,13 @@ function CatalogPage() {
           <div className="page-content">
             <section className="banner">
               <div className="container">
-                <h2 className="title">Баннер</h2>
+                {/*!TODO поменять на картинку без надписи и доделать верстку баннера*/}
+                <img className="banner__img" src="/images/banner.jpg" alt="Баннер" />
               </div>
             </section>
             <section className="catalog">
               <div className="container">
-                <h1 className="title">Карточки товаров</h1>
+                <CatalogCards />
               </div>
             </section>
           </div>

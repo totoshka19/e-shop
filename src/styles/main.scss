@@ -72,3 +72,13 @@
     margin-left: 58px;
   }
 }
+
+/*---------- catalog ----------*/
+.banner {
+  margin: 10px 0;
+}
+.catalog__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 46px 23px;
+}
