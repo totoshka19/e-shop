@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Contacts from './contacts';
 import { AppRoute } from '../conts';
 
 function Header() {
@@ -26,14 +27,7 @@ function Header() {
           <Link className="header__cart-btn" to={AppRoute.Basket} aria-label="Переход в корзину">
             <img className="cart__img" src="/images/cart-icon.svg" alt="Иконка тележки" width="30" height="25" />
           </Link>
-          <ul className="header__contacts contacts" aria-label="Контакты">
-            <li className="contacts__item">
-              <a href="tel:84993502608" aria-label="Телефон: 8-499-350-26-08">8-499-350-26-08</a>
-            </li>
-            <li className="contacts__item">
-              <a href="mailto:info@enote-shop.ru" aria-label="Электронная почта: info@enote-shop.ru">info@enote-shop.ru</a>
-            </li>
-          </ul>
+          <Contacts />
         </div>
       </div>
     </header>
