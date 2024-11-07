@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { fakerRU as faker } from '@faker-js/faker';
 import { BaseProduct } from '../types/product';
 
 function createRandomProduct(): BaseProduct {
@@ -6,7 +6,7 @@ function createRandomProduct(): BaseProduct {
     id: faker.string.uuid(),
     name: faker.commerce.productName(),
     previewImg: faker.image.urlLoremFlickr({ width: 490, height: 320, category: 'computer' }),
-    description: faker.lorem.sentence(),
+    description: faker.lorem.sentences(2),
   };
 }
 
