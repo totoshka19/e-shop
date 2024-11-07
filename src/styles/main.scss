@@ -75,7 +75,7 @@
 
 /*---------- banner ----------*/
 .banner {
-  margin: 10px 0;
+  margin: 18px 0;
 }
 
 /*---------- catalog ----------*/
@@ -92,6 +92,7 @@
     justify-content: space-between;
     border-radius: 8px;
     box-shadow: variables.$box-shadow;
+    height: 616px;
   }
   .product-card__img {
     width: 100%;
@@ -123,6 +124,17 @@
     display: flex;
     justify-content: center;
     gap: 30px;
-    margin: 0 23px 20px;
+    margin: 0 23px 52px;
+  }
+  .marketplace__item-link {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    img {
+      width: 36px;
+      height: 36px;
+    }
+    &:hover {
+      transform: scale(1.2);
+    }
   }
 }
