@@ -8,7 +8,7 @@ function Header() {
     <header className="header">
       <div className="header__inner container">
         <div className="header__block header__block-drop-down-list">
-          <Logo />
+          <Logo className="header__logo" />
           <button
             className="header__catalog-btn"
             /*!TODO доделать функционал открытия/закрытия выпадающего списка с категориями товаров*/
@@ -25,7 +25,7 @@ function Header() {
           <Link className="header__cart-btn" to={AppRoute.Basket} aria-label="Переход в корзину">
             <img className="cart__img" src="/images/cart-icon.svg" alt="Иконка тележки" width="30" height="25" />
           </Link>
-          <Contacts />
+          <Contacts className="header__contacts" />
         </div>
       </div>
     </header>

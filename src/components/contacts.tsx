@@ -1,6 +1,10 @@
-function Contacts() {
+type ContactsProps = {
+  className: string;
+};
+
+function Contacts({ className = '' }: ContactsProps) {
   return (
-    <ul className="header__contacts contacts" aria-label="Контакты">
+    <ul className={`${className} contacts`} aria-label="Контакты">
       <li className="contacts__item">
         <a href="tel:84993502608" aria-label="Телефон: 8-499-350-26-08">8-499-350-26-08</a>
       </li>
