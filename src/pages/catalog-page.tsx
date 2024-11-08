@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import CatalogCards from '../components/catalog-cards';
 
-/*!TODO поменять на картинку без надписи и доделать верстку баннера*/
 function CatalogPage() {
   return (
     <div className="wrapper">
@@ -12,18 +11,19 @@ function CatalogPage() {
 
       <Layout>
         <main>
-          <div className="page-content">
-            <section className="banner">
-              <div className="container">
-                <img className="banner__img" src="/images/banner.jpg" alt="Баннер" />
+          <section className="banner">
+            <div className="container">
+              <div className="banner__inner">
+                <h1 className="banner__title">Мы&nbsp;на&nbsp;маркетах</h1>
+                <h2 className="banner__subtitle">Наши товары для Вас на&nbsp;любой удобной площадке</h2>
               </div>
-            </section>
-            <section className="catalog">
-              <div className="container">
-                <CatalogCards />
-              </div>
-            </section>
-          </div>
+            </div>
+          </section>
+          <section className="catalog">
+            <div className="container">
+              <CatalogCards />
+            </div>
+          </section>
         </main>
       </Layout>
     </div>

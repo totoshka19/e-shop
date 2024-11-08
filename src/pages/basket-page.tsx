@@ -10,13 +10,11 @@ function BasketPage() {
 
       <Layout>
         <main>
-          <div className="page-content">
-            <section className="cart">
-              <div className="container">
-                <h1 className="title">Корзина заказов</h1>
-              </div>
-            </section>
-          </div>
+          <section className="cart">
+            <div className="container">
+              <h1 className="title">Корзина заказов</h1>
+            </div>
+          </section>
         </main>
       </Layout>
     </div>
