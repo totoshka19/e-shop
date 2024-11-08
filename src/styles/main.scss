@@ -148,6 +148,42 @@
   }
 }
 
+/*---------- рagination ----------*/
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 100px;
+  &__item {
+    color: variables.$grey-color;
+    background-color: variables.$secondary-color;
+    border-radius: 8px;
+  }
+  &__item--active {
+    .pagination__button {
+      color: #000;
+      background-color: variables.$primary-color;
+    }
+  }
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 58px;
+    height: 40px;
+    border-radius: 8px;
+    padding: 5px 10px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    &:hover:not(:disabled) {
+      box-shadow: variables.$box-shadow__hover;
+    }
+    &:disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+}
+
 /*---------- footer ----------*/
 .footer {
   &__inner {
