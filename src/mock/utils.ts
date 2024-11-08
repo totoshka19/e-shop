@@ -11,7 +11,7 @@ function createRandomProduct(): BaseProduct {
 }
 
 export function createMockProductsArray(): BaseProduct[] {
-  const count = faker.number.int({ min: 11, max: 13 });
+  const count = faker.number.int({ min: 30, max: 100 });
   const products: BaseProduct[] = [];
 
   for (let i = 0; i < count; i++) {

@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from './product-card';
-import { createMockProductsArray } from '../mock/utils';
 import Pagination from './pagination';
+import { createMockProductsArray } from '../mock/utils';
 import { BaseProduct } from '../types/product';
-import {PRODUCTS_PER_PAGE} from '../conts';
+import { PRODUCTS_PER_PAGE } from '../conts';
 
 function CatalogCards() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<BaseProduct[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(PRODUCTS_PER_PAGE);
 
   useEffect(() => {
     const mockProducts = createMockProductsArray();
     setProducts(mockProducts);
   }, []);
 
-  const indexOfLastProduct = currentPage * PRODUCTS_PER_PAGE;
-  const indexOfFirstProduct = indexOfLastProduct - PRODUCTS_PER_PAGE;
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
@@ -31,11 +30,14 @@ function CatalogCards() {
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
-      {products.length > PRODUCTS_PER_PAGE && (
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-      )}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={Math.ceil(products.length / productsPerPage)}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 }
+
 
 export default CatalogCards;

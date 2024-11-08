@@ -68,7 +68,7 @@
 .banner {
   margin: 18px 0;
   &__inner {
-    background-image: url("/public/images/banner.jpg");
+    background-image: url("/images/banner.jpg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
@@ -160,27 +160,29 @@
     border-radius: 8px;
   }
   &__item--active {
-    .pagination__button {
+    .pagination__item-link {
       color: #000;
       background-color: variables.$primary-color;
     }
   }
-  &__button {
+  &__item-link {
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 58px;
     height: 40px;
     border-radius: 8px;
+    cursor: pointer;
     padding: 5px 10px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
-    &:hover:not(:disabled) {
+    &:hover {
       box-shadow: variables.$box-shadow__hover;
     }
-    &:disabled {
-      cursor: not-allowed;
-      pointer-events: none;
-    }
+  }
+  &__item-disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
   }
 }
 
