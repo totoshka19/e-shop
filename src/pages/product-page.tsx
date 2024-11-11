@@ -45,9 +45,17 @@ function ProductPage() {
 
           <section className="product">
             <div className="container">
-              <img src={product.previewImg} alt={product.name} />
-              <h1>{product.name}</h1>
-              <p>{product.description}</p>
+              <div className="product__content">
+                <div className="product__block product__block-pictures">
+                  <img src={product.previewImg} alt={product.name} />
+                </div>
+                <div className="product__block">
+                  <h1>{product.name}</h1>
+                  <p>{product.description}</p>
+                </div>
+
+              </div>
+
             </div>
           </section>
         </main>

@@ -198,6 +198,28 @@
 /*---------- product ----------*/
 .product {
   margin-top: 28px;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__block {
+    width: 50%;
+  }
+  &__block-pictures {
+    display: grid;
+    grid-template-columns: 106px 1fr;
+    grid-template-areas:
+      "small-picture-1 big-picture"
+      "small-picture-2 big-picture"
+      "small-picture-3 big-picture"
+      "small-picture-4 big-picture"
+      "small-picture-5 big-picture";
+    gap: 8px 18px;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+  }
 
 }
 
