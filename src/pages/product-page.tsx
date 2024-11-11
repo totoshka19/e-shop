@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
-import { Link, useParams } from 'react-router-dom';
-import { AppRoute } from '../conts';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { fetchProduct } from '../store/product-slice';
 import { BaseProduct } from '../types/product';
+import Breadcrumbs from '../components/breadcrumbs';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -41,38 +41,13 @@ function ProductPage() {
 
       <Layout>
         <main>
+          <Breadcrumbs />
+
           <section className="product">
             <div className="container">
-              <div className="breadcrumbs">
-                <div className="container">
-                  <ul className="breadcrumbs__list">
-                    <li className="breadcrumbs__item">
-                      <Link className="breadcrumbs__link" to={AppRoute.Catalog}>Главная
-                        <svg width="5" height="8" aria-hidden="true">
-                          <use xlinkHref="#icon-arrow-mini"></use>
-                        </svg>
-                      </Link>
-                    </li>
-                    <li className="breadcrumbs__item">
-                      <Link className="breadcrumbs__link" to={AppRoute.Catalog}>Электроника
-                        <svg width="5" height="8" aria-hidden="true">
-                          <use xlinkHref="#icon-arrow-mini"></use>
-                        </svg>
-                      </Link>
-                    </li>
-                    <li className="breadcrumbs__item">
-                      <span className="breadcrumbs__link breadcrumbs__link--active">Комплектующие</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="product">
-                <div className="container">
-                  <img src={product.previewImg} alt={product.name} />
-                  <h1>{product.name}</h1>
-                  <p>{product.description}</p>
-                </div>
-              </div>
+              <img src={product.previewImg} alt={product.name} />
+              <h1>{product.name}</h1>
+              <p>{product.description}</p>
             </div>
           </section>
         </main>

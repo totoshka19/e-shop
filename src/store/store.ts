@@ -3,6 +3,7 @@ import productsReducer from './products-slice';
 import productReducer from './product-slice';
 import { initializeMockData } from '../mock/utils';
 
+// !TODO заменить на данные с сервера
 localStorage.clear();
 initializeMockData();
 
