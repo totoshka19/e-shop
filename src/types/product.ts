@@ -3,4 +3,6 @@ export type BaseProduct = {
   name: string;
   previewImg: string;
   description: string;
+  category: string;
+  subcategory: string;
 };

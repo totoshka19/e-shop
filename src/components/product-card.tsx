@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { BaseProduct } from '../types/product';
 
 type ProductCardProps = {
@@ -18,9 +19,9 @@ function ProductCard({ product }: ProductCardProps) {
       </div>
       <ul className="product-card__marketplace">
         <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
+          <Link className="marketplace__item-link" to={`/product/${product.id}`}>
             <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
-          </a>
+          </Link>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
