@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { BaseProduct } from '../types/product';
-import { createMockProductsArray } from '../mock/utils';
 import { ProductsState } from '../types/state';
 
 const initialState: ProductsState = {
@@ -12,8 +11,12 @@ const initialState: ProductsState = {
 export const fetchProducts = createAsyncThunk(
   'products/fetchProducts',
   async () => {
-    const products = createMockProductsArray();
-    return products;
+    const storedProducts = localStorage.getItem('mockProducts');
+    if (storedProducts) {
+      return JSON.parse(storedProducts);
+    } else {
+      throw new Error('Mock products not found');
+    }
   }
 );
 

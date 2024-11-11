@@ -12,8 +12,8 @@ function createRandomProduct(): BaseProduct {
   };
 }
 
-export function createMockProductsArray(): BaseProduct[] {
-  const count = faker.number.int({ min: 30, max:  100});
+function createMockProductsArray(): BaseProduct[] {
+  const count = faker.number.int({ min: 10, max:  100});
   const products: BaseProduct[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -21,4 +21,12 @@ export function createMockProductsArray(): BaseProduct[] {
   }
 
   return products;
+}
+
+export function initializeMockData() {
+  const storedProducts = localStorage.getItem('mockProducts');
+  if (!storedProducts) {
+    const products = createMockProductsArray();
+    localStorage.setItem('mockProducts', JSON.stringify(products));
+  }
 }
