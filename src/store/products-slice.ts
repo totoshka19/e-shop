@@ -15,7 +15,7 @@ export const fetchProducts = createAsyncThunk(
     if (storedProducts) {
       return JSON.parse(storedProducts);
     } else {
-      throw new Error('Mock products not found');
+      throw new Error('Товары не найдены');
     }
   }
 );
@@ -36,7 +36,7 @@ export const productsSlice = createSlice({
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to fetch products';
+        state.error = action.error.message || 'Не удалось получить товары';
       });
   },
 });

@@ -9,7 +9,7 @@ import { BaseProduct } from '../types/product';
 
 function CatalogCards() {
   const dispatch = useDispatch<AppDispatch>();
-  const products = useSelector((state: RootState) => state.products.items);
+  const products: BaseProduct[] = useSelector((state: RootState) => state.products.items);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(PRODUCTS_PER_PAGE);
 

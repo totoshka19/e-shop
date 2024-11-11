@@ -1,30 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import { Link, useParams } from 'react-router-dom';
 import { AppRoute } from '../conts';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
+import { fetchProduct } from '../store/product-slice';
 import { BaseProduct } from '../types/product';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
-  const products = useSelector((state: RootState) => state.products.items);
-  const loading = useSelector((state: RootState) => state.products.loading);
-  const error = useSelector((state: RootState) => state.products.error);
-
-  const [product, setProduct] = useState<BaseProduct | null>(null);
+  const dispatch = useDispatch();
+  const product: BaseProduct | null = useSelector((state: RootState) => state.product.item);
+  const loading: boolean = useSelector((state: RootState) => state.product.loading);
+  const error: string | null = useSelector((state: RootState) => state.product.error);
 
   useEffect(() => {
     if (id) {
-      const foundProduct = products.find((p) => p.id === id);
-      if (foundProduct) {
-        setProduct(foundProduct);
-      } else {
-        setProduct(null);
-      }
+      dispatch(fetchProduct(id));
     }
-  }, [id, products]);
+  }, [id, dispatch]);
 
   if (loading) {
     return <div>Загрузка...</div>;

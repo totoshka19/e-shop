@@ -13,7 +13,7 @@ export const fetchProduct = createAsyncThunk(
   async (productId: string) => {
     const storedProducts = localStorage.getItem('mockProducts');
     if (storedProducts) {
-      const products = JSON.parse(storedProducts);
+      const products: BaseProduct[] = JSON.parse(storedProducts);
       const product = products.find((p: BaseProduct) => p.id === productId);
       if (product) {
         return product;
@@ -21,7 +21,7 @@ export const fetchProduct = createAsyncThunk(
         throw new Error('Товар не найден');
       }
     } else {
-      throw new Error('Mock products not found');
+      throw new Error('Товары не найдены');
     }
   }
 );
