@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import CatalogPage from './pages/catalog-page';
 import ProductPage from './pages/product-page';
 import BasketPage from './pages/basket-page';
+import NotFoundPage from './pages/not-found-page';
 import { store } from './store/store';
 import { AppRoute } from './conts';
 
@@ -16,6 +17,7 @@ function App() {
             <Route path={AppRoute.Catalog} element={<CatalogPage />} />
             <Route path={AppRoute.Product} element={<ProductPage />} />
             <Route path={AppRoute.Basket} element={<BasketPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </HelmetProvider>

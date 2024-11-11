@@ -46,7 +46,7 @@ function ProductPage() {
 
       <Layout>
         <main>
-          <section className="cart">
+          <section className="product">
             <div className="container">
               <div className="breadcrumbs">
                 <div className="container">
