@@ -47,15 +47,30 @@ function ProductPage() {
             <div className="container">
               <div className="product__content">
                 <div className="product__block product__block-pictures">
-                  <img src={product.previewImg} alt={product.name} />
+                  <a className="product__picture-link" href="">
+                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  </a>
+                  <a className="product__picture-link" href="">
+                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  </a>
+                  <a className="product__picture-link" href="">
+                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  </a>
+                  <a className="product__picture-link" href="">
+                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  </a>
+                  <a className="product__picture-link" href="">
+                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  </a>
+                  <a className="product__picture-link" href="">
+                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  </a>
                 </div>
                 <div className="product__block">
                   <h1>{product.name}</h1>
                   <p>{product.description}</p>
                 </div>
-
               </div>
-
             </div>
           </section>
         </main>

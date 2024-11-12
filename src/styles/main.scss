@@ -218,9 +218,43 @@
     justify-content: center;
     align-content: center;
     align-items: center;
-
   }
+  &__picture-link {
+    border-radius: 8px;
+    box-shadow: variables.$box-shadow;
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
 
+    &:nth-child(1) {
+      grid-area: small-picture-1;
+    }
+    &:nth-child(2) {
+      grid-area: small-picture-2;
+    }
+    &:nth-child(3) {
+      grid-area: small-picture-3;
+    }
+    &:nth-child(4) {
+      grid-area: small-picture-4;
+    }
+    &:nth-child(5) {
+      grid-area: small-picture-5;
+    }
+    &:nth-child(6) {
+      grid-area: big-picture;
+    }
+  }
+  &__picture-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+    &:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+  }
 }
 
 /*---------- not found page ----------*/
