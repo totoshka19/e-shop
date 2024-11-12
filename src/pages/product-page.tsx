@@ -47,28 +47,87 @@ function ProductPage() {
             <div className="container">
               <div className="product__content">
                 <div className="product__block product__block-pictures">
-                  <a className="product__picture-link" href="">
-                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  <a className="picture__link" href="">
+                    <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
-                  <a className="product__picture-link" href="">
-                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  <a className="picture__link" href="">
+                    <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
-                  <a className="product__picture-link" href="">
-                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  <a className="picture__link" href="">
+                    <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
-                  <a className="product__picture-link" href="">
-                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  <a className="picture__link" href="">
+                    <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
-                  <a className="product__picture-link" href="">
-                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  <a className="picture__link" href="">
+                    <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
-                  <a className="product__picture-link" href="">
-                    <img className="product__picture-img" src={product.previewImg} alt={product.name} />
+                  <a className="picture__link" href="">
+                    <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
                 </div>
-                <div className="product__block">
-                  <h1>{product.name}</h1>
-                  <p>{product.description}</p>
+                <div className="product__block product__block-info">
+                  <h1 className="product__title">{product.name}</h1>
+                  <div className="product__wrapper">
+                    <div className="product__wrapper-item">
+                      <div className="product__share">
+                        <p>Актуальные цены смотрите на маркетах</p>
+                        <button className="product__share-button" id="copy-link">
+                          <img src="/public/images/copy-icon.svg" alt="Копировать ссылку"/>
+                        </button>
+                        <button className="product__share-button" id="share-popup">
+                          <img src="/public/images/share-icon.svg" alt="Поделиться"/>
+                        </button>
+                      </div>
+                      <div className="product__marketplace">
+                        <ul className="marketplace__list">
+                          <li className="marketplace__item">
+                            <a className="marketplace__item-link" href="">
+                              <img src="/images/wb-icon.svg" alt="Купить на Wildberries"/>
+                              Купить - 429р
+                            </a>
+                          </li>
+                          <li className="marketplace__item">
+                            <a className="marketplace__item-link" href="">
+                              <img src="/images/ozon-icon.svg" alt="Купить на Ozon"/>
+                              Купить - 429р
+                            </a>
+                          </li>
+                          <li className="marketplace__item">
+                            <a className="marketplace__item-link" href="">
+                              <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
+                              Купить - 429р
+                            </a>
+                          </li>
+                          <li className="marketplace__item">
+                            <a className="marketplace__item-link" href="">
+                              <img src="/images/avito-icon.svg" alt="Купить на Avito"/>
+                              Купить - 429р
+                            </a>
+                          </li>
+                          <li className="marketplace__item">
+                            <a className="marketplace__item-link" href="">
+                              <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
+                              Купить - 429р
+                            </a>
+                          </li>
+                          <li className="marketplace__item">
+                            <button>Оформить заказ</button>
+                          </li>
+                        </ul>
+                      </div>
+                      <button>Добавить в корзину</button>
+                    </div>
+                    <div className="product__wrapper-item">
+                      <div className="product__description">
+                        <p>{product.description}</p>
+                        <p>{product.description}</p>
+                        <p>{product.description}</p>
+                      </div>
+                      <a href="">Перейти к описанию &gt;</a>
+
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
