@@ -114,7 +114,7 @@ function ProductPage() {
                           <button className="order-btn">Оформить заказ</button>
                         </ul>
                       </div>
-                      <button>Добавить в корзину</button>
+                      <button className="product__add-to-cart">Добавить в корзину</button>
                     </div>
                     <div className="product__wrapper-item">
                       <div className="product__description">

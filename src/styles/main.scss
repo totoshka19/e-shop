@@ -160,6 +160,10 @@
     height: 40px;
     cursor: pointer;
     padding: 5px 10px;
+    box-shadow: none;
+    &:active {
+      transform: none;
+    }
   }
   &__item-disabled {
     cursor: not-allowed;
@@ -272,6 +276,9 @@
     gap: 36px;
   }
   &__wrapper-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 50%;
   }
   &__share {
@@ -320,6 +327,19 @@
     font-size: 16px;
     font-weight: 600;
     padding: 7px 7px 7px 25px;
+  }
+  &__add-to-cart {
+    @extend .btn;
+    border: 2px solid variables.$primary-color;
+    box-shadow: 0 0 2px 0 rgba(192, 227, 222, 0.26);
+    font-size: 20px;
+    font-weight: 600;
+    padding: 15px;
+    transition: all 0.3s ease, transform 0.3s ease;
+    &:hover {
+      background-color: variables.$primary-color;
+      box-shadow: 0 0 2px 0 rgba(192, 227, 222, 0.5);
+    }
   }
   &__description p {
     margin-bottom: 15px;
