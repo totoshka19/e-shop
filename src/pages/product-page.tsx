@@ -73,10 +73,10 @@ function ProductPage() {
                       <div className="product__share">
                         <p>Актуальные цены смотрите на маркетах</p>
                         <button className="product__share-button" id="copy-link">
-                          <img src="/public/images/copy-icon.svg" alt="Копировать ссылку"/>
+                          <img src="/images/copy-icon.svg" alt="Копировать ссылку"/>
                         </button>
                         <button className="product__share-button" id="share-popup">
-                          <img src="/public/images/share-icon.svg" alt="Поделиться"/>
+                          <img src="/images/share-icon.svg" alt="Поделиться"/>
                         </button>
                       </div>
                       <div className="product__marketplace">
@@ -123,7 +123,6 @@ function ProductPage() {
                         <p>{product.description}</p>
                       </div>
                       <a href="">Перейти к описанию &gt;</a>
-
                     </div>
                   </div>
                 </div>
