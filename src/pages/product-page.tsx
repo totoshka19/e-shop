@@ -111,9 +111,7 @@ function ProductPage() {
                               Купить - 429р
                             </a>
                           </li>
-                          <li className="marketplace__item">
-                            <button>Оформить заказ</button>
-                          </li>
+                          <button className="order-btn">Оформить заказ</button>
                         </ul>
                       </div>
                       <button>Добавить в корзину</button>

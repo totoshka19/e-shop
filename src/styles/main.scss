@@ -285,6 +285,7 @@
     padding: 10px;
   }
   .marketplace__list {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 30px 20px;
@@ -292,15 +293,31 @@
   }
   .marketplace__item {
     @extend .btn;
+    position: relative;
+    z-index: 5;
+    min-width: 160px;
+    height: 54px;
     background-color: #FFF;
     padding: 7px;
   }
   .marketplace__item-link {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 8px;
   }
-
+  .order-btn {
+    @extend .btn;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60%;
+    height: 54px;
+    z-index: 1;
+    background-color: variables.$primary-color;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 7px 7px 7px 25px;
+  }
 }
 
 /*---------- not found page ----------*/
