@@ -97,6 +97,26 @@ function ProductPage() {
                       <a className="product__description-link" href="">Перейти к описанию &gt;</a>
                     </div>
                   </div>
+                  <div className="product__about">
+                    <h2 className="product__about-title">О товаре</h2>
+                    <div className="product__table">
+                      <table className="product__table-inner">
+                        <tr className="table__row">
+                          <td className="table__parameter">Артикул</td>
+                          <td className="table__meaning">163443548</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Тип</td>
+                          <td className="table__meaning">Корпус для ssd</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Материал</td>
+                          <td className="table__meaning">Пластик</td>
+                        </tr>
+                      </table>
+                    </div>
+
+                  </div>
                 </div>
               </div>
             </div>
