@@ -1,0 +1,86 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { BaseProduct } from '../types/product';
+
+type MarketplaceListProps = {
+  context: 'productPage' | 'productCard';
+  product: BaseProduct;
+};
+
+function MarketplaceList({ context, product }: MarketplaceListProps) {
+  if (context === 'productPage') {
+    return (
+      <ul className="marketplace__list">
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/wb-icon.svg" alt="Купить на Wildberries"/>
+            Купить - 429р
+          </a>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/ozon-icon.svg" alt="Купить на Ozon"/>
+            Купить - 429р
+          </a>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
+            Купить - 429р
+          </a>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/avito-icon.svg" alt="Купить на Avito"/>
+            Купить - 429р
+          </a>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
+            Купить - 429р
+          </a>
+        </li>
+        <li className="marketplace__item order-btn">
+          <button>Оформить заказ</button>
+        </li>
+      </ul>
+    );
+  }
+
+  if (context === 'productCard') {
+    return (
+      <ul className="marketplace__list">
+        <li className="marketplace__item">
+          <Link className="marketplace__item-link" to={`/product/${product.id}`}>
+            <img src="/images/enote-icon.svg" alt="Купить в Enote Shope" />
+          </Link>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете" />
+          </a>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/wb-icon.svg" alt="Купить на Wildberries" />
+          </a>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/avito-icon.svg" alt="Купить на Avito" />
+          </a>
+        </li>
+        <li className="marketplace__item">
+          <a className="marketplace__item-link" href="">
+            <img src="/images/ozon-icon.svg" alt="Купить на Ozon" />
+          </a>
+        </li>
+      </ul>
+    );
+  }
+
+  return null;
+}
+
+export default MarketplaceList;

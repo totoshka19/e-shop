@@ -7,6 +7,7 @@ import { RootState } from '../store';
 import { fetchProduct } from '../store/product-slice';
 import { BaseProduct } from '../types/product';
 import Breadcrumbs from '../components/breadcrumbs';
+import MarketplaceList from '../components/marketplace-list';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -80,39 +81,10 @@ function ProductPage() {
                         </button>
                       </div>
                       <div className="product__marketplace">
-                        <ul className="marketplace__list">
-                          <li className="marketplace__item">
-                            <a className="marketplace__item-link" href="">
-                              <img src="/images/wb-icon.svg" alt="Купить на Wildberries"/>
-                              Купить - 429р
-                            </a>
-                          </li>
-                          <li className="marketplace__item">
-                            <a className="marketplace__item-link" href="">
-                              <img src="/images/ozon-icon.svg" alt="Купить на Ozon"/>
-                              Купить - 429р
-                            </a>
-                          </li>
-                          <li className="marketplace__item">
-                            <a className="marketplace__item-link" href="">
-                              <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
-                              Купить - 429р
-                            </a>
-                          </li>
-                          <li className="marketplace__item">
-                            <a className="marketplace__item-link" href="">
-                              <img src="/images/avito-icon.svg" alt="Купить на Avito"/>
-                              Купить - 429р
-                            </a>
-                          </li>
-                          <li className="marketplace__item">
-                            <a className="marketplace__item-link" href="">
-                              <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
-                              Купить - 429р
-                            </a>
-                          </li>
-                          <button className="order-btn">Оформить заказ</button>
-                        </ul>
+                        <MarketplaceList
+                          context="productPage"
+                          product={product}
+                        />
                       </div>
                       <button className="product__add-to-cart">Добавить в корзину</button>
                     </div>

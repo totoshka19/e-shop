@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import MarketplaceList from './marketplace-list';
 import { BaseProduct } from '../types/product';
 
 type ProductCardProps = {
@@ -18,33 +18,10 @@ function ProductCard({ product }: ProductCardProps) {
         <p className="product-card__description">{product.description}</p>
       </div>
       <div className="product-card__marketplace">
-        <ul className="marketplace__list">
-          <li className="marketplace__item">
-            <Link className="marketplace__item-link" to={`/product/${product.id}`}>
-              <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
-            </Link>
-          </li>
-          <li className="marketplace__item">
-            <a className="marketplace__item-link" href="">
-              <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
-            </a>
-          </li>
-          <li className="marketplace__item">
-            <a className="marketplace__item-link" href="">
-              <img src="/images/wb-icon.svg" alt="Купить на Wildberries"/>
-            </a>
-          </li>
-          <li className="marketplace__item">
-            <a className="marketplace__item-link" href="">
-              <img src="/images/avito-icon.svg" alt="Купить на Avito"/>
-            </a>
-          </li>
-          <li className="marketplace__item">
-            <a className="marketplace__item-link" href="">
-              <img src="/images/ozon-icon.svg" alt="Купить на Ozon"/>
-            </a>
-          </li>
-        </ul>
+        <MarketplaceList
+          context="productCard"
+          product={product}
+        />
       </div>
     </div>
   );
