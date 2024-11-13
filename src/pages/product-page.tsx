@@ -94,7 +94,7 @@ function ProductPage() {
                         <p>{product.description}</p>
                         <p>{product.description}</p>
                       </div>
-                      <a href="">Перейти к описанию &gt;</a>
+                      <a className="product__description-link" href="">Перейти к описанию &gt;</a>
                     </div>
                   </div>
                 </div>
