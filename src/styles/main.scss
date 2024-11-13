@@ -355,6 +355,7 @@
     position: absolute;
     right: 0;
     bottom: 0;
+    font-size: 14px;
     width: 234px;
     height: 55px;
   }
@@ -367,18 +368,44 @@
     border-radius: 8px;
     background-color: variables.$background-color;
   }
-  &__table-inner {
-    padding: 24px 14px;
-    width: 100%;
-    tr {
-      td {
-        padding: 8px 5px;
-      }
-    }
+}
+
+/*---------- characteristics ----------*/
+.characteristics {
+  margin-bottom: 90px;
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  .table__parameter {
-    color: variables.$grey-color;
+  &__title {
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 16px;
   }
+  &__link {
+    @extend .btn;
+    font-size: 14px;
+    width: 234px;
+    height: 55px;
+  }
+  &__block {
+    margin-bottom: 24px;
+  }
+  &__block-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  &__block-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .product__table {
+    width: 50%;
+  }
+
 }
 
 /*---------- not found page ----------*/

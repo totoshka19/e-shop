@@ -67,3 +67,18 @@ main {
     transform: translateY(2px);
   }
 }
+
+.table {
+  padding: 24px 14px;
+  width: 100%;
+  tr {
+    td {
+      padding: 8px 5px;
+    }
+  }
+  &__parameter {
+      color: variables.$grey-color;
+      width: 360px;
+  }
+}
+

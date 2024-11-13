@@ -34,6 +34,8 @@ function ProductPage() {
     return <div>Товар не найден</div>;
   }
 
+  // !TODO вынести таблички в отдельный компонент
+
   return (
     <div className="wrapper">
       <Helmet>
@@ -91,8 +93,6 @@ function ProductPage() {
                     <div className="product__wrapper-item">
                       <div className="product__description">
                         <p>{product.description}</p>
-                        <p>{product.description}</p>
-                        <p>{product.description}</p>
                       </div>
                       <a className="product__description-link" href="">Перейти к описанию &gt;</a>
                     </div>
@@ -100,7 +100,7 @@ function ProductPage() {
                   <div className="product__about">
                     <h2 className="product__about-title">О товаре</h2>
                     <div className="product__table">
-                      <table className="product__table-inner">
+                      <table className="table">
                         <tr className="table__row">
                           <td className="table__parameter">Артикул</td>
                           <td className="table__meaning">163443548</td>
@@ -115,7 +115,100 @@ function ProductPage() {
                         </tr>
                       </table>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
+          <section className="characteristics">
+            <div className="container">
+              <div className="characteristics__wrapper">
+                <h2 className="characteristics__title">Характеристики</h2>
+                <a className="characteristics__link" href="">Перейти к характеристикам &gt;</a>
+              </div>
+              <div className="characteristics__block">
+                <h3 className="characteristics__block-title">Основные</h3>
+                <div className="characteristics__block-wrapper">
+                  <div className="product__table">
+                    <table className="table">
+                      <tr className="table__row">
+                        <td className="table__parameter">Артикул</td>
+                        <td className="table__meaning">163443548</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Тип</td>
+                        <td className="table__meaning">Корпус для ssd</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Страна производитель</td>
+                        <td className="table__meaning">Китай</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Материал</td>
+                        <td className="table__meaning">Пластик</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div className="product__table">
+                    <table className="table">
+                      <tr className="table__row">
+                        <td className="table__parameter">Артикул</td>
+                        <td className="table__meaning">163443548</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Тип</td>
+                        <td className="table__meaning">Корпус для ssd</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Материал</td>
+                        <td className="table__meaning">Пластик</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div className="characteristics__block">
+                <h3 className="characteristics__block-title">Дополнительная информация</h3>
+                <div className="characteristics__block-wrapper">
+                  <div className="product__table">
+                    <table className="table">
+                      <tr className="table__row">
+                        <td className="table__parameter">Артикул</td>
+                        <td className="table__meaning">163443548</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Тип</td>
+                        <td className="table__meaning">Корпус для ssd</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Материал</td>
+                        <td className="table__meaning">Пластик</td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div className="product__table">
+                    <table className="table">
+                      <tr className="table__row">
+                        <td className="table__parameter">Артикул</td>
+                        <td className="table__meaning">163443548</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Тип</td>
+                        <td className="table__meaning">Корпус для ssd</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Страна производитель</td>
+                        <td className="table__meaning">Китай</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Материал</td>
+                      </tr>
+                      <tr className="table__row">
+                        <td className="table__parameter">Артикул</td>
+                        <td className="table__meaning">163443548</td>
+                      </tr>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -128,3 +221,5 @@ function ProductPage() {
 }
 
 export default ProductPage;
+
+
