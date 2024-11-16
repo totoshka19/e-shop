@@ -27,16 +27,15 @@ function createMockProductsArray(): BaseProduct[] {
 function createRandomReview(): Review {
   return {
     id: faker.string.uuid(),
-    username: faker.internet.username(),
+    username: faker.person.firstName(),
     rating: faker.number.int({ min: 1, max: 5 }),
     date: faker.date.past().toLocaleString('ru-RU', {
-      year: 'numeric',
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
     }),
-    review: faker.lorem.paragraph(),
+    review: faker.lorem.sentence(),
   };
 }
 
