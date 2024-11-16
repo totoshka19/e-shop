@@ -112,15 +112,7 @@ function ProductPage() {
                             <td className="table__meaning">Корпус для ssd</td>
                           </tr>
                           <tr className="table__row">
-                            <td className="table__parameter">Страна производитель</td>
-                            <td className="table__meaning">Китай</td>
-                          </tr>
-                          <tr className="table__row">
                             <td className="table__parameter">Материал</td>
-                          </tr>
-                          <tr className="table__row">
-                            <td className="table__parameter">Артикул</td>
-                            <td className="table__meaning">163443548</td>
                           </tr>
                         </tbody>
                       </table>
@@ -233,12 +225,8 @@ function ProductPage() {
             </div>
           </section>
 
-          <section className="reviews">
-            <div className="container">
-              <h2 className="reviews__title">Отзывы наших покупателей</h2>
-              <Reviews />
-            </div>
-          </section>
+          <Reviews />
+
         </main>
       </Layout>
     </div>

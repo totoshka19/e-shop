@@ -15,9 +15,9 @@ const baseSettings = {
 
 function Reviews() {
   const dispatch = useDispatch<AppDispatch>();
-  const reviews = useSelector((state: RootState) => state.reviews.reviews);
-  const loading = useSelector((state: RootState) => state.reviews.loading);
-  const error = useSelector((state: RootState) => state.reviews.error);
+  const reviews: Review[] = useSelector((state: RootState) => state.reviews.reviews);
+  const loading: boolean = useSelector((state: RootState) => state.reviews.loading);
+  const error: string | null = useSelector((state: RootState) => state.reviews.error);
   const [sliderSettings, setSliderSettings] = useState(baseSettings);
   const [carouselPadding, setCarouselPadding] = useState('0 30px');
 
@@ -41,6 +41,10 @@ function Reviews() {
     }
   }, [reviews]);
 
+  if (reviews.length === 0) {
+    return null;
+  }
+
   if (loading) {
     return <div>Загрузка...</div>;
   }
@@ -50,18 +54,23 @@ function Reviews() {
   }
 
   return (
-    <div className="reviews__carousel" style={{ padding: carouselPadding }}>
-      <Slider {...sliderSettings}>
-        {reviews.map((review) => (
-          <div key={review.id} className="review__card">
-            <h3 className="review__username">{review.username}</h3>
-            {/*<Rating rating={review.rating} />*/}
-            <p className="review__date">{review.date}</p>
-            <p className="review__text"><span>Достоинства: </span>{review.review}</p>
-          </div>
-        ))}
-      </Slider>
-    </div>
+    <section className="reviews">
+      <div className="container">
+        <h2 className="reviews__title">Отзывы наших покупателей</h2>
+        <div className="reviews__carousel" style={{ padding: carouselPadding }}>
+          <Slider {...sliderSettings}>
+            {reviews.map((review) => (
+              <div key={review.id} className="review__card">
+                <h3 className="review__username">{review.username}</h3>
+                {/*<Rating rating={review.rating} />*/}
+                <p className="review__date">{review.date}</p>
+                <p className="review__text"><span>Достоинства: </span>{review.review}</p>
+              </div>
+            ))}
+          </Slider>
+        </div>
+      </div>
+    </section>
   );
 }
 

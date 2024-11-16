@@ -40,7 +40,7 @@ function createRandomReview(): Review {
 }
 
 function createMockReviewsArray(): Review[] {
-  const count = faker.number.int({ min: 2, max: 8});
+  const count = faker.number.int({ min: 2, max: 6});
   const reviews: Review[] = [];
 
   for (let i = 0; i < count; i++) {
