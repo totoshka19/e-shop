@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import productsReducer from './products-slice';
 import productReducer from './product-slice';
+import reviewsReducer from './reviews-slice';
 import { initializeMockData } from '../mock/utils';
 
 // !TODO заменить на данные с сервера
@@ -11,6 +12,7 @@ export const store = configureStore({
   reducer: {
     products: productsReducer,
     product: productReducer,
+    reviews: reviewsReducer,
   },
 });
 

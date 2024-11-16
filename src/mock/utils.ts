@@ -1,5 +1,6 @@
 import { fakerRU as faker } from '@faker-js/faker';
 import { BaseProduct } from '../types/product';
+import { Review } from '../types/review';
 
 function createRandomProduct(): BaseProduct {
   return {
@@ -13,7 +14,7 @@ function createRandomProduct(): BaseProduct {
 }
 
 function createMockProductsArray(): BaseProduct[] {
-  const count = faker.number.int({ min: 10, max:  100});
+  const count = faker.number.int({ min: 10, max: 100});
   const products: BaseProduct[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -23,10 +24,44 @@ function createMockProductsArray(): BaseProduct[] {
   return products;
 }
 
+function createRandomReview(): Review {
+  return {
+    id: faker.string.uuid(),
+    username: faker.internet.username(),
+    rating: faker.number.int({ min: 1, max: 5 }),
+    date: faker.date.past().toLocaleString('ru-RU', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
+    review: faker.lorem.paragraph(),
+  };
+}
+
+function createMockReviewsArray(): Review[] {
+  const count = faker.number.int({ min: 2, max: 8});
+  const reviews: Review[] = [];
+
+  for (let i = 0; i < count; i++) {
+    reviews.push(createRandomReview());
+  }
+
+  return reviews;
+}
+
 export function initializeMockData() {
   const storedProducts = localStorage.getItem('mockProducts');
+  const storedReviews = localStorage.getItem('mockReviews');
+
   if (!storedProducts) {
     const products = createMockProductsArray();
     localStorage.setItem('mockProducts', JSON.stringify(products));
+  }
+
+  if (!storedReviews) {
+    const reviews = createMockReviewsArray();
+    localStorage.setItem('mockReviews', JSON.stringify(reviews));
   }
 }

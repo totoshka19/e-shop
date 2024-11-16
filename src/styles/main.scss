@@ -408,6 +408,14 @@
 
 }
 
+/*---------- reviews ----------*/
+.reviews {
+  &__title {
+    font-size: 24px;
+    font-weight: 500;
+  }
+}
+
 /*---------- not found page ----------*/
 .not-found-page {
   display: flex;

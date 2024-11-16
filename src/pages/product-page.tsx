@@ -8,6 +8,7 @@ import { fetchProduct } from '../store/product-slice';
 import { BaseProduct } from '../types/product';
 import Breadcrumbs from '../components/breadcrumbs';
 import MarketplaceList from '../components/marketplace-list';
+import Reviews from '../components/reviews';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -101,18 +102,27 @@ function ProductPage() {
                     <h2 className="product__about-title">О товаре</h2>
                     <div className="product__table">
                       <table className="table">
-                        <tr className="table__row">
-                          <td className="table__parameter">Артикул</td>
-                          <td className="table__meaning">163443548</td>
-                        </tr>
-                        <tr className="table__row">
-                          <td className="table__parameter">Тип</td>
-                          <td className="table__meaning">Корпус для ssd</td>
-                        </tr>
-                        <tr className="table__row">
-                          <td className="table__parameter">Материал</td>
-                          <td className="table__meaning">Пластик</td>
-                        </tr>
+                        <tbody>
+                          <tr className="table__row">
+                            <td className="table__parameter">Артикул</td>
+                            <td className="table__meaning">163443548</td>
+                          </tr>
+                          <tr className="table__row">
+                            <td className="table__parameter">Тип</td>
+                            <td className="table__meaning">Корпус для ssd</td>
+                          </tr>
+                          <tr className="table__row">
+                            <td className="table__parameter">Страна производитель</td>
+                            <td className="table__meaning">Китай</td>
+                          </tr>
+                          <tr className="table__row">
+                            <td className="table__parameter">Материал</td>
+                          </tr>
+                          <tr className="table__row">
+                            <td className="table__parameter">Артикул</td>
+                            <td className="table__meaning">163443548</td>
+                          </tr>
+                        </tbody>
                       </table>
                     </div>
                   </div>
@@ -132,38 +142,42 @@ function ProductPage() {
                 <div className="characteristics__block-wrapper">
                   <div className="product__table">
                     <table className="table">
-                      <tr className="table__row">
-                        <td className="table__parameter">Артикул</td>
-                        <td className="table__meaning">163443548</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Тип</td>
-                        <td className="table__meaning">Корпус для ssd</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Страна производитель</td>
-                        <td className="table__meaning">Китай</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Материал</td>
-                        <td className="table__meaning">Пластик</td>
-                      </tr>
+                      <tbody>
+                        <tr className="table__row">
+                          <td className="table__parameter">Артикул</td>
+                          <td className="table__meaning">163443548</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Тип</td>
+                          <td className="table__meaning">Корпус для ssd</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Страна производитель</td>
+                          <td className="table__meaning">Китай</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Материал</td>
+                          <td className="table__meaning">Пластик</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                   <div className="product__table">
                     <table className="table">
-                      <tr className="table__row">
-                        <td className="table__parameter">Артикул</td>
-                        <td className="table__meaning">163443548</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Тип</td>
-                        <td className="table__meaning">Корпус для ssd</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Материал</td>
-                        <td className="table__meaning">Пластик</td>
-                      </tr>
+                      <tbody>
+                        <tr className="table__row">
+                          <td className="table__parameter">Артикул</td>
+                          <td className="table__meaning">163443548</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Тип</td>
+                          <td className="table__meaning">Корпус для ssd</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Материал</td>
+                          <td className="table__meaning">Пластик</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                 </div>
@@ -173,45 +187,56 @@ function ProductPage() {
                 <div className="characteristics__block-wrapper">
                   <div className="product__table">
                     <table className="table">
-                      <tr className="table__row">
-                        <td className="table__parameter">Артикул</td>
-                        <td className="table__meaning">163443548</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Тип</td>
-                        <td className="table__meaning">Корпус для ssd</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Материал</td>
-                        <td className="table__meaning">Пластик</td>
-                      </tr>
+                      <tbody>
+                        <tr className="table__row">
+                          <td className="table__parameter">Артикул</td>
+                          <td className="table__meaning">163443548</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Тип</td>
+                          <td className="table__meaning">Корпус для ssd</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Материал</td>
+                          <td className="table__meaning">Пластик</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                   <div className="product__table">
                     <table className="table">
-                      <tr className="table__row">
-                        <td className="table__parameter">Артикул</td>
-                        <td className="table__meaning">163443548</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Тип</td>
-                        <td className="table__meaning">Корпус для ssd</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Страна производитель</td>
-                        <td className="table__meaning">Китай</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Материал</td>
-                      </tr>
-                      <tr className="table__row">
-                        <td className="table__parameter">Артикул</td>
-                        <td className="table__meaning">163443548</td>
-                      </tr>
+                      <tbody>
+                        <tr className="table__row">
+                          <td className="table__parameter">Артикул</td>
+                          <td className="table__meaning">163443548</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Тип</td>
+                          <td className="table__meaning">Корпус для ssd</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Страна производитель</td>
+                          <td className="table__meaning">Китай</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Материал</td>
+                        </tr>
+                        <tr className="table__row">
+                          <td className="table__parameter">Артикул</td>
+                          <td className="table__meaning">163443548</td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section className="reviews">
+            <div className="container">
+              <h2 className="reviews__title">Отзывы наших покупателей</h2>
+              <Reviews />
             </div>
           </section>
         </main>
