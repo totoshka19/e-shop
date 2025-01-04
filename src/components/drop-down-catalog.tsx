@@ -43,6 +43,12 @@ function DropdownCatalog({ isOpen }: DropdownCatalogProps) {
     setCategories(Array.from(categoriesMap.values()));
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setActiveCategory(null);
+    }
+  }, [isOpen]);
+
   if (!isOpen) {
     return null;
   }

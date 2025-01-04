@@ -2,19 +2,29 @@ import { fakerRU as faker } from '@faker-js/faker';
 import { BaseProduct } from '../types/product';
 import { Review } from '../types/review';
 
+const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
+
+const uniqueCategories = Array.from({ length: 10 }, () =>
+  capitalize(faker.commerce.department())
+);
+
+const uniqueSubcategories = Array.from({ length: 5 }, () =>
+  capitalize(faker.commerce.productAdjective())
+);
+
 function createRandomProduct(): BaseProduct {
   return {
     id: faker.string.uuid(),
     name: faker.commerce.productName(),
     previewImg: faker.image.urlLoremFlickr({ width: 490, height: 320, category: 'computer' }),
     description: faker.lorem.sentences(2),
-    category: faker.commerce.department(),
-    subcategory: faker.commerce.productAdjective(),
+    category: faker.helpers.arrayElement(uniqueCategories),
+    subcategory: faker.helpers.arrayElement(uniqueSubcategories),
   };
 }
 
 export function createMockProductsArray(): BaseProduct[] {
-  const count = faker.number.int({ min: 10, max: 100});
+  const count = faker.number.int({ min: 10, max: 100 });
   const products: BaseProduct[] = [];
 
   for (let i = 0; i < count; i++) {
@@ -40,7 +50,7 @@ function createRandomReview(): Review {
 }
 
 function createMockReviewsArray(): Review[] {
-  const count = faker.number.int({ min: 2, max: 6});
+  const count = faker.number.int({ min: 2, max: 6 });
   const reviews: Review[] = [];
 
   for (let i = 0; i < count; i++) {

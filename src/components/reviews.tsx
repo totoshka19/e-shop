@@ -4,8 +4,9 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Rating from './rating';
-import { RootState, AppDispatch } from '../store';
+import { AppDispatch, RootState } from '../store/store';
 import { fetchReviews } from '../store/reviews-slice';
+import { Review } from '../types/review';
 
 const baseSettings = {
   infinite: false,

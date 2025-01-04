@@ -6,13 +6,14 @@ type RatingProps = {
 
 function Rating({ rating }: RatingProps) {
   const maxStars = 5;
+  const stars = Array.from({ length: maxStars }, (_, index) => index);
 
   return (
     <div className="rating">
-      {[...Array(maxStars)].map((_, index) => (
+      {stars.map((starIndex) => (
         <span
-          key={index}
-          className={`rating__star ${index < rating ? 'rating__star--active' : ''}`}
+          key={starIndex}
+          className={`rating__star ${starIndex < rating ? 'rating__star--active' : ''}`}
         >
           &#9733;
         </span>

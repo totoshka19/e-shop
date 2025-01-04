@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from './product-card';
 import Pagination from './pagination';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../store';
+import { AppDispatch, RootState } from '../store/store';
 import { fetchProducts } from '../store/products-slice';
 import { PRODUCTS_PER_PAGE } from '../conts';
 import { BaseProduct } from '../types/product';

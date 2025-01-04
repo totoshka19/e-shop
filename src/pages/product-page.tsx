@@ -3,19 +3,18 @@ import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store';
 import { fetchProduct } from '../store/product-slice';
-import { BaseProduct } from '../types/product';
 import Breadcrumbs from '../components/breadcrumbs';
 import MarketplaceList from '../components/marketplace-list';
 import Reviews from '../components/reviews';
+import { AppDispatch, RootState } from '../store/store';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch();
-  const product: BaseProduct | null = useSelector((state: RootState) => state.product.item);
-  const loading: boolean = useSelector((state: RootState) => state.product.loading);
-  const error: string | null = useSelector((state: RootState) => state.product.error);
+  const dispatch = useDispatch<AppDispatch>();
+  const product = useSelector((state: RootState) => state.product.item);
+  const loading = useSelector((state: RootState) => state.product.loading);
+  const error = useSelector((state: RootState) => state.product.error);
 
   useEffect(() => {
     if (id) {
