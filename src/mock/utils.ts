@@ -13,7 +13,7 @@ function createRandomProduct(): BaseProduct {
   };
 }
 
-function createMockProductsArray(): BaseProduct[] {
+export function createMockProductsArray(): BaseProduct[] {
   const count = faker.number.int({ min: 10, max: 100});
   const products: BaseProduct[] = [];
 
