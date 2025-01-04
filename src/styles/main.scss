@@ -91,7 +91,6 @@
     justify-content: space-between;
     border-radius: 8px;
     box-shadow: variables.$box-shadow;
-    height: 616px;
   }
   .product-card__img {
     width: 100%;
@@ -454,6 +453,10 @@
             background-position: center;
           }
         }
+        &.slick-disabled {
+          cursor: not-allowed;
+          pointer-events: none;
+        }
       }
       .slick-list {
         overflow: hidden;
@@ -474,7 +477,7 @@
   }
   .review__card {
     padding: 30px 50px;
-    box-shadow: 0px -1px 8px 0px rgba(0, 0, 0, 0.26);
+    box-shadow: variables.$box-shadow;
     border-radius: 8px;
     min-height: 220px;
     height: 100%;
@@ -505,7 +508,7 @@
     font-size: 30px;
     color: variables.$secondary-color;
     &--active {
-      color: #ffd700;
+      color: #FFCC00;
     }
   }
 }
@@ -529,7 +532,7 @@
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: variables.$box-shadow;
   &__content {
     display: flex;
   }
