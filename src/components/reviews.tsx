@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-// import Rating from './Rating'; // Компонент для отображения рейтинга
+import Rating from './rating';
 import { RootState, AppDispatch } from '../store';
 import { fetchReviews } from '../store/reviews-slice';
 
@@ -63,8 +63,10 @@ function Reviews() {
           <Slider {...sliderSettings}>
             {reviews.map((review) => (
               <div key={review.id} className="review__card">
-                <h3 className="review__username">{review.username}</h3>
-                {/*<Rating rating={review.rating} />*/}
+                <div className="review__wrapper">
+                  <h3 className="review__username">{review.username}</h3>
+                  <Rating rating={review.rating} />
+                </div>
                 <p className="review__date">{review.date}</p>
                 <p className="review__text"><span>Достоинства: </span>{review.review}</p>
               </div>

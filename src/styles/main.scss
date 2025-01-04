@@ -460,9 +460,14 @@
       }
       .slick-track {
         display: flex;
+        align-items: stretch;
       }
       .slick-slide {
         padding: 0 16px;
+        height: auto;
+      }
+      .slick-slide > div {
+        height: 100%;
       }
     }
   }
@@ -471,9 +476,15 @@
     box-shadow: 0px -1px 8px 0px rgba(0, 0, 0, 0.26);
     border-radius: 8px;
     min-height: 220px;
+    height: 100%;
+  }
+  .review__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
   }
   .review__username {
-    margin-bottom: 16px;
     font-size: 22px;
     font-weight: 500;
   }
@@ -483,6 +494,18 @@
   }
   .review__text span {
     font-weight: 500;
+  }
+}
+
+/*---------- rating ----------*/
+.rating {
+  display: flex;
+  &__star {
+    font-size: 30px;
+    color: variables.$secondary-color;
+    &--active {
+      color: #ffd700;
+    }
   }
 }
 
