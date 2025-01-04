@@ -7,8 +7,6 @@ import Rating from './rating';
 import { RootState, AppDispatch } from '../store';
 import { fetchReviews } from '../store/reviews-slice';
 
-/*!TODO доделать Rating*/
-
 const baseSettings = {
   infinite: false,
   slidesToShow: 3,
