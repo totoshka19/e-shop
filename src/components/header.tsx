@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './logo';
 import DropdownCatalog from './drop-down-catalog';
@@ -7,9 +7,11 @@ import { AppRoute } from '../conts';
 
 function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsDropdownOpen((prev) => !prev);
   };
 
   const closeDropdown = () => {
@@ -22,6 +24,7 @@ function Header() {
         <div className="header__block header__block-drop-down-list">
           <Logo className="header__logo" />
           <button
+            ref={buttonRef}
             className="header__catalog-btn"
             onClick={toggleDropdown}
             aria-expanded={isDropdownOpen}
@@ -31,7 +34,9 @@ function Header() {
             <img className="catalog-btn__img" src="/images/catalog-icon.svg" alt="Иконка каталога" width="21" height="21" />
             <span className="catalog-btn__title">Каталог</span>
           </button>
-          <DropdownCatalog isOpen={isDropdownOpen} onClose={closeDropdown} />
+          {isDropdownOpen && (
+            <DropdownCatalog isOpen={isDropdownOpen} onClose={closeDropdown} buttonRef={buttonRef} />
+          )}
         </div>
         <div className="header__block">
           <Link className="header__cart-btn" to={AppRoute.Basket} aria-label="Переход в корзину">

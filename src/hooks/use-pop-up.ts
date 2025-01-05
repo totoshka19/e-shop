@@ -4,10 +4,15 @@ type UsePopUpOptions = {
   onClose: () => void;
   initialFocusRef?: React.RefObject<HTMLElement>;
   modalRef: React.RefObject<HTMLDivElement>;
+  isOpen: boolean;
 };
 
-export const usePopUp = ({ onClose, initialFocusRef, modalRef }: UsePopUpOptions) => {
+export const usePopUp = ({ onClose, initialFocusRef, modalRef, isOpen }: UsePopUpOptions) => {
   useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
@@ -33,9 +38,13 @@ export const usePopUp = ({ onClose, initialFocusRef, modalRef }: UsePopUpOptions
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
     };
-  }, [onClose, initialFocusRef]);
+  }, [onClose, initialFocusRef, isOpen]);
 
   useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     const handleTabKey = (event: KeyboardEvent) => {
       if (event.key === 'Tab') {
         const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
@@ -62,10 +71,10 @@ export const usePopUp = ({ onClose, initialFocusRef, modalRef }: UsePopUpOptions
     return () => {
       window.removeEventListener('keydown', handleTabKey);
     };
-  }, [modalRef]);
+  }, [modalRef, isOpen]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose();
     }
   };
