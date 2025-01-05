@@ -12,7 +12,7 @@ function App() {
   return (
     <Provider store={store}>
       <HelmetProvider>
-        <BrowserRouter basename="/e-shop">
+        <BrowserRouter basename="/e-shop/">
           <Routes>
             <Route path={AppRoute.Catalog} element={<CatalogPage />} />
             <Route path={AppRoute.Product} element={<ProductPage />} />
