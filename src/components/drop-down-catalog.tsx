@@ -21,7 +21,7 @@ function DropdownCatalog({ isOpen, onClose, buttonRef }: DropdownCatalogProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [position, setPosition] = useState({ top: 0, left: 0, marginTop: 23 });
 
   const { handleOverlayClick } = usePopUp({
     onClose,
@@ -64,6 +64,7 @@ function DropdownCatalog({ isOpen, onClose, buttonRef }: DropdownCatalogProps) {
       setPosition({
         top: buttonRect.bottom + window.scrollY,
         left: buttonRect.left + window.scrollX,
+        marginTop: 23 - window.scrollY,
       });
     }
   }, [isOpen, buttonRef]);
@@ -85,6 +86,7 @@ function DropdownCatalog({ isOpen, onClose, buttonRef }: DropdownCatalogProps) {
           position: 'absolute',
           top: position.top,
           left: position.left,
+          marginTop: position.marginTop,
         }}
       >
         <div className="dropdown-catalog__content">
