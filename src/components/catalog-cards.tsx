@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ProductCard from './product-card';
 import Pagination from './pagination';
 import { useSelector, useDispatch } from 'react-redux';

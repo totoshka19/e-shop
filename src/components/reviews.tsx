@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -8,7 +8,15 @@ import { AppDispatch, RootState } from '../store/store';
 import { fetchReviews } from '../store/reviews-slice';
 import { Review } from '../types/review';
 
-const baseSettings = {
+type SliderSettings = {
+  infinite: boolean;
+  slidesToShow: number;
+  slidesToScroll: number;
+  arrows?: boolean;
+  draggable?: boolean;
+}
+
+const baseSettings: SliderSettings = {
   infinite: false,
   slidesToShow: 3,
   slidesToScroll: 3,

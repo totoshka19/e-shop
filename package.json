@@ -28,10 +28,13 @@
   },
   "devDependencies": {
     "@faker-js/faker": "9.2.0",
+    "@testing-library/jest-dom": "6.6.3",
     "@types/faker": "6.6.11",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
     "@types/react-redux": "7.1.25",
+    "@types/react-slick": "0.23.13",
+    "@types/testing-library__jest-dom": "6.0.0",
     "@typescript-eslint/eslint-plugin": "5.60.1",
     "@typescript-eslint/parser": "5.57.1",
     "@vitejs/plugin-react": "4.0.1",
@@ -39,10 +42,11 @@
     "eslint-config-htmlacademy": "9.1.1",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.4.1",
-    "gh-pages": "^6.3.0",
+    "gh-pages": "6.3.0",
     "sass": "1.80.6",
     "typescript": "5.0.4",
-    "vite": "4.3.9"
+    "vite": "4.3.9",
+    "vitest": "2.1.8"
   },
   "browserslist": {
     "production": [
