@@ -25,18 +25,18 @@ export const usePopUp = ({ onClose, initialFocusRef, modalRef, isOpen }: UsePopU
       initialFocusRef.current.focus();
     }
 
-    const hasScrollbar = document.body.scrollHeight > window.innerHeight;
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const preventScroll = (event: Event) => {
+      event.preventDefault();
+    };
 
-    if (hasScrollbar) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    }
-    document.body.style.overflow = 'hidden';
+    document.body.addEventListener('wheel', preventScroll, { passive: false });
+    document.body.addEventListener('touchmove', preventScroll, { passive: false });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
       document.body.style.paddingRight = '';
+      document.body.removeEventListener('wheel', preventScroll);
+      document.body.removeEventListener('touchmove', preventScroll);
     };
   }, [onClose, initialFocusRef, isOpen]);
 
