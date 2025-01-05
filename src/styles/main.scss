@@ -29,6 +29,23 @@
     background-color: variables.$primary-color;
     margin-left: 37px;
   }
+  .catalog-btn__icon-wrapper {
+    position: relative;
+    width: 21px;
+    height: 21px;
+  }
+  .catalog-btn__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.3s ease;
+  }
+  .catalog-btn__img.fade-in {
+    opacity: 1;
+  }
+  .catalog-btn__img.fade-out {
+    opacity: 0;
+  }
   .catalog-btn__title {
     font-size: 14px;
     font-weight: 600;

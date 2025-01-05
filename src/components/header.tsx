@@ -31,7 +31,22 @@ function Header() {
             aria-haspopup="true"
             aria-label="Открыть/закрыть каталог"
           >
-            <img className="catalog-btn__img" src="/images/catalog-icon.svg" alt="Иконка каталога" width="21" height="21" />
+            <div className="catalog-btn__icon-wrapper">
+              <img
+                className={`catalog-btn__img ${isDropdownOpen ? 'fade-out' : 'fade-in'}`}
+                src="/images/catalog-icon.svg"
+                alt="Иконка каталога"
+                width="21"
+                height="21"
+              />
+              <img
+                className={`catalog-btn__img ${isDropdownOpen ? 'fade-in' : 'fade-out'}`}
+                src="/images/catalog-icon-open.svg"
+                alt="Иконка каталога (открыто)"
+                width="21"
+                height="21"
+              />
+            </div>
             <span className="catalog-btn__title">Каталог</span>
           </button>
           {isDropdownOpen && (
