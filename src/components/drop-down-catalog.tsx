@@ -92,7 +92,9 @@ function DropdownCatalog({ isOpen, onClose, buttonRef }: DropdownCatalogProps) {
             {categories.map((category) => (
               <li
                 key={category.name}
-                className="dropdown-catalog__category"
+                className={`dropdown-catalog__category ${
+                  activeCategory === category.name ? 'active' : ''
+                }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   setActiveCategory(category.name);
