@@ -12,31 +12,31 @@ function MarketplaceList({ context, product }: MarketplaceListProps) {
       <ul className="marketplace__list">
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/wb-icon.svg" alt="Купить на Wildberries"/>
+            <img src="images/wb-icon.svg" alt="Купить на Wildberries"/>
             Купить - 429р
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/ozon-icon.svg" alt="Купить на Ozon"/>
+            <img src="images/ozon-icon.svg" alt="Купить на Ozon"/>
             Купить - 429р
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
+            <img src="images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
             Купить - 429р
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/avito-icon.svg" alt="Купить на Avito"/>
+            <img src="images/avito-icon.svg" alt="Купить на Avito"/>
             Купить - 429р
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
+            <img src="images/enote-icon.svg" alt="Купить в Enote Shope"/>
             Купить - 429р
           </a>
         </li>
@@ -52,27 +52,27 @@ function MarketplaceList({ context, product }: MarketplaceListProps) {
       <ul className="marketplace__list">
         <li className="marketplace__item">
           <Link className="marketplace__item-link" to={`/product/${product.id}`}>
-            <img src="/images/enote-icon.svg" alt="Купить в Enote Shope" />
+            <img src="images/enote-icon.svg" alt="Купить в Enote Shope" />
           </Link>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете" />
+            <img src="images/yamarket-icon.svg" alt="Купить на Яндекс Маркете" />
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/wb-icon.svg" alt="Купить на Wildberries" />
+            <img src="images/wb-icon.svg" alt="Купить на Wildberries" />
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/avito-icon.svg" alt="Купить на Avito" />
+            <img src="images/avito-icon.svg" alt="Купить на Avito" />
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
-            <img src="/images/ozon-icon.svg" alt="Купить на Ozon" />
+            <img src="images/ozon-icon.svg" alt="Купить на Ozon" />
           </a>
         </li>
       </ul>

@@ -45,16 +45,16 @@ function Footer({ currentYear }: FooterProps) {
           <div className="footer__block-inner">
             <div className="footer__social">
               <a className="footer__social-link" href="">
-                <img src="/images/telegram-icon.svg" alt="Переход в Telegram"/>
+                <img src="images/telegram-icon.svg" alt="Переход в Telegram"/>
               </a>
               <a className="footer__social-link" href="">
-                <img src="/images/ok-icon.svg" alt="Переход в Одноклассники"/>
+                <img src="images/ok-icon.svg" alt="Переход в Одноклассники"/>
               </a>
               <a className="footer__social-link" href="">
-                <img src="/images/whatsapp-icon.svg" alt="Переход в WhatsApp"/>
+                <img src="images/whatsapp-icon.svg" alt="Переход в WhatsApp"/>
               </a>
               <a className="footer__social-link" href="">
-                <img src="/images/vk-icon.svg" alt="Переход в VK"/>
+                <img src="images/vk-icon.svg" alt="Переход в VK"/>
               </a>
             </div>
             <Contacts className="footer__contacts" />

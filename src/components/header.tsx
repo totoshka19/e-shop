@@ -34,14 +34,14 @@ function Header() {
             <div className="catalog-btn__icon-wrapper">
               <img
                 className={`catalog-btn__img ${isDropdownOpen ? 'fade-out' : 'fade-in'}`}
-                src="/images/catalog-icon.svg"
+                src="images/catalog-icon.svg"
                 alt="Иконка каталога"
                 width="21"
                 height="21"
               />
               <img
                 className={`catalog-btn__img ${isDropdownOpen ? 'fade-in' : 'fade-out'}`}
-                src="/images/catalog-icon-open.svg"
+                src="images/catalog-icon-open.svg"
                 alt="Иконка каталога (открыто)"
                 width="21"
                 height="21"
@@ -55,7 +55,7 @@ function Header() {
         </div>
         <div className="header__block">
           <Link className="header__cart-btn" to={AppRoute.Basket} aria-label="Переход в корзину">
-            <img className="cart__img" src="/images/cart-icon.svg" alt="Иконка тележки" width="30" height="25" />
+            <img className="cart__img" src="images/cart-icon.svg" alt="Иконка тележки" width="30" height="25" />
           </Link>
           <Contacts className="header__contacts" />
         </div>
