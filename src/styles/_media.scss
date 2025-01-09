@@ -122,6 +122,15 @@
 }
 
 @media (max-width: 480px) {
+  .header {
+    &__block-drop-down-list {
+      margin: 8px 0;
+      padding: 10px 29px 10px 13px;
+    }
+    &__contacts {
+      line-height: 1.5rem;
+    }
+  }
   .container {
     padding: 0 9px;
   }
