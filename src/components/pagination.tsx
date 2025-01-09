@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
 type PaginationProps = {
@@ -7,6 +8,9 @@ type PaginationProps = {
 };
 
 function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+  const [pageRange, setPageRange] = useState(5);
+  const [marginPages, setMarginPages] = useState(1);
+
   const handlePageClick = (event: { selected: number }) => {
     onPageChange(event.selected + 1);
   };
@@ -29,6 +33,22 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
     </svg>
   );
 
+  const updatePaginationSettings = () => {
+    if (window.innerWidth < 960) {
+      setPageRange(3);
+      setMarginPages(0);
+    } else {
+      setPageRange(5);
+      setMarginPages(1);
+    }
+  };
+
+  useEffect(() => {
+    updatePaginationSettings();
+    window.addEventListener('resize', updatePaginationSettings);
+    return () => window.removeEventListener('resize', updatePaginationSettings);
+  }, []);
+
   if (totalPages <= 1) {
     return null;
   }
@@ -38,7 +58,8 @@ function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) 
       breakLabel="..."
       nextLabel={<NextIcon />}
       onPageChange={handlePageClick}
-      pageRangeDisplayed={5}
+      pageRangeDisplayed={pageRange}
+      marginPagesDisplayed={marginPages}
       pageCount={totalPages}
       previousLabel={<PreviousIcon />}
       forcePage={currentPage - 1}

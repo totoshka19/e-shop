@@ -4,14 +4,28 @@ import Pagination from './pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { fetchProducts } from '../store/products-slice';
-import { PRODUCTS_PER_PAGE } from '../conts';
+import { PRODUCTS_PER_PAGE_DESKTOP, PRODUCTS_PER_PAGE_MOBILE } from '../conts';
 import { BaseProduct } from '../types/product';
 
 function CatalogCards() {
   const dispatch = useDispatch<AppDispatch>();
   const products: BaseProduct[] = useSelector((state: RootState) => state.products.items);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(PRODUCTS_PER_PAGE);
+  const [productsPerPage, setProductsPerPage] = useState(PRODUCTS_PER_PAGE_DESKTOP);
+
+  const updateProductsPerPage = () => {
+    if (window.innerWidth < 720) {
+      setProductsPerPage(PRODUCTS_PER_PAGE_MOBILE);
+    } else {
+      setProductsPerPage(PRODUCTS_PER_PAGE_DESKTOP);
+    }
+  };
+
+  useEffect(() => {
+    updateProductsPerPage();
+    window.addEventListener('resize', updateProductsPerPage);
+    return () => window.removeEventListener('resize', updateProductsPerPage);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchProducts());

@@ -82,3 +82,51 @@ main {
   }
 }
 
+.catalog-btn {
+  @extend .btn;
+  width: 141px;
+  height: 36px;
+  background-color: variables.$primary-color;
+  margin-left: 37px;
+  &__icon-wrapper {
+    position: relative;
+    width: 21px;
+    height: 21px;
+  }
+  &__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.3s ease;
+    &.fade-in {
+      opacity: 1;
+    }
+    &.fade-out {
+      opacity: 0;
+    }
+  }
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    padding-left: 17px;
+  }
+}
+
+.home-btn,
+.cart-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 54px;
+  background-color: variables.$background-color;
+  border-radius: 8px;
+  box-shadow: variables.$box-shadow;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  &:hover {
+    box-shadow: variables.$box-shadow__hover;
+  }
+  &:active {
+    transform: translateY(2px);
+  }
+}

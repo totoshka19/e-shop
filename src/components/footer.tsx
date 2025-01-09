@@ -1,11 +1,27 @@
+import React, { useState } from 'react';
 import Logo from './logo';
 import Contacts from './contacts';
+import CatalogBtn from './catalog-btn';
+import CartBtn from './cart-btn';
+import { AppRoute } from '../conts';
+import { Link } from 'react-router-dom';
 
 type FooterProps = {
   currentYear: number;
 };
 
 function Footer({ currentYear }: FooterProps) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsDropdownOpen((prev) => !prev);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
+
   return (
     <footer className="footer">
       <div className="footer__inner container">
@@ -64,6 +80,13 @@ function Footer({ currentYear }: FooterProps) {
           <p>
             &copy;&nbsp;2002&ndash;{currentYear} Компания БЛА БЛА. Администрация Сайта не&nbsp;несет ответственности за&nbsp;размещаемые Пользователями материалы (в&nbsp;т.ч. информацию и&nbsp;изображения), их&nbsp;содержание и&nbsp;качество.
           </p>
+        </div>
+        <div className="footer__block footer__mobile-nav">
+          <Link to={AppRoute.Catalog} className="home-btn" aria-label="Вернуться на главную страницу">
+            <img className="cart__img" src="/images/home-icon.svg" alt="Иконка домика" width="30" height="25" />
+          </Link>
+          <CatalogBtn isDropdownOpen={isDropdownOpen} toggleDropdown={toggleDropdown} closeDropdown={closeDropdown}/>
+          <CartBtn />
         </div>
       </div>
     </footer>
