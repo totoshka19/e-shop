@@ -22,12 +22,22 @@ function DropdownCatalog({ isOpen, onClose, buttonRef }: DropdownCatalogProps) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [position, setPosition] = useState({ top: 0, left: 0, marginTop: 23 });
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 720);
 
   const { handleOverlayClick } = usePopUp({
     onClose,
     modalRef,
     isOpen,
   });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 720);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const mockProducts = createMockProductsArray();
@@ -89,7 +99,7 @@ function DropdownCatalog({ isOpen, onClose, buttonRef }: DropdownCatalogProps) {
           marginTop: position.marginTop,
         }}
       >
-        <div className="dropdown-catalog__content">
+        <div className={`dropdown-catalog__content ${isMobile ? 'mobile' : ''}`}>
           <ul className="dropdown-catalog__categories">
             {categories.map((category) => (
               <li
@@ -103,11 +113,20 @@ function DropdownCatalog({ isOpen, onClose, buttonRef }: DropdownCatalogProps) {
                 }}
               >
                 <span className="dropdown-catalog__category-title">{category.name}</span>
+                {isMobile && activeCategory === category.name && (
+                  <ul className="dropdown-catalog__subcategories">
+                    {category.subcategories.map((subcategory) => (
+                      <li key={subcategory.name} className="dropdown-catalog__subcategory">
+                        <span className="dropdown-catalog__subcategory-title">{subcategory.name}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
 
-          {activeCategory !== null && (
+          {!isMobile && activeCategory !== null && (
             <ul className="dropdown-catalog__subcategories">
               {categories
                 .find((category) => category.name === activeCategory)

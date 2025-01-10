@@ -515,6 +515,10 @@
   animation: fadeIn 0.2s ease-in-out;
   &__content {
     display: flex;
+    flex-direction: row;
+    &.mobile {
+      flex-direction: column;
+    }
   }
   &__categories,
   &__subcategories {
@@ -538,6 +542,11 @@
     &.active {
       font-weight: 500;
       color: #000;
+    }
+  }
+  &__subcategories {
+    .mobile & {
+      padding-left: 24px;
     }
   }
 }
