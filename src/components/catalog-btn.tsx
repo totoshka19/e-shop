@@ -1,22 +1,33 @@
 import React, { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsDropdownOpen, setIsCatalogBtnInFooter } from '../store/catalog-slice';
 import DropdownCatalog from './drop-down-catalog';
+import { AppDispatch, RootState } from '../store/store';
 
-interface CatalogBtnProps {
-  isDropdownOpen: boolean;
-  toggleDropdown: (event: React.MouseEvent) => void;
-  closeDropdown: () => void;
-}
+type CatalogBtnProps = {
+  isFooter?: boolean;
+};
 
-function CatalogBtn({ isDropdownOpen, toggleDropdown, closeDropdown }: CatalogBtnProps) {
+function CatalogBtn({ isFooter }: CatalogBtnProps) {
+  const dispatch = useDispatch<AppDispatch>();
+  const isDropdownOpen = useSelector((state: RootState) => state.catalog.isDropdownOpen);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    dispatch(setIsDropdownOpen(!isDropdownOpen));
+    if (isFooter) {
+      dispatch(setIsCatalogBtnInFooter(true));
+    }
+  };
 
   return (
     <>
       <button
         ref={buttonRef}
         className="catalog-btn"
-        onClick={toggleDropdown}
-        aria-expanded={isDropdownOpen}
+        onClick={handleClick}
+        aria-expanded={isDropdownOpen ? 'true' : 'false'}
         aria-haspopup="true"
         aria-label="Открыть/закрыть каталог"
       >
@@ -27,6 +38,7 @@ function CatalogBtn({ isDropdownOpen, toggleDropdown, closeDropdown }: CatalogBt
             alt="Иконка каталога"
             width="21"
             height="21"
+            style={{ display: isDropdownOpen ? 'none' : 'block' }}
           />
           <img
             className={`catalog-btn__img ${isDropdownOpen ? 'fade-in' : 'fade-out'}`}
@@ -34,12 +46,17 @@ function CatalogBtn({ isDropdownOpen, toggleDropdown, closeDropdown }: CatalogBt
             alt="Иконка каталога (открыто)"
             width="21"
             height="21"
+            style={{ display: isDropdownOpen ? 'block' : 'none' }}
           />
         </div>
         <span className="catalog-btn__title">Каталог</span>
       </button>
       {isDropdownOpen && (
-        <DropdownCatalog isOpen={isDropdownOpen} onClose={closeDropdown} buttonRef={buttonRef} />
+        <DropdownCatalog
+          isOpen={isDropdownOpen}
+          onClose={() => dispatch(setIsDropdownOpen(false))}
+          buttonRef={buttonRef}
+        />
       )}
     </>
   );

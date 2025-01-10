@@ -1,9 +1,26 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import CatalogCards from '../components/catalog-cards';
 import ReturnBtn from '../components/return-btn';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 function CatalogPage() {
+  const { isDropdownOpen, isCatalogBtnInFooter } = useSelector((state: RootState) => state.catalog);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 720);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 720);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isReturnBtnVisible = isMobile && isCatalogBtnInFooter && isDropdownOpen;
+
   return (
     <div className="wrapper">
       <Helmet>
@@ -12,7 +29,7 @@ function CatalogPage() {
 
       <Layout>
         <main>
-          <ReturnBtn isVisible />
+          {isReturnBtnVisible && <ReturnBtn isVisible />}
           <section className="banner">
             <div className="container">
               <div className="banner__inner">

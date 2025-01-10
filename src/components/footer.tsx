@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import Logo from './logo';
 import Contacts from './contacts';
 import CatalogBtn from './catalog-btn';
@@ -11,16 +10,6 @@ type FooterProps = {
 };
 
 function Footer({ currentYear }: FooterProps) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setIsDropdownOpen((prev) => !prev);
-  };
-
-  const closeDropdown = () => {
-    setIsDropdownOpen(false);
-  };
 
   return (
     <footer className="footer">
@@ -85,7 +74,7 @@ function Footer({ currentYear }: FooterProps) {
           <Link to={AppRoute.Catalog} className="home-btn" aria-label="Вернуться на главную страницу">
             <img className="cart__img" src="/images/home-icon.svg" alt="Иконка домика" width="30" height="25" />
           </Link>
-          <CatalogBtn isDropdownOpen={isDropdownOpen} toggleDropdown={toggleDropdown} closeDropdown={closeDropdown}/>
+          <CatalogBtn isFooter />
           <CartBtn />
         </div>
       </div>

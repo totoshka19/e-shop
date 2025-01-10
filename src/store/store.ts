@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import catalogReducer from './catalog-slice';
 import productsReducer from './products-slice';
 import productReducer from './product-slice';
 import reviewsReducer from './reviews-slice';
@@ -10,6 +11,7 @@ initializeMockData();
 
 export const store = configureStore({
   reducer: {
+    catalog: catalogReducer,
     products: productsReducer,
     product: productReducer,
     reviews: reviewsReducer,
