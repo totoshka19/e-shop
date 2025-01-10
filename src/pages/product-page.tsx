@@ -8,6 +8,7 @@ import Breadcrumbs from '../components/breadcrumbs';
 import MarketplaceList from '../components/marketplace-list';
 import Reviews from '../components/reviews';
 import { AppDispatch, RootState } from '../store/store';
+import ReturnBtn from '../components/return-btn';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -44,6 +45,7 @@ function ProductPage() {
 
       <Layout>
         <main>
+          <ReturnBtn isVisible />
           <Breadcrumbs />
 
           <section className="product">

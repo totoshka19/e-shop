@@ -130,3 +130,19 @@ main {
     transform: translateY(2px);
   }
 }
+
+.return-btn {
+  display: none;
+  @extend .btn;
+  width: 39px;
+  height: 39px;
+  padding: 10px;
+  background-color: variables.$primary-color;
+  margin: 10px;
+  &.visible {
+    display: flex;
+  }
+  .return__img {
+    transform: scaleX(-1);
+  }
+}

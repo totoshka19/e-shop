@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
+import ReturnBtn from '../components/return-btn';
 
 function BasketPage() {
   return (
@@ -10,6 +11,7 @@ function BasketPage() {
 
       <Layout>
         <main>
+          <ReturnBtn isVisible />
           <section className="cart">
             <div className="container">
               <h1 className="title">Корзина заказов</h1>

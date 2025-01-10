@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import CatalogCards from '../components/catalog-cards';
+import ReturnBtn from '../components/return-btn';
 
 function CatalogPage() {
   return (
@@ -11,6 +12,7 @@ function CatalogPage() {
 
       <Layout>
         <main>
+          <ReturnBtn isVisible />
           <section className="banner">
             <div className="container">
               <div className="banner__inner">
