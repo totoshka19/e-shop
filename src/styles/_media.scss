@@ -79,10 +79,21 @@
     &__title {
       font-size: 32px;
     }
-    .picture__img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
+    &__description,
+    &__description-link {
+      display: none;
+    }
+  }
+  .reviews {
+    .review__card {
+      padding: 15px 20px;
+      box-shadow: variables.$box-shadow;
+      border-radius: 8px;
+      min-height: 220px;
+      height: 100%;
+    }
+    .review__username {
+      font-size: 18px;
     }
   }
 }
@@ -114,6 +125,22 @@
   .product {
     &__title {
       font-size: 26px;
+    }
+    .picture__img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+  .characteristics {
+    &__block-wrapper {
+      display: block;
+    }
+    .product__table {
+      width: 100%;
+    }
+    .product__table:not(:last-child) {
+      margin-bottom: 5px;
     }
   }
 }
@@ -201,6 +228,43 @@
       }
       &__title {
         display: none;
+      }
+    }
+  }
+  .breadcrumbs {
+    display: none;
+  }
+  .product {
+    margin-top: 8px;
+    &__content {
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+    &__block {
+      width: 100%;
+    }
+    &__title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+    &__wrapper {
+      margin-bottom: 0;
+    }
+  }
+  .characteristics {
+    display: none;
+  }
+  .reviews {
+    &__title {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+    &__carousel {
+      padding: 0 !important;
+      .slick-slider {
+        .slick-slide {
+          padding: 0;
+        }
       }
     }
   }

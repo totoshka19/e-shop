@@ -20,6 +20,7 @@ const baseSettings: SliderSettings = {
   infinite: false,
   slidesToShow: 3,
   slidesToScroll: 3,
+  arrows: true,
 };
 
 function Reviews() {
@@ -33,6 +34,35 @@ function Reviews() {
   useEffect(() => {
     dispatch(fetchReviews());
   }, [dispatch]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 720) {
+        setSliderSettings({
+          ...baseSettings,
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          arrows: false,
+        });
+      } else if (window.innerWidth <= 960) {
+        setSliderSettings({
+          ...baseSettings,
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          arrows: true,
+        });
+      } else {
+        setSliderSettings(baseSettings);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (reviews.length <= 3) {
