@@ -1,0 +1,29 @@
+@use 'variables';
+@use 'reset';
+@use 'global';
+
+.breadcrumbs {
+  margin-top: 38px;
+  &__list {
+    display: flex;
+    align-items: center;
+  }
+  &__item {
+    margin-right: 5px;
+    &:not(:last-child)::after {
+      content: '>';
+      margin-left: 5px;
+      color: variables.$grey-color;
+    }
+  }
+  &__link {
+    color: variables.$grey-color;
+    transition: color 0.3s ease;
+    &:hover {
+      color: #000;
+    }
+    &--active {
+      color: #000;
+    }
+  }
+}
