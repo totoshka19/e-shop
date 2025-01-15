@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import { useParams } from 'react-router-dom';
@@ -16,6 +16,11 @@ function ProductPage() {
   const product = useSelector((state: RootState) => state.product.item);
   const loading = useSelector((state: RootState) => state.product.loading);
   const error = useSelector((state: RootState) => state.product.error);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const handleDotClick = (index: number) => {
+    setCurrentSlide(index);
+  };
 
   useEffect(() => {
     if (id) {
@@ -70,6 +75,16 @@ function ProductPage() {
                   <a className="picture__link" href="">
                     <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
+
+                  <div className="product__pagination">
+                    {[0, 1, 2].map((index) => (
+                      <button
+                        key={index}
+                        className={`product__pagination-dot ${index === 0 ? 'active' : ''}`}
+                        onClick={() => handleDotClick(index)}
+                      />
+                    ))}
+                  </div>
                 </div>
                 <div className="product__block product__block-info">
                   <h1 className="product__title">{product.name}</h1>

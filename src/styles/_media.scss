@@ -1,5 +1,64 @@
 @use 'variables';
 
+@media (max-width: 1540px) {
+  .product {
+    &__block-pictures {
+      display: block;
+      max-height: 650px;
+    }
+    .picture__link {
+      display: none;
+      &:nth-child(6) {
+        display: block;
+        height: 100%;
+        max-width: 100%;
+        grid-area: unset;
+      }
+    }
+    .picture__img {
+
+      transition: none;
+      &:hover {
+        transform: none;
+        transition: none;
+      }
+    }
+    &__pagination {
+      display: flex;
+      justify-content: center;
+      gap: 11px;
+      margin-top: 16px;
+    }
+    &__pagination-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: variables.$secondary-color;;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      &.active {
+        background-color: variables.$primary-color;;
+      }
+    }
+    &__wrapper {
+      flex-direction: column;
+      gap: 20px;
+    }
+    &__wrapper-item {
+      width: 100%;
+      min-height: 0;
+    }
+    &__description {
+      margin-top: 5px;
+    }
+    &__description-link {
+      position: sticky;
+
+      height: 55px;
+    }
+  }
+}
+
 @media (max-width: 1200px) {
   .banner {
     &__title {

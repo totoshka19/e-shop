@@ -184,7 +184,6 @@
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    height: 650px;
     margin-bottom: 90px;
   }
   &__block {
@@ -268,6 +267,9 @@
     align-items: center;
     gap: 16px;
     margin-bottom: 14px;
+    p {
+      flex-grow: 1;
+    }
   }
   &__marketplace {
     border-radius: 8px;
