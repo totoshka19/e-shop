@@ -11,8 +11,11 @@
     .picture__link {
       display: none;
       &:nth-child(6) {
-        display: block;
+        display: flex;
         grid-area: unset;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
       }
     }
     .picture__img {
@@ -76,6 +79,11 @@
     &__title {
       font-size: 32px;
     }
+    .picture__img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
   }
 }
 
@@ -101,6 +109,11 @@
     &__block-inner {
       width: 100%;
       justify-content: space-around;
+    }
+  }
+  .product {
+    &__title {
+      font-size: 26px;
     }
   }
 }
