@@ -3,20 +3,19 @@
 @media (max-width: 1540px) {
   .product {
     &__block-pictures {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       max-height: 650px;
     }
     .picture__link {
       display: none;
       &:nth-child(6) {
         display: block;
-        height: 100%;
-        max-width: 100%;
         grid-area: unset;
       }
     }
     .picture__img {
-
       transition: none;
       &:hover {
         transform: none;
@@ -49,12 +48,10 @@
       min-height: 0;
     }
     &__description {
-      margin-top: 5px;
+      margin-top: 20px;
     }
-    &__description-link {
-      position: sticky;
-
-      height: 55px;
+    &__about {
+      display: none;
     }
   }
 }
@@ -73,6 +70,11 @@
     &__nav {
       gap: 50px;
       margin-left: 20px;
+    }
+  }
+  .product {
+    &__title {
+      font-size: 32px;
     }
   }
 }

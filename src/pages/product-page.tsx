@@ -41,6 +41,7 @@ function ProductPage() {
   }
 
   // !TODO вынести таблички в отдельный компонент
+  // !TODO вынести таблички в отдельный компонент
 
   return (
     <div className="wrapper">
