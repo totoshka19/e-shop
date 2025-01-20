@@ -259,6 +259,14 @@
       font-size: 20px;
       margin-bottom: 12px;
     }
+    &__carousel {
+      padding: 0;
+      .slick-slider {
+        .slick-slide {
+          padding: 0;
+        }
+      }
+    }
   }
 }
 

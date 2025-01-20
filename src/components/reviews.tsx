@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -28,57 +28,59 @@ function Reviews() {
   const reviews: Review[] = useSelector((state: RootState) => state.reviews.reviews);
   const loading: boolean = useSelector((state: RootState) => state.reviews.loading);
   const error: string | null = useSelector((state: RootState) => state.reviews.error);
-  const [sliderSettings, setSliderSettings] = useState(baseSettings);
-  const [carouselPadding, setCarouselPadding] = useState('0 30px');
+  const [sliderSettings, setSliderSettings] = useState<SliderSettings>(baseSettings);
 
   useEffect(() => {
     dispatch(fetchReviews());
   }, [dispatch]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth <= 720) {
-        setSliderSettings({
-          ...baseSettings,
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          arrows: false,
-        });
-      } else if (window.innerWidth <= 960) {
-        setSliderSettings({
-          ...baseSettings,
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          arrows: true,
-        });
-      } else {
-        setSliderSettings(baseSettings);
-      }
-    };
+  const updateSliderSettings = useCallback((width: number, reviewsCount: number) => {
+    let newSettings: SliderSettings;
 
+    if (reviewsCount <= 3) {
+      newSettings = {
+        ...baseSettings,
+        arrows: false,
+        slidesToShow: reviewsCount,
+        slidesToScroll: reviewsCount,
+        draggable: false,
+      };
+    } else if (width < 720) {
+      newSettings = {
+        ...baseSettings,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+      };
+    } else if (width < 960) {
+      newSettings = {
+        ...baseSettings,
+        slidesToShow: 2,
+        slidesToScroll: 2,
+        arrows: true,
+      };
+    } else {
+      newSettings = baseSettings;
+    }
+
+    setSliderSettings(newSettings);
+  }, []);
+
+  const handleResize = useCallback(() => {
+    updateSliderSettings(window.innerWidth, reviews.length);
+  }, [reviews.length, updateSliderSettings]);
+
+  useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [handleResize]);
 
   useEffect(() => {
-    if (reviews.length <= 3) {
-      setSliderSettings({
-        ...baseSettings,
-        arrows: false,
-        slidesToShow: reviews.length,
-        slidesToScroll: reviews.length,
-        draggable: false,
-      });
-      setCarouselPadding('0');
-    } else {
-      setSliderSettings(baseSettings);
-      setCarouselPadding('0 30px');
-    }
-  }, [reviews]);
+    updateSliderSettings(window.innerWidth, reviews.length);
+  }, [reviews.length, updateSliderSettings]);
 
   if (reviews.length === 0) {
     return null;
@@ -96,7 +98,7 @@ function Reviews() {
     <section className="reviews">
       <div className="container">
         <h2 className="reviews__title">Отзывы наших покупателей</h2>
-        <div className="reviews__carousel" style={{ padding: carouselPadding }}>
+        <div className="reviews__carousel">
           <Slider {...sliderSettings}>
             {reviews.map((review) => (
               <div key={review.id} className="review__card">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import { useParams } from 'react-router-dom';
@@ -16,11 +16,6 @@ function ProductPage() {
   const product = useSelector((state: RootState) => state.product.item);
   const loading = useSelector((state: RootState) => state.product.loading);
   const error = useSelector((state: RootState) => state.product.error);
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const handleDotClick = (index: number) => {
-    setCurrentSlide(index);
-  };
 
   useEffect(() => {
     if (id) {
@@ -39,9 +34,6 @@ function ProductPage() {
   if (!product) {
     return <div>Товар не найден</div>;
   }
-
-  // !TODO вынести таблички в отдельный компонент
-  // !TODO вынести таблички в отдельный компонент
 
   return (
     <div className="wrapper">
@@ -82,7 +74,6 @@ function ProductPage() {
                       <button
                         key={index}
                         className={`product__pagination-dot ${index === 0 ? 'active' : ''}`}
-                        onClick={() => handleDotClick(index)}
                       />
                     ))}
                   </div>
@@ -243,7 +234,6 @@ function ProductPage() {
           </section>
 
           <Reviews />
-
         </main>
       </Layout>
     </div>
@@ -251,5 +241,3 @@ function ProductPage() {
 }
 
 export default ProductPage;
-
-
