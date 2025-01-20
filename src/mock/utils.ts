@@ -16,7 +16,7 @@ function createRandomProduct(): BaseProduct {
   return {
     id: faker.string.uuid(),
     name: faker.commerce.productName(),
-    previewImg: faker.image.urlLoremFlickr({ width: 490, height: 320, category: 'computer' }),
+    previewImg: faker.image.urlLoremFlickr({ width: 490, height: 320 }),
     description: faker.lorem.sentences(2),
     category: faker.helpers.arrayElement(uniqueCategories),
     subcategory: faker.helpers.arrayElement(uniqueSubcategories),

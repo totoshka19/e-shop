@@ -260,10 +260,10 @@
       margin-bottom: 12px;
     }
     &__carousel {
-      padding: 0;
+      padding: 0 1px;
       .slick-slider {
         .slick-slide {
-          padding: 0;
+          padding: 0 8px;
         }
       }
     }

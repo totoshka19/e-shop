@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -34,41 +34,25 @@ function Reviews() {
     dispatch(fetchReviews());
   }, [dispatch]);
 
-  const updateSliderSettings = useCallback((width: number, reviewsCount: number) => {
-    let newSettings: SliderSettings;
-
-    if (reviewsCount <= 3) {
-      newSettings = {
-        ...baseSettings,
-        arrows: false,
-        slidesToShow: reviewsCount,
-        slidesToScroll: reviewsCount,
-        draggable: false,
-      };
-    } else if (width < 720) {
-      newSettings = {
+  const handleResize = () => {
+    if (window.innerWidth < 720) {
+      setSliderSettings({
         ...baseSettings,
         slidesToShow: 1,
         slidesToScroll: 1,
         arrows: false,
-      };
-    } else if (width < 960) {
-      newSettings = {
+      });
+    } else if (window.innerWidth < 960) {
+      setSliderSettings({
         ...baseSettings,
         slidesToShow: 2,
         slidesToScroll: 2,
         arrows: true,
-      };
+      });
     } else {
-      newSettings = baseSettings;
+      setSliderSettings(baseSettings);
     }
-
-    setSliderSettings(newSettings);
-  }, []);
-
-  const handleResize = useCallback(() => {
-    updateSliderSettings(window.innerWidth, reviews.length);
-  }, [reviews.length, updateSliderSettings]);
+  };
 
   useEffect(() => {
     handleResize();
@@ -76,11 +60,21 @@ function Reviews() {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [handleResize]);
+  }, []);
 
   useEffect(() => {
-    updateSliderSettings(window.innerWidth, reviews.length);
-  }, [reviews.length, updateSliderSettings]);
+    if (reviews.length <= 3) {
+      setSliderSettings({
+        ...baseSettings,
+        arrows: false,
+        slidesToShow: reviews.length,
+        slidesToScroll: reviews.length,
+        draggable: false,
+      });
+    } else {
+      handleResize();
+    }
+  }, [reviews]);
 
   if (reviews.length === 0) {
     return null;
