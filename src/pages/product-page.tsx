@@ -79,7 +79,10 @@ function ProductPage() {
                   </div>
                 </div>
                 <div className="product__block product__block-info">
-                  <h1 className="product__title">{product.name}</h1>
+                  <div className="product__title-wrapper">
+                    <h1 className="product__title">{product.name}</h1>
+                    <a className="product__more-link" href="">Еще</a>
+                  </div>
                   <div className="product__wrapper">
                     <div className="product__wrapper-item">
                       <div className="product__share">

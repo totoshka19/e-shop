@@ -63,11 +63,24 @@
       transition: transform 0.3s ease;
     }
   }
+  &__title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
   &__title {
     font-size: 40px;
     font-weight: 400;
     line-height: 47px;
     margin-bottom: 8px;
+  }
+  &__more-link {
+    display: none;
+    @extend .btn;
+    padding: 18px;
+    width: 65px;
+    height: 55px;
   }
   &__wrapper {
     display: flex;
