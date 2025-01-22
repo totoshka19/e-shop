@@ -18,6 +18,7 @@ function ProductPage() {
   const loading = useSelector((state: RootState) => state.product.loading);
   const error = useSelector((state: RootState) => state.product.error);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
+  const [isMoreButtonVisible, setIsMoreButtonVisible] = useState(true);
 
   useEffect(() => {
     if (id) {
@@ -27,6 +28,7 @@ function ProductPage() {
 
   const handleMoreClick = () => {
     setIsDescriptionVisible(!isDescriptionVisible);
+    setIsMoreButtonVisible(false);
   };
 
   if (loading) {
@@ -87,9 +89,11 @@ function ProductPage() {
                 <div className="product__block product__block-info">
                   <div className="product__title-wrapper">
                     <h1 className="product__title">{product.name}</h1>
-                    <button className="product__more-link" onClick={handleMoreClick}>
-                      Еще
-                    </button>
+                    {isMoreButtonVisible && (
+                      <button className="product__more-link" onClick={handleMoreClick}>
+                        Еще
+                      </button>
+                    )}
                   </div>
 
                   <div
