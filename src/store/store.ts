@@ -3,10 +3,11 @@ import catalogReducer from './catalog-slice';
 import productsReducer from './products-slice';
 import productReducer from './product-slice';
 import reviewsReducer from './reviews-slice';
+import cartReducer from './cart-slice';
 import { initializeMockData } from '../mock/utils';
 
 // !TODO заменить на данные с сервера
-localStorage.clear();
+// localStorage.clear();
 initializeMockData();
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     products: productsReducer,
     product: productReducer,
     reviews: reviewsReducer,
+    cart: cartReducer,
   },
 });
 

@@ -10,6 +10,8 @@ import Reviews from '../components/reviews';
 import { AppDispatch, RootState } from '../store/store';
 import ReturnBtn from '../components/return-btn';
 import Characteristics from '../components/characteristics';
+import { addToCart } from '../store/cart-slice';
+import { AppRoute } from '../conts';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +31,12 @@ function ProductPage() {
   const handleMoreClick = () => {
     setIsDescriptionVisible(!isDescriptionVisible);
     setIsMoreButtonVisible(false);
+  };
+
+  const handleAddToCart = () => {
+    if (product) {
+      dispatch(addToCart({ product, quantity: 1 }));
+    }
   };
 
   if (loading) {
@@ -52,7 +60,13 @@ function ProductPage() {
       <Layout>
         <main>
           <ReturnBtn isVisible />
-          <Breadcrumbs />
+          <Breadcrumbs
+            crumbs={[
+              { name: 'Главная', path: AppRoute.Catalog },
+              { name: 'Электроника', path: AppRoute.Catalog },
+              { name: 'Комплектующие', path: AppRoute.Catalog },
+            ]}
+          />
 
           <section className="product">
             <div className="container">
@@ -122,7 +136,7 @@ function ProductPage() {
                           product={product}
                         />
                       </div>
-                      <button className="product__add-to-cart">Добавить в корзину</button>
+                      <button className="product__add-to-cart" onClick={handleAddToCart}>Добавить в корзину</button>
                     </div>
                     <div className="product__wrapper-item">
                       <div className="product__description">

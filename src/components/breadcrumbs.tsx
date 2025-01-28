@@ -1,26 +1,32 @@
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../conts';
 
-function Breadcrumbs() {
+type Crumb = {
+  name: string;
+  path: string;
+};
+
+type BreadcrumbsProps = {
+  crumbs: Crumb[];
+};
+
+function Breadcrumbs({ crumbs }: BreadcrumbsProps) {
   return (
     <section className="breadcrumbs">
       <div className="container">
         <ul className="breadcrumbs__list">
-          <li className="breadcrumbs__item">
-            <Link className="breadcrumbs__link" to={AppRoute.Catalog}>
-              Главная
-            </Link>
-          </li>
-          <li className="breadcrumbs__item">
-            <Link className="breadcrumbs__link" to={AppRoute.Catalog}>
-              Электроника
-            </Link>
-          </li>
-          <li className="breadcrumbs__item">
-            <span className="breadcrumbs__link breadcrumbs__link--active">
-              Комплектующие
-            </span>
-          </li>
+          {crumbs.map((crumb, index) => (
+            <li key={`${crumb.name}-${crumb.path}`} className="breadcrumbs__item">
+              {index === crumbs.length - 1 ? (
+                <span className="breadcrumbs__link breadcrumbs__link--active">
+                  {crumb.name}
+                </span>
+              ) : (
+                <Link className="breadcrumbs__link" to={crumb.path}>
+                  {crumb.name}
+                </Link>
+              )}
+            </li>
+          ))}
         </ul>
       </div>
     </section>

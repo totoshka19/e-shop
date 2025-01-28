@@ -7,37 +7,39 @@ type MarketplaceListProps = {
 };
 
 function MarketplaceList({ context, product }: MarketplaceListProps) {
+  const formattedPrice = product.price ? `${Math.round(product.price)}р` : 'Цена не указана';
+
   if (context === 'productPage') {
     return (
       <ul className="marketplace__list">
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
             <img src="/images/wb-icon.svg" alt="Купить на Wildberries"/>
-            Купить - 429р
+            Купить - {formattedPrice}
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
             <img src="/images/ozon-icon.svg" alt="Купить на Ozon"/>
-            Купить - 429р
+            Купить - {formattedPrice}
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
             <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
-            Купить - 429р
+            Купить - {formattedPrice}
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
             <img src="/images/avito-icon.svg" alt="Купить на Avito"/>
-            Купить - 429р
+            Купить - {formattedPrice}
           </a>
         </li>
         <li className="marketplace__item">
           <a className="marketplace__item-link" href="">
             <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
-            Купить - 429р
+            Купить - {formattedPrice}
           </a>
         </li>
         <li className="marketplace__item order-btn">

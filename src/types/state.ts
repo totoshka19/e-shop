@@ -1,4 +1,4 @@
-import { BaseProduct } from './product';
+import {BaseProduct, Product} from './product';
 import { Review } from './review';
 
 export type ProductState = {
@@ -17,4 +17,18 @@ export type ReviewsState = {
   reviews: Review[];
   loading: boolean;
   error: string | null;
+}
+
+export type CatalogState = {
+  isDropdownOpen: boolean;
+  isCatalogBtnInFooter: boolean;
+}
+
+export type CartItem = {
+  product: Product;
+  quantity: number;
+}
+
+export type CartState = {
+  items: CartItem[];
 }

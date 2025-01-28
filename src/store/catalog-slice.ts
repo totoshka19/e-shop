@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-type CatalogState = {
-  isDropdownOpen: boolean;
-  isCatalogBtnInFooter: boolean;
-}
+import { CatalogState } from '../types/state';
 
 const initialState: CatalogState = {
   isDropdownOpen: false,

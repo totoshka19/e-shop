@@ -5,4 +5,11 @@ export type BaseProduct = {
   description: string;
   category: string;
   subcategory: string;
+  price: number;
+  inStock: boolean;
+  sku: string;
+};
+
+export type Product = BaseProduct & {
+  images: string[];
 };

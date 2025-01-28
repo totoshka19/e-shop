@@ -20,6 +20,9 @@ function createRandomProduct(): BaseProduct {
     description: faker.lorem.sentences(2),
     category: faker.helpers.arrayElement(uniqueCategories),
     subcategory: faker.helpers.arrayElement(uniqueSubcategories),
+    price: parseFloat(faker.commerce.price(10, 1000, 2)),
+    inStock: true,
+    sku: String(Math.floor(100000000 + Math.random() * 900000000)),
   };
 }
 
