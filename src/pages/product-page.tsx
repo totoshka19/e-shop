@@ -51,6 +51,12 @@ function ProductPage() {
     return <div>Товар не найден</div>;
   }
 
+  const breadcrumbs = [
+    { name: 'Главная', path: AppRoute.Catalog },
+    { name: product.category, path: `${AppRoute.Catalog}/${product.category.toLowerCase()}` },
+    { name: product.subcategory, path: `${AppRoute.Catalog}/${product.category.toLowerCase()}/${product.subcategory.toLowerCase()}` },
+  ];
+
   return (
     <div className="wrapper">
       <Helmet>
@@ -60,13 +66,7 @@ function ProductPage() {
       <Layout>
         <main>
           <ReturnBtn isVisible />
-          <Breadcrumbs
-            crumbs={[
-              { name: 'Главная', path: AppRoute.Catalog },
-              { name: 'Электроника', path: AppRoute.Catalog },
-              { name: 'Комплектующие', path: AppRoute.Catalog },
-            ]}
-          />
+          <Breadcrumbs crumbs={breadcrumbs} />
 
           <section className="product">
             <div className="container">
