@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../store/cart-slice';
 import { AppDispatch } from '../store/store';
+import { AppRoute } from '../conts';
 
 type CartItemProps = {
   item: BaseProduct;
@@ -64,7 +65,7 @@ function CartItem({ item, quantity }: CartItemProps) {
         <p className={`${removeClass}-title`}>Удалить</p>
         <button className={`${removeClass}-btn`} onClick={handleRemoveItem}>&mdash;</button>
       </div>
-      <button className={`${itemClass}__buy`}>Купить</button>
+      <Link to={AppRoute.Order} className={`${itemClass}__buy`}>Купить</Link>
     </div>
   );
 }

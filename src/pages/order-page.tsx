@@ -24,7 +24,7 @@ function BasketPage() {
 
           <section className="cart">
             <div className="container">
-              <h1 className="title">Корзина заказов</h1>
+              <h1 className="title">Оставить заявку</h1>
             </div>
           </section>
         </main>

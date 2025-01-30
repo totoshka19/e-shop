@@ -91,6 +91,13 @@ function ProductPage() {
                     <img className="picture__img" src={product.previewImg} alt={product.name} />
                   </a>
 
+                  {/*!TODO доделать чтобы картинки разные были у товара*/}
+                  {/*{product.images.map((image) => (*/}
+                  {/*  <a key={image} className="picture__link" href="">*/}
+                  {/*    <img className="picture__img" src={image} alt={`${product.name}`} />*/}
+                  {/*  </a>*/}
+                  {/*))}*/}
+
                   <div className="product__pagination">
                     {[0, 1, 2].map((index) => (
                       <button

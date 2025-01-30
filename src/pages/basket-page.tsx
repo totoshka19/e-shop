@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
 import Layout from '../components/layout';
 import ReturnBtn from '../components/return-btn';
 import Breadcrumbs from '../components/breadcrumbs';
@@ -43,7 +44,7 @@ function BasketPage() {
                     <CartList items={cartItems} isInStock={false} />
                     <div className="cart__summary">
                       <p className="cart__summary-total"><span>Итого</span> {totalAmount}</p>
-                      <button className="cart__summary-order-btn">Оформить заказ</button>
+                      <Link to={AppRoute.Order} className="cart__summary-order-btn">Оформить заказ</Link>
                     </div>
                   </>
                 )}

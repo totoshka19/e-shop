@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { BaseProduct } from '../types/product';
+import { AppRoute } from '../conts';
 
 type MarketplaceListProps = {
   context: 'productPage' | 'productCard';
@@ -43,7 +44,7 @@ function MarketplaceList({ context, product }: MarketplaceListProps) {
           </a>
         </li>
         <li className="marketplace__item order-btn">
-          <button>Оформить заказ</button>
+          <Link to={AppRoute.Order}>Оформить заказ</Link>
         </li>
       </ul>
     );

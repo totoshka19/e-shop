@@ -13,11 +13,6 @@ const uniqueSubcategories = Array.from({ length: 5 }, () =>
 );
 
 function createRandomProduct(): BaseProduct {
-  const numberOfImages = faker.number.int({ min: 5, max: 10 });
-  const images = Array.from({ length: numberOfImages }, () =>
-    faker.image.urlLoremFlickr()
-  );
-
   return {
     id: faker.string.uuid(),
     name: faker.commerce.productName(),
@@ -28,7 +23,9 @@ function createRandomProduct(): BaseProduct {
     price: parseFloat(faker.commerce.price({ min: 10, max: 1000 })),
     inStock: true,
     sku: String(Math.floor(100000000 + Math.random() * 900000000)),
-    images: images,
+    images: Array.from({ length: 4 }, () =>
+      faker.image.urlLoremFlickr()
+    ),
   };
 }
 
