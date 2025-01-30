@@ -31,6 +31,9 @@ function CartItem({ item, quantity }: CartItemProps) {
     }
   };
 
+  const handleRemoveItem = () => {
+    dispatch(removeFromCart(item.id));
+  };
 
   return (
     <div className={itemClass}>
@@ -59,7 +62,7 @@ function CartItem({ item, quantity }: CartItemProps) {
       </p>
       <div className={removeClass}>
         <p className={`${removeClass}-title`}>Удалить</p>
-        <button className={`${removeClass}-btn`}>&mdash;</button>
+        <button className={`${removeClass}-btn`} onClick={handleRemoveItem}>&mdash;</button>
       </div>
       <button className={`${itemClass}__buy`}>Купить</button>
     </div>
