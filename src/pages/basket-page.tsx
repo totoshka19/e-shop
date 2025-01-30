@@ -10,7 +10,6 @@ import { calculateTotalPrice } from '../utils';
 
 function BasketPage() {
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const quantities = cartItems.map((item) => item.quantity);
 
   const totalAmount = cartItems.reduce((total, item) =>
     total + calculateTotalPrice(item.product.price, item.quantity)
@@ -41,7 +40,7 @@ function BasketPage() {
 
                 {cartItems.length === 0 ? null : (
                   <>
-                    <CartList items={cartItems} quantities={quantities} isInStock={false} />
+                    <CartList items={cartItems} isInStock={false} />
                     <div className="cart__summary">
                       <p className="cart__summary-total"><span>Итого</span> {totalAmount}</p>
                       <button className="cart__summary-order-btn">Оформить заказ</button>

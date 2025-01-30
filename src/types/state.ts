@@ -1,4 +1,4 @@
-import {BaseProduct, Product} from './product';
+import { BaseProduct } from './product';
 import { Review } from './review';
 
 export type ProductState = {
@@ -25,7 +25,7 @@ export type CatalogState = {
 }
 
 export type CartItem = {
-  product: Product;
+  product: BaseProduct;
   quantity: number;
 }
 

@@ -1,10 +1,9 @@
-import React from 'react';
-import { Product } from '../types/product';
+import { BaseProduct } from '../types/product';
 import { calculateTotalPrice, formatPrice } from '../utils';
 import { Link } from 'react-router-dom';
 
 type CartItemProps = {
-  item: Product;
+  item: BaseProduct;
   quantity: number;
 }
 

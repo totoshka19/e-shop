@@ -8,8 +8,5 @@ export type BaseProduct = {
   price: number;
   inStock: boolean;
   sku: string;
-};
-
-export type Product = BaseProduct & {
   images: string[];
 };

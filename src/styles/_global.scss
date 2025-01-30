@@ -131,6 +131,26 @@ main {
   }
 }
 
+.cart-btn {
+  position: relative;
+}
+
+.cart-btn__count {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: variables.$primary-color;
+  border: 1px solid #A0A0A0;
+  border-radius: 50%;
+  font-size: 12px;
+  padding: 5px;
+}
+
 .return-btn {
   display: none;
   @extend .btn;

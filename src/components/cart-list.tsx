@@ -1,9 +1,8 @@
-import React from 'react';
-import { Product } from '../types/product';
+import { BaseProduct } from '../types/product';
 import CartItem from './cart-item';
 
 type CartListProps = {
-  items: { product: Product; quantity: number }[];
+  items: { product: BaseProduct; quantity: number }[];
   isInStock: boolean;
 }
 
