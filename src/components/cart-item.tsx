@@ -1,6 +1,9 @@
 import { BaseProduct } from '../types/product';
 import { calculateTotalPrice, formatPrice } from '../utils';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addToCart, removeFromCart } from '../store/cart-slice';
+import { AppDispatch } from '../store/store';
 
 type CartItemProps = {
   item: BaseProduct;
@@ -8,12 +11,26 @@ type CartItemProps = {
 }
 
 function CartItem({ item, quantity }: CartItemProps) {
+  const dispatch = useDispatch<AppDispatch>();
   const isInStock = item.inStock;
   const itemClass = isInStock ? 'cart-item' : 'cart-out-of-stock-item';
   const quantityClass = isInStock ? 'cart-item__quantity' : 'cart-out-of-stock-item__quantity';
   const removeClass = isInStock ? 'cart-item__remove' : 'cart-out-of-stock-item__remove';
 
   const totalPrice = calculateTotalPrice(item.price, quantity).toFixed(2);
+
+  const handleIncreaseQuantity = () => {
+    dispatch(addToCart({ product: item, quantity: 1 }));
+  };
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      dispatch(addToCart({ product: item, quantity: -1 }));
+    } else {
+      dispatch(removeFromCart(item.id));
+    }
+  };
+
 
   return (
     <div className={itemClass}>
@@ -32,9 +49,9 @@ function CartItem({ item, quantity }: CartItemProps) {
       <div className={quantityClass}>
         <p className={`${quantityClass}-title`}>Количество<br /></p>
         <div className={`${quantityClass}-wrapper`}>
-          <button className={`${quantityClass}-btn-minus`}>&mdash;</button>
+          <button className={`${quantityClass}-btn-minus`} onClick={handleDecreaseQuantity}>&mdash;</button>
           <span className={`${quantityClass}-value`}>{quantity}</span>
-          <button className={`${quantityClass}-btn-plus`}>+</button>
+          <button className={`${quantityClass}-btn-plus`} onClick={handleIncreaseQuantity}>+</button>
         </div>
       </div>
       <p className={`${itemClass}__total`}>
