@@ -48,30 +48,33 @@ function BasketPage() {
                   </>
                 )}
 
-                <div className="cart__out-of-stock">
-                  <h2 className="cart__out-of-stock-title">Товара нет на складе</h2>
-                  <div className="cart-out-of-stock__items">
-                    <div className="cart-out-of-stock-item">
-                      <img className="cart-out-of-stock-item__img" src="" alt=""/>
-                      <h3 className="cart-out-of-stock-item__name">Корпус для жесткого диска HDD SSD (2.5&rsquo;, USB 3.0, SATA)</h3>
-                      <p className="cart-out-of-stock-item__price">Цена<br /><span>1177.00</span></p>
-                      <div className="cart-out-of-stock-item__quantity">
-                        <p className="cart-out-of-stock-item__quantity-title">Количество<br /></p>
-                        <div className="cart-out-of-stock-item__quantity-wrapper">
-                          <button className="cart-out-of-stock-item__quantity-btn-minus">&mdash;</button>
-                          <span className="cart-out-of-stock-item__quantity-value">2</span>
-                          <button className="cart-out-of-stock-item__quantity-btn-plus">+</button>
+                {/* Условный рендеринг блока "Товара нет на складе" */}
+                {cartItems.length > 0 && (
+                  <div className="cart__out-of-stock">
+                    <h2 className="cart__out-of-stock-title">Товара нет на складе</h2>
+                    <div className="cart-out-of-stock__items">
+                      <div className="cart-out-of-stock-item">
+                        <img className="cart-out-of-stock-item__img" src="" alt=""/>
+                        <h3 className="cart-out-of-stock-item__name">Корпус для жесткого диска HDD SSD (2.5&rsquo;, USB 3.0, SATA)</h3>
+                        <p className="cart-out-of-stock-item__price">Цена<br /><span>1177.00</span></p>
+                        <div className="cart-out-of-stock-item__quantity">
+                          <p className="cart-out-of-stock-item__quantity-title">Количество<br /></p>
+                          <div className="cart-out-of-stock-item__quantity-wrapper">
+                            <button className="cart-out-of-stock-item__quantity-btn-minus">&mdash;</button>
+                            <span className="cart-out-of-stock-item__quantity-value">2</span>
+                            <button className="cart-out-of-stock-item__quantity-btn-plus">+</button>
+                          </div>
                         </div>
+                        <p className="cart-out-of-stock-item__total">Стоимость<br /><span>1177.00</span></p>
+                        <div className="cart-out-of-stock-item__remove">
+                          <p className="cart-out-of-stock-item__remove-title">Удалить</p>
+                          <button className="cart-out-of-stock-item__remove-btn">&mdash;</button>
+                        </div>
+                        <button className="cart-out-of-stock-item__buy">Купить</button>
                       </div>
-                      <p className="cart-out-of-stock-item__total">Стоимость<br /><span>1177.00</span></p>
-                      <div className="cart-out-of-stock-item__remove">
-                        <p className="cart-out-of-stock-item__remove-title">Удалить</p>
-                        <button className="cart-out-of-stock-item__remove-btn">&mdash;</button>
-                      </div>
-                      <button className="cart-out-of-stock-item__buy">Купить</button>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
 
               {/*!TODO добавить ссылки в элементы списка*/}
