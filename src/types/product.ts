@@ -1,3 +1,13 @@
+export type MarketplaceIcons = {
+  [key: string]: string;
+};
+
+export type Marketplace = {
+  name: string;
+  price: number;
+  link: string;
+};
+
 export type BaseProduct = {
   id: string;
   name: string;
@@ -9,4 +19,5 @@ export type BaseProduct = {
   inStock: boolean;
   sku: string;
   images: string[];
+  marketplaces: Marketplace[];
 };

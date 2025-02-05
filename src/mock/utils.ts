@@ -13,6 +13,19 @@ const uniqueSubcategories = Array.from({ length: 5 }, () =>
 );
 
 function createRandomProduct(): BaseProduct {
+  const allMarketplaces = [
+    { name: 'yamarket', price: parseFloat(faker.commerce.price({ min: 10, max: 1000 })), link: 'https://market.yandex.ru' },
+    { name: 'wb', price: parseFloat(faker.commerce.price({ min: 10, max: 1000 })), link: 'https://www.wildberries.ru' },
+    { name: 'avito', price: parseFloat(faker.commerce.price({ min: 10, max: 1000 })), link: 'https://www.avito.ru' },
+    { name: 'ozon', price: parseFloat(faker.commerce.price({ min: 10, max: 1000 })), link: 'https://www.ozon.ru' },
+  ];
+
+  const randomCount = Math.floor(Math.random() * (allMarketplaces.length + 1));
+
+  const shuffledMarketplaces = allMarketplaces.sort(() => 0.5 - Math.random());
+
+  const marketplaces = shuffledMarketplaces.slice(0, randomCount);
+
   return {
     id: faker.string.uuid(),
     name: faker.commerce.productName(),
@@ -26,6 +39,7 @@ function createRandomProduct(): BaseProduct {
     images: Array.from({ length: 4 }, () =>
       faker.image.urlLoremFlickr()
     ),
+    marketplaces: marketplaces,
   };
 }
 

@@ -119,6 +119,9 @@
     gap: 30px 20px;
     font-size: 14px;
   }
+  .marketplace__list:not(:last-child) {
+    margin-bottom: 30px; //!TODO поправить отступ
+  }
   .marketplace__item {
     @extend .btn;
     position: relative;

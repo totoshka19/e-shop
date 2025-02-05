@@ -7,7 +7,7 @@ import cartReducer from './cart-slice';
 import { initializeMockData } from '../mock/utils';
 
 // !TODO заменить на данные с сервера
-// localStorage.clear();
+localStorage.clear();
 initializeMockData();
 
 export const store = configureStore({

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { BaseProduct } from '../types/product';
-import { AppRoute } from '../conts';
+import { AppRoute, marketplaceIcons } from '../conts';
 
 type MarketplaceListProps = {
   context: 'productPage' | 'productCard';
@@ -10,43 +10,43 @@ type MarketplaceListProps = {
 function MarketplaceList({ context, product }: MarketplaceListProps) {
   const formattedPrice = product.price ? `${Math.round(product.price)}р` : 'Цена не указана';
 
+  const renderMarketplaceItems = () => {
+    if (!product.marketplaces || !Array.isArray(product.marketplaces)) {
+      return null;
+    }
+
+    return product.marketplaces.map((marketplace) => {
+      const isProductCard = context === 'productCard';
+      return (
+        <li className="marketplace__item" key={marketplace.name}>
+          <a className="marketplace__item-link" href={marketplace.link} target="_blank" rel="noopener noreferrer">
+            <img src={marketplaceIcons[marketplace.name]} alt={`Купить на ${marketplace.name.charAt(0).toUpperCase() + marketplace.name.slice(1)}`} />
+            {!isProductCard && `Купить - ${Math.round(marketplace.price)}р`}
+          </a>
+        </li>
+      );
+    });
+  };
+
   if (context === 'productPage') {
     return (
-      <ul className="marketplace__list">
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/wb-icon.svg" alt="Купить на Wildberries"/>
-            Купить - {formattedPrice}
-          </a>
-        </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/ozon-icon.svg" alt="Купить на Ozon"/>
-            Купить - {formattedPrice}
-          </a>
-        </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете"/>
-            Купить - {formattedPrice}
-          </a>
-        </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/avito-icon.svg" alt="Купить на Avito"/>
-            Купить - {formattedPrice}
-          </a>
-        </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/enote-icon.svg" alt="Купить в Enote Shope"/>
-            Купить - {formattedPrice}
-          </a>
-        </li>
-        <li className="marketplace__item order-btn">
-          <Link to={AppRoute.Order}>Оформить заказ</Link>
-        </li>
-      </ul>
+      <>
+        <ul className="marketplace__list">
+          {renderMarketplaceItems()}
+        </ul>
+        <div className="marketplace__list">
+          <div className="marketplace__item">
+            <a className="marketplace__item-link" href="">
+              <img src={marketplaceIcons['enote']} alt="Купить в Enote Shope" />
+              Купить - {formattedPrice}
+            </a>
+          </div>
+          <div className="marketplace__item order-btn">
+            <Link to={AppRoute.Order}>Оформить заказ</Link>
+          </div>
+        </div>
+      </>
+
     );
   }
 
@@ -55,29 +55,10 @@ function MarketplaceList({ context, product }: MarketplaceListProps) {
       <ul className="marketplace__list">
         <li className="marketplace__item">
           <Link className="marketplace__item-link" to={`/product/${product.id}`}>
-            <img src="/images/enote-icon.svg" alt="Купить в Enote Shope" />
+            <img src={marketplaceIcons['enote']} alt="Купить в Enote Shope" />
           </Link>
         </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/yamarket-icon.svg" alt="Купить на Яндекс Маркете" />
-          </a>
-        </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/wb-icon.svg" alt="Купить на Wildberries" />
-          </a>
-        </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/avito-icon.svg" alt="Купить на Avito" />
-          </a>
-        </li>
-        <li className="marketplace__item">
-          <a className="marketplace__item-link" href="">
-            <img src="/images/ozon-icon.svg" alt="Купить на Ozon" />
-          </a>
-        </li>
+        {renderMarketplaceItems()}
       </ul>
     );
   }
