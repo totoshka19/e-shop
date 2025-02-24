@@ -39,7 +39,7 @@ function CartItem({ item, quantity }: CartItemProps) {
   return (
     <div className={itemClass}>
       <img className={`${itemClass}__img`} src={item.previewImg} alt={item.name} />
-      <Link to={`/product/${item.id}`}>
+      <Link className={`${itemClass}__link`} to={`/product/${item.id}`}>
         <h3 className={`${itemClass}__name`}>{item.name}</h3>
       </Link>
       {isInStock && (

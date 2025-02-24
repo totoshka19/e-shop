@@ -56,7 +56,9 @@ function BasketPage() {
                     <div className="cart-out-of-stock__items">
                       <div className="cart-out-of-stock-item">
                         <img className="cart-out-of-stock-item__img" src="" alt=""/>
-                        <h3 className="cart-out-of-stock-item__name">Корпус для жесткого диска HDD SSD (2.5&rsquo;, USB 3.0, SATA)</h3>
+                        <a className="cart-out-of-stock-item__link" href="#">
+                          <h3 className="cart-out-of-stock-item__name">Корпус для жесткого диска HDD SSD (2.5&rsquo;, USB 3.0, SATA)</h3>
+                        </a>
                         <p className="cart-out-of-stock-item__price">Цена<br /><span>1177.00</span></p>
                         <div className="cart-out-of-stock-item__quantity">
                           <p className="cart-out-of-stock-item__quantity-title">Количество<br /></p>
