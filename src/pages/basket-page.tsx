@@ -8,6 +8,7 @@ import CartList from '../components/cart-list';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { calculateTotalPrice } from '../utils';
+import AsideInfo from '../components/aside-info';
 
 function BasketPage() {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -34,14 +35,14 @@ function BasketPage() {
 
           <section className="cart">
             <div className="container">
-              <div className="cart__main-content">
+              <main className="cart__main-content">
                 <h1 className="cart-title">
                   Ваша корзина {cartItems.length === 0 ? 'пуста' : ''}
                 </h1>
 
                 {cartItems.length === 0 ? null : (
                   <>
-                    <CartList items={cartItems} isInStock={false} />
+                    <CartList items={cartItems} isInStock />
                     <div className="cart__summary">
                       <p className="cart__summary-total"><span>Итого</span> {totalAmount}</p>
                       <Link to={AppRoute.Order} className="cart__summary-order-btn">Оформить заказ</Link>
@@ -78,18 +79,9 @@ function BasketPage() {
                     </div>
                   </div>
                 )}
-              </div>
+              </main>
 
-              {/*!TODO добавить ссылки в элементы списка*/}
-              <div className="cart__info">
-                <h2 className="cart__info-title">Информация для ознакомления</h2>
-                <ul className="cart__info-list">
-                  <li className="cart__info-item">Как оформить заказ?</li>
-                  <li className="cart__info-item">Как вернуть товар?</li>
-                  <li className="cart__info-item">Как отменить заказ?</li>
-                  <li className="cart__info-item">Пояснительная бригада?</li>
-                </ul>
-              </div>
+              <AsideInfo classPrefix="cart" />
             </div>
           </section>
         </main>

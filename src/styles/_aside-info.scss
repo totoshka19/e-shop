@@ -1,0 +1,27 @@
+@use 'variables';
+@use 'reset';
+@use 'global';
+
+.cart__info,
+.order__info {
+  margin-top: 45px;
+  max-width: 230px;
+  min-height: 327px;
+  height: 100%;
+  border-radius: 5px;
+  margin-left: 8px;
+  padding: 30px  20px;
+  background: variables.$light-background;
+  box-shadow: variables.$box-shadow;
+}
+.cart__info-title,
+.order__info-title {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 23px;
+  margin-bottom: 47px;
+}
+.cart__info-item,
+.order__info-item {
+  padding: 7px 0;
+}
