@@ -4,6 +4,7 @@ import ReturnBtn from '../components/return-btn';
 import Breadcrumbs from '../components/breadcrumbs';
 import { AppRoute } from '../conts';
 import AsideInfo from '../components/aside-info';
+import OrderForm from '../components/order-form';
 
 function OrderPage() {
   return (
@@ -56,64 +57,8 @@ function OrderPage() {
                     </p>
                   </div>
                 </div>
-                <form className="order-form" action="/submit-order" method="POST">
-                  <div className="form__block">
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="name">Ваше имя</label>
-                      <input className="form-control" id="name" type="text" maxLength="50" />
-                    </div>
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="email">Ваш e-mail*</label>
-                      <input className="form-control" id="email" type="email" required />
-                    </div>
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="phone">Ваш номер телефона*</label>
-                      <input className="form-control" id="phone" type="tel" placeholder="+7 (___)___ - __ __" required />
-                    </div>
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="message">Дополнительно
-                        <p>Задай вопрос магазину</p>
-                      </label>
-                      <textarea className="form-control" id="message" rows="10" maxLength="500"></textarea>
-                    </div>
-                  </div>
-                  <div className="form__block">
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="address">Адрес доставки*</label>
-                      <input className="form-control" id="address" type="text" required />
-                    </div>
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="delivery-method">Метод доставки*</label>
-                      <select className="form-control" id="delivery-method" required>
-                        <option value="" disabled selected>Выберите метод доставки</option>
-                        <option value="post">Почта России</option>
-                        <option value="cdek">Сдэк</option>
-                        <option value="yadostavka">Яндекс доставка</option>
-                      </select>
-                    </div>
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="postal-code">Почтовый индекс*</label>
-                      <input className="form-control" id="postal-code" type="text" required />
-                    </div>
-                    <div className="form-item">
-                      <label className="form-label" htmlFor="order-amount">Сумма заказа</label>
-                      <input
-                        className="form-control"
-                        id="order-amount"
-                        type="text"
-                        value="0.00"
-                        readOnly
-                      />
-                    </div>
-                    <div className="form-item form-item__wrapper">
-                      <button className="form-item__button" type="button">Оплатить</button>
-                      <p className="form-item__text">
-                        Нажимая на кнопку, вы соглашаетесь с <a className="form-item__link" href="#">Условиями обработки персональных данных</a>,
-                        а также с <a className="form-item__link" href="#">Условиями продажи</a>
-                      </p>
-                    </div>
-                  </div>
-                </form>
+
+                <OrderForm />
               </main>
 
               <AsideInfo classPrefix="order" />
