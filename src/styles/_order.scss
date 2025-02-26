@@ -55,19 +55,21 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 60px;
+    margin-bottom: 40px;
   }
   .form__block {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    height: 100%;
     border-radius: 5px;
     box-shadow: variables.$box-shadow;
-    background: rgb(254, 254, 254);
+    background: variables.$light-background;
     padding: 15px 30px;
   }
   .form-item {
     display: flex;
     flex-direction: column;
-  }
-  .form-item:not(:last-child) {
-    margin-bottom: 18px;
   }
   .form-label {
     font-size: 12px;
@@ -77,9 +79,55 @@
     color: variables.$grey-color;
   }
   .form-control {
-    border: 2px solid rgb(217, 217, 217);
+    border: 2px solid variables.$secondary-color;
     border-radius: 8px;
     padding: 10px 4px;
+    transition: all 0.3s ease;
+  }
+  .form-control:hover {
+    border-color: variables.$primary-color;
+    box-shadow: 0 0 5px variables.$primary-color;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: variables.$primary-color;
+    box-shadow: none;
+  }
+  .form-control[readonly] {
+    cursor: not-allowed;
+    border-color: variables.$secondary-color;
+  }
+  .form-control[readonly]:hover {
+    box-shadow: 0 0 5px variables.$secondary-color;
+  }
+  .form-control#message {
+    resize: none;
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  .form-item__wrapper {
+    align-self: flex-end;
+    margin-top: auto;
+  }
+  .form-item__button {
+    max-width: 320px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: variables.$primary-color;
+    border: 2px solid variables.$primary-color;
+    padding: 10px;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    &:hover {
+      box-shadow: 0 0 4px 0 variables.$primary-color;
+    }
+  }
+  .form-item__text {
+    text-align: end;
+    font-size: 10px;
+    color: variables.$grey-color;
+    max-width: 320px;
   }
 }
 

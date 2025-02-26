@@ -60,7 +60,7 @@ function OrderPage() {
                   <div className="form__block">
                     <div className="form-item">
                       <label className="form-label" htmlFor="name">Ваше имя</label>
-                      <input className="form-control" id="name" type="text" />
+                      <input className="form-control" id="name" type="text" maxLength="50" />
                     </div>
                     <div className="form-item">
                       <label className="form-label" htmlFor="email">Ваш e-mail*</label>
@@ -74,7 +74,7 @@ function OrderPage() {
                       <label className="form-label" htmlFor="message">Дополнительно
                         <p>Задай вопрос магазину</p>
                       </label>
-                      <textarea className="form-control" id="message" rows="10"></textarea>
+                      <textarea className="form-control" id="message" rows="10" maxLength="500"></textarea>
                     </div>
                   </div>
                   <div className="form__block">
@@ -93,17 +93,23 @@ function OrderPage() {
                     </div>
                     <div className="form-item">
                       <label className="form-label" htmlFor="postal-code">Почтовый индекс*</label>
-                      <input className="form-control" id="postal-code" type="number" required />
+                      <input className="form-control" id="postal-code" type="text" required />
                     </div>
                     <div className="form-item">
                       <label className="form-label" htmlFor="order-amount">Сумма заказа</label>
-                      <input className="form-control" id="order-amount" type="number" />
+                      <input
+                        className="form-control"
+                        id="order-amount"
+                        type="text"
+                        value="0.00"
+                        readOnly
+                      />
                     </div>
-                    <div className="form-item">
-                      <button type="button">Оплатить</button>
-                      <p>
-                        Нажимая на кнопку, вы соглашаетесь с <a href="#">Условиями обработки персональных данных</a>,
-                        а также с <a href="#">Условиями продажи</a>.
+                    <div className="form-item form-item__wrapper">
+                      <button className="form-item__button" type="button">Оплатить</button>
+                      <p className="form-item__text">
+                        Нажимая на кнопку, вы соглашаетесь с <a className="form-item__link" href="#">Условиями обработки персональных данных</a>,
+                        а также с <a className="form-item__link" href="#">Условиями продажи</a>
                       </p>
                     </div>
                   </div>
