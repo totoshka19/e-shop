@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function OrderForm() {
   const [deliveryMethod, setDeliveryMethod] = useState('');
@@ -18,6 +18,13 @@ function OrderForm() {
       };
     }
   }, []);
+
+  const [postalCode, setPostalCode] = useState('');
+
+  const handlePostalCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, '');
+    setPostalCode(value.slice(0, 6));
+  };
 
   return (
     <form className="order-form" action="/submit-order" method="POST">
@@ -43,6 +50,10 @@ function OrderForm() {
       </div>
       <div className="form__block">
         <div className="form-item">
+          <label className="form-label" htmlFor="address">Адрес доставки*</label>
+          <input className="form-control" id="address" type="text" maxLength={50} />
+        </div>
+        <div className="form-item">
           <label className="form-label" htmlFor="delivery-method">Метод доставки*</label>
           <div className="custom-select">
             <select
@@ -64,7 +75,16 @@ function OrderForm() {
         </div>
         <div className="form-item">
           <label className="form-label" htmlFor="postal-code">Почтовый индекс*</label>
-          <input className="form-control" id="postal-code" type="text" required />
+          <input
+            className="form-control"
+            id="postal-code"
+            type="text"
+            value={postalCode}
+            onChange={handlePostalCodeChange}
+            required
+            pattern="\d{6}"
+            maxLength={6}
+          />
         </div>
         <div className="form-item">
           <label className="form-label" htmlFor="order-amount">Сумма заказа</label>
