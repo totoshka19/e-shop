@@ -26,6 +26,8 @@ function OrderForm() {
     setPostalCode(value.slice(0, 6));
   };
 
+  // !TODO доделать валидацию
+
   return (
     <form className="order-form" action="/submit-order" method="POST">
       <div className="form__block">
