@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { marketplaceIcons } from '../conts';
+import { marketplaceIcons } from '../consts';
 
 type MarketplaceItemProps = {
   name: string;
