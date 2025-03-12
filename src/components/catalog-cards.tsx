@@ -4,7 +4,7 @@ import Pagination from './pagination';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
 import { fetchProducts } from '../store/products-slice';
-import { PRODUCTS_PER_PAGE_DESKTOP, PRODUCTS_PER_PAGE_MOBILE } from '../conts';
+import { PRODUCTS_PER_PAGE_DESKTOP, PRODUCTS_PER_PAGE_MOBILE } from '../consts';
 import { BaseProduct } from '../types/product';
 
 function CatalogCards() {

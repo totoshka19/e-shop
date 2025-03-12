@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart, removeFromCart } from '../store/cart-slice';
 import { AppDispatch } from '../store/store';
-import { AppRoute } from '../conts';
+import { AppRoute } from '../consts';
 
 type CartItemProps = {
   item: BaseProduct;

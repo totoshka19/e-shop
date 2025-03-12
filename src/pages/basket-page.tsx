@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/layout';
 import ReturnBtn from '../components/return-btn';
 import Breadcrumbs from '../components/breadcrumbs';
-import { AppRoute } from '../conts';
+import { AppRoute } from '../consts';
 import CartList from '../components/cart-list';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';

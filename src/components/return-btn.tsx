@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../conts';
+import { AppRoute } from '../consts';
 
 type ReturnBtnProps = {
   isVisible: boolean;

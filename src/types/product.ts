@@ -8,6 +8,13 @@ export type Marketplace = {
   link: string;
 };
 
+export type Category = {
+  id: number;
+  name: string;
+  slug: string;
+  child: Category[];
+};
+
 export type BaseProduct = {
   id: string;
   name: string;
@@ -20,4 +27,20 @@ export type BaseProduct = {
   sku: string;
   images: string[];
   marketplaces: Marketplace[];
+};
+
+export type Product = {
+  id: number;
+  name: string | null;
+  description: string;
+  short_description: string;
+  price: number;
+  sku: string | null;
+  available_count: number;
+  is_available: boolean;
+  to_feed: boolean;
+  category: Category;
+  images: string[];
+  logo: string | null;
+  marketplace: Marketplace[];
 };

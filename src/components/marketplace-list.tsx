@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { BaseProduct } from '../types/product';
-import { AppRoute, marketplaceIcons } from '../conts';
+import { AppRoute, marketplaceIcons } from '../consts';
 
 type MarketplaceListProps = {
   context: 'productPage' | 'productCard';

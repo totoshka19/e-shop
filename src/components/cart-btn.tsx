@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../conts';
+import { AppRoute } from '../consts';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 

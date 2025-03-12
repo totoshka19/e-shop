@@ -2,7 +2,7 @@ import Logo from './logo';
 import Contacts from './contacts';
 import CatalogBtn from './catalog-btn';
 import CartBtn from './cart-btn';
-import { AppRoute } from '../conts';
+import { AppRoute } from '../consts';
 import { Link } from 'react-router-dom';
 
 type FooterProps = {

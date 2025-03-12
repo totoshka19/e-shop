@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import Layout from '../components/layout';
 import ReturnBtn from '../components/return-btn';
 import Breadcrumbs from '../components/breadcrumbs';
-import { AppRoute } from '../conts';
+import { AppRoute } from '../consts';
 import AsideInfo from '../components/aside-info';
 import OrderForm from '../components/order-form';
 

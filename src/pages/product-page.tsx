@@ -11,7 +11,7 @@ import { AppDispatch, RootState } from '../store/store';
 import ReturnBtn from '../components/return-btn';
 import Characteristics from '../components/characteristics';
 import { addToCart } from '../store/cart-slice';
-import { AppRoute } from '../conts';
+import { AppRoute } from '../consts';
 
 function ProductPage() {
   const { id } = useParams<{ id: string }>();

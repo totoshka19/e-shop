@@ -7,7 +7,7 @@ import BasketPage from './pages/basket-page';
 import OrderPage from './pages/order-page';
 import NotFoundPage from './pages/not-found-page';
 import { store } from './store/store';
-import { AppRoute } from './conts';
+import { AppRoute } from './consts';
 
 function App() {
   return (

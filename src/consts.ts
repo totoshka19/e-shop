@@ -1,5 +1,11 @@
 import { MarketplaceIcons } from './types/product';
 
+export const URL_API = 'http://api.hirohitoshop.ru/api';
+
+export const ApiRoute = {
+  Products: '/products',
+} as const;
+
 export const AppRoute = {
   Catalog: '/',
   Product: '/product/:id',
