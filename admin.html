@@ -1,0 +1,141 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <form id="auth">
+        <input type="text" name="email" value="zumianfs@yandex.ru"><br>
+        <input type="text" name="password" value="imSoCringe@3"><br>
+
+        <button id="auth_b">Авторизоваться</button>
+    </form>
+    <hr>
+
+    <p style="font-size:10px; width: 250px; word-break: break-all" id="auth_key">
+
+    </p>
+
+
+    <p>
+        Получить категории
+
+        <form method="get">
+            <button id="getGroup" type="submit">Получить</button>
+        </form>
+
+        <ul id="showCategory">
+
+        </ul>
+
+    </p>
+    <hr>
+
+    <div>
+        <p>Создать группу</p>
+        <form id="createGroupName">
+            <input type="text" name="name">
+            <button onclick="createGroup()"> Создать группу</button>
+        </form>
+    </div>
+
+
+
+
+    <script>
+        //Авторизация
+        $('#auth_b').click(function(e) {
+            e.preventDefault();
+
+            var $data = {};
+            $('#auth').find('input, textearea, select').each(function() {
+
+                $data[this.name] = $(this).val();
+            });
+
+            $.ajax({
+                url: 'http://api.hirohitoshop.ru/api/login',
+                type: 'post',
+                data: $data,
+                dataType: 'json',
+                async: true,
+
+                success: function(result) {
+                    $auth_key = result.access_token;
+                    $('#auth_key').html($auth_key);
+                }
+            });
+        })
+
+        // Получить группы
+
+        $('#getGroup').click(function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: 'http://api.hirohitoshop.ru/api/admin/categories',
+                type: 'GET',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
+                },
+                success: function(result) {
+                    $.each(result.data, function(key, value) {
+                            $('#showCategory').append("<li>" + value.name + "&nbsp" + "<button onclick='editGroup(" + value.id + ")'>edit</button><button onclick='deleteGroup(" + value.id + ")'>del</button></li><ul><li>" + value.cild + "</li></ul>");
+                            console.log(value.name);
+                        }
+
+                    )
+                }
+            });
+        })
+
+        // Изменить группу
+        function editGroup(e) {
+            console.log(e);
+
+        }
+
+        // Удалтить группу
+        function deleteGroup(id) {
+
+            var $deletUrl = "http://api.hirohitoshop.ru/api/admin/categories/" + id + "/delete";
+            $.ajax({
+                url: $deletUrl,
+                type: 'DELETE',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
+                },
+            });
+            console.log($deletUrl);
+
+        }
+
+        // Добавить группу
+
+        function createGroup() {
+
+            var $data = {};
+
+            $('#createGroupName').find('input, textearea, select').each(function() {
+
+                $data[this.name] = $(this).val();
+            });
+
+            $.ajax({
+                url: "http://api.hirohitoshop.ru/api/admin/categories/create",
+                type: 'POST',
+                data: $data,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
+                },
+            });
+            console.log($data);
+
+        }
+    </script>
+</body>
+
+</html>
