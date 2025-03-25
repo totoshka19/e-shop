@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { URL_API } from '../consts';
 
 export const login = createAsyncThunk(
   'auth/login',
@@ -9,7 +10,7 @@ export const login = createAsyncThunk(
       formData.append('email', email);
       formData.append('password', password);
 
-      const response = await axios.post('http://api.hirohitoshop.ru/api/login', formData, {
+      const response = await axios.post(`${URL_API}/login`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -18,11 +19,8 @@ export const login = createAsyncThunk(
       if (!response.data.access_token) {
         throw new Error('Некорректный ответ от сервера.');
       }
-
-      console.log('Успешная авторизация:', response.data);
       return { token: response.data.access_token };
     } catch (error) {
-      console.error('Ошибка авторизации:', error.message);
       return rejectWithValue(error.message);
     }
   }
@@ -45,7 +43,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: function (state) {
-      console.log('Выполняется logout');
       state.token = null;
       state.status = 'idle';
       state.error = null;
@@ -54,17 +51,14 @@ const authSlice = createSlice({
   extraReducers: function (builder) {
     builder
       .addCase(login.pending, (state) => {
-        console.log('Начинается авторизация...');
         state.status = 'loading';
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        console.log('Авторизация завершена успешно:', action.payload);
         state.status = 'succeeded';
         state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
-        console.error('Ошибка авторизации:', action.payload);
         state.status = 'failed';
         state.error = action.payload || 'Произошла ошибка.';
       });

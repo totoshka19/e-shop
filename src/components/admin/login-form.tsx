@@ -1,18 +1,16 @@
-// src/components/admin/login-form.tsx
 import React, { useState } from 'react';
 
-interface LoginFormProps {
+type LoginFormProps = {
   onLogin: (email: string, password: string) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+function LoginForm ({ onLogin }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Отправка данных для авторизации:', { email, password });
-    onLogin(email, password); // Вызываем коллбэк для выполнения авторизации
+    onLogin(email, password);
   };
 
   return (
@@ -43,6 +41,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
       </form>
     </div>
   );
-};
+}
 
 export default LoginForm;
