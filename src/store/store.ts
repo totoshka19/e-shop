@@ -4,6 +4,7 @@ import productsReducer from './products-slice';
 import productReducer from './product-slice';
 import reviewsReducer from './reviews-slice';
 import cartReducer from './cart-slice';
+import filterReducer from './filter-slice';
 import { initializeMockData } from '../mock/utils';
 
 // !TODO заменить на данные с сервера
@@ -17,6 +18,7 @@ export const store = configureStore({
     product: productReducer,
     reviews: reviewsReducer,
     cart: cartReducer,
+    filter: filterReducer,
   },
 });
 
