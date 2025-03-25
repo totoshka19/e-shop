@@ -2,6 +2,13 @@ import { MarketplaceIcons } from './types/product';
 
 export const URL_API = 'http://api.hirohitoshop.ru/api';
 
+export const STATUS_IDLE = 'idle';
+export const STATUS_LOADING = 'loading';
+export const STATUS_SUCCEEDED = 'succeeded';
+export const STATUS_FAILED = 'failed';
+
+export type StatusType = typeof STATUS_IDLE | typeof STATUS_LOADING | typeof STATUS_SUCCEEDED | typeof STATUS_FAILED;
+
 export const ApiRoute = {
   Products: '/products',
 } as const;
