@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 
 type LoginFormProps = {
   onLogin: (email: string, password: string) => void;
-}
+};
 
-function LoginForm ({ onLogin }: LoginFormProps) {
+function LoginForm({ onLogin }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 

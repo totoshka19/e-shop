@@ -1,18 +1,15 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login, logout } from '../../store/auth-slice';
 import LoginForm from '../../components/admin/login-form';
-import { AppDispatch, RootState } from '../../store/store';
+import { AppDispatch } from '../../store/store';
+import { useAuth } from '../../hooks/use-auth';
 
 function AdminPage() {
   const dispatch = useDispatch<AppDispatch>();
-  const { token, status, error } = useSelector((state: RootState) => state.auth);
+  const { token, status, error } = useAuth();
 
   const handleLogin = async (email: string, password: string) => {
-    try {
-      await dispatch(login({ email, password })).unwrap();
-    } catch {
-      // Убран alert, вместо этого показываем ошибку в интерфейсе
-    }
+    await dispatch(login({ email, password })).unwrap();
   };
 
   const handleLogout = () => {
@@ -20,11 +17,10 @@ function AdminPage() {
   };
 
   if (error) {
-    // Показываем ошибку в интерфейсе
     return (
       <div className="error-message">
         <p>Произошла ошибка: {error}</p>
-        <button onClick={handleLogin}>Попробовать снова</button>
+        <button onClick={() => handleLogin('', '')}>Попробовать снова</button>
       </div>
     );
   }
