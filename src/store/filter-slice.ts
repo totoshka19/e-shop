@@ -10,6 +10,8 @@ const initialState: FilterParams = {
   selectedSubcategory: null,
 };
 
+// !TODO доделать фильтрацию
+
 const filterSlice = createSlice({
   name: 'filter',
   initialState,

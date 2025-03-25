@@ -10,7 +10,8 @@ export const AppRoute = {
   Catalog: '/',
   Product: '/product/:id',
   Basket: '/basket',
-  Order: '/order'
+  Order: '/order',
+  Admin: '/admin'
 } as const;
 
 export const PRODUCTS_PER_PAGE_DESKTOP = 6;

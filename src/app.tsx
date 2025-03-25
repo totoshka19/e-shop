@@ -6,10 +6,12 @@ import ProductPage from './pages/product-page';
 import BasketPage from './pages/basket-page';
 import OrderPage from './pages/order-page';
 import NotFoundPage from './pages/not-found-page';
+import AdminPage from './pages/admin/admin-page';
 import { store } from './store/store';
 import { AppRoute } from './consts';
 
 function App() {
+
   return (
     <Provider store={store}>
       <HelmetProvider>
@@ -19,6 +21,7 @@ function App() {
             <Route path={AppRoute.Product} element={<ProductPage />} />
             <Route path={AppRoute.Basket} element={<BasketPage />} />
             <Route path={AppRoute.Order} element={<OrderPage />} />
+            <Route path={AppRoute.Admin} element={<AdminPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
