@@ -8,8 +8,8 @@ function AdminPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { token, status, error } = useAuth();
 
-  const handleLogin = async (email: string, password: string) => {
-    await dispatch(login({ email, password })).unwrap();
+  const handleLogin = (email: string, password: string) => {
+    dispatch(login({ email, password })).unwrap();
   };
 
   const handleLogout = () => {
