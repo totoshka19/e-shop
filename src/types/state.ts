@@ -1,5 +1,6 @@
 import { BaseProduct } from './product';
 import { Review } from './review';
+import { StatusType } from '../consts';
 
 export type ProductState = {
   item: BaseProduct | null;
@@ -32,3 +33,9 @@ export type CartItem = {
 export type CartState = {
   items: CartItem[];
 }
+
+export type AuthState = {
+  token: string | null;
+  status: StatusType;
+  error: string | null;
+};

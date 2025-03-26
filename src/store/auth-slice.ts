@@ -1,36 +1,43 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { STATUS_FAILED, STATUS_IDLE, STATUS_LOADING, STATUS_SUCCEEDED, StatusType, URL_API } from '../consts';
+import { AuthState } from '../types/state';
+import { STATUS_FAILED, STATUS_IDLE, STATUS_LOADING, STATUS_SUCCEEDED, URL_API } from '../consts';
 
-export const login = createAsyncThunk(
-  'auth/login',
-  async ({ email, password }: { email: string; password: string }, { rejectWithValue }) => {
-    try {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
+export const login = createAsyncThunk<
+  { token: string },
+  { email: string; password: string },
+  { rejectValue: string }
+  >(
+    'auth/login',
+    async ({ email, password }, { rejectWithValue }) => {
+      try {
+        const formData = new FormData();
+        formData.append('email', email);
+        formData.append('password', password);
 
-      const response = await axios.post(`${URL_API}/login`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+        const response = await axios.post<{ access_token: string }>(
+          `${URL_API}/login`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
 
-      if (!response.data.access_token) {
-        throw new Error('Некорректный ответ от сервера.');
+        if (!response.data.access_token) {
+          throw new Error('Некорректный ответ от сервера.');
+        }
+        return { token: response.data.access_token };
+      } catch (error) {
+        let errorMessage = 'Произошла ошибка.';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        return rejectWithValue(errorMessage);
       }
-      return { token: response.data.access_token };
-    } catch (error) {
-      return rejectWithValue(error.message);
     }
-  }
-);
-
-interface AuthState {
-  token: string | null;
-  status: StatusType;
-  error: string | null;
-}
+  );
 
 const initialState: AuthState = {
   token: null,
