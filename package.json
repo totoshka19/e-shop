@@ -5,7 +5,7 @@
   "homepage": "https://totoshka19.github.io/e-shop",
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build && bash ./replace-paths.ps1",
+    "build": "tsc && vite build && bash ./replace-paths.sh",
     "lint": "eslint src --ext ts,tsx",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
