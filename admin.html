@@ -119,21 +119,29 @@
 </form>
 <div>
   <p id="createProduct_result">
-
   </p>
 </div>
 </div>
 <script>
+
   //Добавление товара вручную
 
   $('#createProduct_b').click(function(e) {
             e.preventDefault();
 
+            var $logo;
+            var $images =[];
             var $data = {};
+
             $('#createProduct_f').find('input, textearea, select, file').each(function() {
 
                 $data[this.name] = $(this).val();
             });
+
+            $data.logo = 'img1';
+
+            // Object.assign({logo:'img1',images:["img1","img2"]}, $data);
+
             console.log($data);
 
 
