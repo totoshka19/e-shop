@@ -45,6 +45,11 @@ function Footer({ currentYear }: FooterProps) {
                   </li>
                 </ul>
               </div>
+              <div className="footer__nav-column">
+                <Link to={AppRoute.Admin} className="footer__nav-link">
+                  Вход в личный кабинет
+                </Link>
+              </div>
             </nav>
           </div>
           <div className="footer__block-inner">
