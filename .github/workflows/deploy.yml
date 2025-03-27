@@ -29,8 +29,8 @@ jobs:
         run: npm run build
 
       # Шаг 5: выполнение скрипта в GitHub Actions
-      - name: Run replace-paths.sh
-        run: bash ./replace-paths.sh
+#      - name: Run replace-paths.sh
+#        run: bash ./replace-paths.sh
 
       # Шаг 6: Деплой на GitHub Pages
       - name: Deploy to GitHub Pages
