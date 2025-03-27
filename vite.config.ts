@@ -7,4 +7,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   base: '/e-shop/',
+  server: {
+    open: true, // Автоматически открывает проект в браузере
+  },
 });

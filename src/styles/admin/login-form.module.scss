@@ -1,0 +1,66 @@
+@use '../src/styles/variables' as variables;
+
+.login-form {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid variables.$secondary-color;
+  border-radius: 8px;
+  background-color: variables.$light-background;
+  box-shadow: variables.$box-shadow;
+
+  &__title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: variables.$title-color;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 16px;
+    color: variables.$text-color;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 16px;
+    border: 1px solid variables.$secondary-color;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      background-color: variables.$background-color;
+      outline: none;
+    }
+  }
+
+  &__button {
+    display: block;
+    width: 100%;
+    margin-top: 40px;
+    padding: 10px;
+    font-size: 18px;
+    color: variables.$title-color;
+    background-color: variables.$primary-color;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      box-shadow: variables.$box-shadow__hover;
+    }
+
+    &:active {
+      transform: translateY(2px);
+    }
+  }
+
+  br {
+    display: none;
+  }
+}
