@@ -9,7 +9,36 @@
 </head>
 
 <body>
+  <style>
+    .red{
+      background-color: red;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 23px;
+    }
+    .green{
+      background-color: green;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 23px;
+
+    }
+    .container{
+      padding-top: 25px;
+    }
+  </style>
+
   <div class="container">
+    <div id="authStatus" >
+      <p> Авторизация</p>
+    </div>
+
   <!-- Авторизация -->
 
     <form method="dialog" id="auth">
@@ -51,25 +80,92 @@
 
 <!-- Продукты -->
 <div>
-
-  <form method="dialog" >
+<p>Добавить товар</p>
+  <form id="createProduct_f" method="dialog" enctype="multipart/form-data">
     <p>Название</p>
-    <input name="name" type="text">
+    <input name="name" type="text" placeholder="Названиетовара">
     <p>Короткое описание</p>
     <input name="short_description" type="text">
     <p>Полное описание</p>
     <input name="description" type="text">
     <p>Категория</p>
     <input name="category_id" type="text">
+    <p>Цена</p>
+    <input type="text" name="price">
+    <p>Доступен/нет</p>
+    <input name="is_available" type="checkbox">
+    <p>Заглавная картинка ?</p>
+    <input type="file" name="logo" accept="image/*">
+    <p>Картинки для слайдера ?</p>
+    <input type="file" name="images[]" multiple accept="image/*">
+    <p>Ариткул (он же sku)</p>
+    <input type="text" name="sku">
+    <p>Доступное количество</p>
+    <input type="text" name="available_count">
+    <p>Параметры</p>
+    <input type="text" name="attributes" value="[{'title': 'example-slug','values': {'Страна производства': 'Китай','Форм фактор для HDD': '2.5'}}]">
+    <pre>
+      "attributes": [
+      {
+          "title": "example-slug",               //Название группы арртибудов
+          "values": {                           //Список атрибутов в группе
+              "Страна производства": "Китай",
+              "Форм фактор для HDD": "2.5"
+          }
+      }
+    ]
+    </pre> <!--Я не плачу, это просто слёзы...-->
+    <button id="createProduct_b">Создать товар</button>
+</form>
+<div>
+  <p id="createProduct_result">
 
-    <input type="text">
-    <input type="text">
-    <input type="text">
-    <input type="text">
-    <input type="text">
-    <input type="text">
-    <input type="text">
-  </form>
+  </p>
+</div>
+</div>
+<script>
+  //Добавление товара вручную
+
+  $('#createProduct_b').click(function(e) {
+            e.preventDefault();
+
+            var $data = {};
+            $('#createProduct_f').find('input, textearea, select, file').each(function() {
+
+                $data[this.name] = $(this).val();
+            });
+            console.log($data);
+
+
+            $.ajax({
+                url: 'http://api.hirohitoshop.ru/api/admin/products/create',
+                type: 'post',
+                data: $data,
+                dataType: 'json',
+                async: true,
+                success: function(result) {
+                  $('#createProduct_result').html(result);
+                  console.log($data);
+                }
+            });
+        })
+
+</script>
+
+моё из формы
+{
+  "name": "Пожарная безопасность",
+  "short_description": "Краткое описание 1",
+  "description": "Полное описание 1",
+  "category_id": "18",
+  "is_available": "on",
+  "logo": "C:\\fakepath\\1-1.png",
+  "images[]": "C:\\fakepath\\1-1.png",
+  "sku": "322212321241212",
+  "available_count": "121",
+  "attributes": "[{\"title\": \"example-slug\",\"values\": {\"Страна производства\": \"Китай\",\"Форм фактор для HDD\": \"2.5\"}}]"
+
+  из Апидога
 
   "name": "Названиетовара",
   "short_description": "кртаткоеописание",
@@ -90,11 +186,17 @@
         }
     }
   ]
-</div>
-
+}
+}
 
     <script>
         //Авторизация
+        if(localStorage.getItem('auth-status')==0){
+          $('#authStatus').addClass("red");
+        }else{
+          $('#authStatus').addClass("green");
+        }
+
         $('#auth_b').click(function(e) {
             e.preventDefault();
 
@@ -109,11 +211,22 @@
                 type: 'post',
                 data: $data,
                 dataType: 'json',
-                async: true,
+                async: false,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
+                },
 
                 success: function(result) {
                     $auth_key = result.access_token;
                     $('#auth_key').html($auth_key);
+                    localStorage.setItem('auth-key', $auth_key);
+
+                    localStorage.setItem('auth-status', 1);
+
+                    $('#authStatus').delay(36000).queue(function(){
+                      $(this).addClass("red").removeClass('green');
+
+                    });
                 }
             });
         })
@@ -127,12 +240,12 @@
                 url: 'http://api.hirohitoshop.ru/api/admin/categories',
                 type: 'GET',
                 beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
+                    xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
                 },
                 success: function(result) {
                     $.each(result.data, function(key, value) {
                             $('#showCategory').append("<li>" + value.name + "&nbsp" + "<button onclick='editGroup(" + value.id + ")'>edit</button><button onclick='deleteGroup(" + value.id + ")'>del</button></li><ul><li>" + value.cild + "</li></ul>");
-                            console.log(value.name);
+                            console.log(value.name+" id:"+value.id);
                         }
 
                     )
