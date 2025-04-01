@@ -1,8 +1,9 @@
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/admin/auth-slice';
 import { AppDispatch } from '../../store/store';
+import logoutStyles from '../../styles/admin/logout-btn.module.scss';
 
-function LogoutBtn({ className }: { className?: string }) {
+function LogoutBtn() {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleLogout = () => {
@@ -13,7 +14,7 @@ function LogoutBtn({ className }: { className?: string }) {
     <button
       type="button"
       onClick={handleLogout}
-      className={`btn btn-danger logout-btn ${className || ''}`}
+      className="btn"
     >
       Выйти
     </button>

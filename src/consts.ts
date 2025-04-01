@@ -33,5 +33,6 @@ export const marketplaceIcons: MarketplaceIcons = {
 };
 
 export const sites = [
-  { id: 'e-shop', name: 'e-shop' }
+  { id: 'e-shop', name: 'e-shop' },
+  { id: 'note', name: 'note' },
 ];

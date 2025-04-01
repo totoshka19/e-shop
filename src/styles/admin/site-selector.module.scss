@@ -1,0 +1,16 @@
+.site-selector {
+  margin: 10px 0;
+  padding: 5px 10px;
+  //border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+}
+
+.site-selector__option {
+  padding: 5px;
+}
