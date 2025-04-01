@@ -1,10 +1,11 @@
 import { useDispatch } from 'react-redux';
-import { login, logout } from '../../store/auth-slice';
+import { login, logout } from '../../store/admin/auth-slice';
 import LoginForm from '../../components/admin/login-form';
 import { AppDispatch } from '../../store/store';
 import { useAuth } from '../../hooks/use-auth';
 import { Helmet } from 'react-helmet-async';
-import Layout from '../../components/layout';
+import Layout from '../../components/public/layout';
+import LayoutAdmin from '../../components/admin/layout-admin';
 
 function AdminPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -52,7 +53,7 @@ function AdminPage() {
           <title>Административная панель - E-shop</title>
         </Helmet>
 
-        <Layout>
+        <LayoutAdmin>
           <main>
             <div className="container">
               <h1>Административная панель</h1>
@@ -60,7 +61,7 @@ function AdminPage() {
               <button onClick={handleLogout}>Выйти</button>
             </div>
           </main>
-        </Layout>
+        </LayoutAdmin>
       </div>
     );
   }

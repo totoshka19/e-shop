@@ -1,0 +1,14 @@
+@use 'src/styles/variables';
+@use 'src/styles/reset';
+@use 'src/styles/global';
+
+.rating {
+  display: flex;
+  &__star {
+    font-size: 30px;
+    color: variables.$secondary-color;
+    &--active {
+      color: #FFCC00;
+    }
+  }
+}

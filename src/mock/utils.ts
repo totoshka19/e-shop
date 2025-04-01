@@ -1,6 +1,6 @@
 import { fakerRU as faker } from '@faker-js/faker';
-import { BaseProduct } from '../types/product';
-import { Review } from '../types/review';
+import { BaseProduct } from '../types/public/product';
+import { Review } from '../types/public/review';
 
 const capitalize = (str: string): string => str.charAt(0).toUpperCase() + str.slice(1);
 
