@@ -95,9 +95,9 @@
     <p>Доступен/нет</p>
     <input name="is_available" type="checkbox">
     <p>Заглавная картинка ?</p>
-    <input type="file" name="logo" accept="image/*">
+    <input id="product_logo" type="file" name="logo" accept="image/*">
     <p>Картинки для слайдера ?</p>
-    <input type="file" name="images" multiple accept="image/*">
+    <input type="file" name="images[]" multiple accept="image/*">
     <p>Ариткул (он же sku)</p>
     <input type="text" name="sku">
     <p>Доступное количество</p>
@@ -129,16 +129,35 @@
   $('#createProduct_b').click(function(e) {
             e.preventDefault();
 
-            var $logo;
+            var $logo = {file:"file:"+$('#product_logo')};
+
+            console.log($logo);
             var $images =[];
             var $data = {};
 
+            $.ajax({
+                url: 'http://api.hirohitoshop.ru/api/admin/file/upload',
+                type: 'post',
+                data: $logo,
+                dataType: 'json',
+                async: true,
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
+                },
+                success: function(result) {
+                  console.log(result.id);
+                }
+            });
+
+            // создание объекта с именами инпутов и данными из формы
             $('#createProduct_f').find('input, textearea, select, file').each(function() {
 
                 $data[this.name] = $(this).val();
             });
 
             $data.logo = 'img1';
+            $data.images = ['img1','img2'];
+
 
             // Object.assign({logo:'img1',images:["img1","img2"]}, $data);
 
