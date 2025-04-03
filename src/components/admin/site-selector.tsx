@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectSite } from '../../store/admin/site-slice';
 import { AppDispatch, RootState } from '../../store/store';
@@ -9,6 +9,8 @@ function SiteSelector() {
   const dispatch = useDispatch<AppDispatch>();
   const selectedSite = useSelector((state: RootState) => state.site.selectedSite);
 
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
+
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = e.target.value;
     const currentSite = sites.find((current) => current.id === selectedId);
@@ -17,16 +19,30 @@ function SiteSelector() {
     }
   };
 
+  const handleFocus = () => {
+    setShowPlaceholder(false);
+  };
+
+  const handleBlur = () => {
+    if (!selectedSite) {
+      setShowPlaceholder(true);
+    }
+  };
+
   return (
     <select
       id="site-selector"
       value={selectedSite?.id || ''}
       onChange={handleChange}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       className={styles['site-selector']}
     >
-      <option value="" disabled className={styles['site-selector__option']}>
+      {showPlaceholder && (
+        <option value="" disabled className={styles['site-selector__option']}>
           Выбор сайта для управления
-      </option>
+        </option>
+      )}
       {sites.map((site) => (
         <option
           key={site.id}

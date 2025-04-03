@@ -1,6 +1,10 @@
-.btn {
-  background-color: #ff4d4f;
+@use '../src/styles/variables' as variables;
+@use '../src/styles/global';
+
+.logout-btn {
+  @extend .btn;
+  background-color: variables.$light-background;
   &:hover {
-    background-color: #d81e1e;
+    background-color: variables.$background-color;
   }
 }

@@ -55,16 +55,16 @@ function Footer({ currentYear }: FooterProps) {
           <div className="footer__block-inner">
             <div className="footer__social">
               <a className="footer__social-link" href="src/components/public/footer">
-                <img src="/public/images/telegram-icon.svg" alt="Переход в Telegram"/>
+                <img src="/images/telegram-icon.svg" alt="Переход в Telegram"/>
               </a>
               <a className="footer__social-link" href="src/components/public/footer">
-                <img src="/public/images/ok-icon.svg" alt="Переход в Одноклассники"/>
+                <img src="/images/ok-icon.svg" alt="Переход в Одноклассники"/>
               </a>
               <a className="footer__social-link" href="src/components/public/footer">
-                <img src="/public/images/whatsapp-icon.svg" alt="Переход в WhatsApp"/>
+                <img src="/images/whatsapp-icon.svg" alt="Переход в WhatsApp"/>
               </a>
               <a className="footer__social-link" href="src/components/public/footer">
-                <img src="/public/images/vk-icon.svg" alt="Переход в VK"/>
+                <img src="/images/vk-icon.svg" alt="Переход в VK"/>
               </a>
             </div>
             <Contacts className="footer__contacts" />
@@ -77,7 +77,7 @@ function Footer({ currentYear }: FooterProps) {
         </div>
         <div className="footer__block footer__mobile-nav">
           <Link to={AppRoute.Catalog} className="home-btn" aria-label="Вернуться на главную страницу">
-            <img className="cart__img" src="/public/images/home-icon.svg" alt="Иконка домика" width="30" height="25" />
+            <img className="cart__img" src="/images/home-icon.svg" alt="Иконка домика" width="30" height="25" />
           </Link>
           <CatalogBtn isFooter />
           <CartBtn />

@@ -10,7 +10,7 @@ function CartBtn() {
 
   return (
     <Link className="cart-btn" to={AppRoute.Basket} aria-label="Переход в корзину">
-      <img className="cart__img" src="/public/images/cart-icon.svg" alt="Иконка тележки" width="30" height="25" />
+      <img className="cart__img" src="/images/cart-icon.svg" alt="Иконка тележки" width="30" height="25" />
       {cartItemsCount > 0 && (
         <span className="cart-btn__count">{cartItemsCount}</span>
       )}
