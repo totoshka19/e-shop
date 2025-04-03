@@ -97,7 +97,7 @@
     <p>Заглавная картинка ?</p>
     <input type="file" name="logo" accept="image/*">
     <p>Картинки для слайдера ?</p>
-    <input type="file" name="images[]" multiple accept="image/*">
+    <input type="file" name="images" multiple accept="image/*">
     <p>Ариткул (он же sku)</p>
     <input type="text" name="sku">
     <p>Доступное количество</p>
@@ -119,21 +119,29 @@
 </form>
 <div>
   <p id="createProduct_result">
-
   </p>
 </div>
 </div>
 <script>
+
   //Добавление товара вручную
 
   $('#createProduct_b').click(function(e) {
             e.preventDefault();
 
+            var $logo;
+            var $images =[];
             var $data = {};
+
             $('#createProduct_f').find('input, textearea, select, file').each(function() {
 
                 $data[this.name] = $(this).val();
             });
+
+            $data.logo = 'img1';
+
+            // Object.assign({logo:'img1',images:["img1","img2"]}, $data);
+
             console.log($data);
 
 
