@@ -3,6 +3,7 @@
 
 .logout-btn {
   @extend .btn;
+  margin: 10px 0;
   background-color: variables.$light-background;
   &:hover {
     background-color: variables.$background-color;

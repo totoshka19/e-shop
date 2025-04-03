@@ -7,6 +7,8 @@ import { Helmet } from 'react-helmet-async';
 import Layout from '../../components/public/layout';
 import LayoutAdmin from '../../components/admin/layout-admin';
 import AsideMenuAdmin from '../../components/admin/aside-menu-admin';
+import GroupManager from '../../components/admin/group-manager';
+import SubgroupManager from '../../components/admin/subgroup-manager';
 import styles from '../../styles/admin/admin-page.module.scss';
 
 function AdminPage() {
@@ -55,9 +57,13 @@ function AdminPage() {
           <div className={styles['content-wrapper']}>
             <AsideMenuAdmin />
             <main>
-              <div className="container">
-                <h1>Административная панель</h1>
-                <p>Вы успешно вошли.</p>
+              <div className={styles['content']}>
+                <GroupManager />
+                <SubgroupManager />
+              </div>
+              <div className={styles['content']}>
+                <GroupManager />
+                <SubgroupManager />
               </div>
             </main>
           </div>
@@ -75,7 +81,6 @@ function AdminPage() {
       <Layout>
         <main>
           <div className="container">
-            <div>Авторизация...</div>
           </div>
         </main>
       </Layout>

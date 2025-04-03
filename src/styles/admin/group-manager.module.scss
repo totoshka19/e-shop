@@ -1,0 +1,14 @@
+@use '../src/styles/variables' as variables;
+
+.group-manager {
+  margin: 10px;
+  h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: variables.$title-color;
+  }
+  .group-manager_wrapper {
+    display: flex;
+    gap: 10px;
+  }
+}
