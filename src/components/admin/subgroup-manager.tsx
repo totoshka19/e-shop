@@ -37,7 +37,7 @@ function SubgroupManager() {
           onClearError={clearError}
         />
         <AddEntity
-          placeholder="Введите название группы"
+          placeholder="Введите название подгруппы"
           onAdd={handleAddSubgroup}
         />
       </div>

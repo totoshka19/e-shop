@@ -22,7 +22,6 @@ function AddEntity({ placeholder, onAdd }: AddEntityProps) {
   const handleAdd = () => {
     if (entityName.trim()) {
       onAdd(entityName);
-      setEntityName('');
       setIsError(false);
     } else {
       setIsError(true);
