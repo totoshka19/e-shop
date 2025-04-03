@@ -17,4 +17,9 @@
       border-color: variables.$primary-color;
     }
   }
+  &.error {
+    .select-entity__select {
+      color: red;
+    }
+  }
 }
