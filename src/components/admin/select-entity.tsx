@@ -5,8 +5,8 @@ type SelectEntityProps = {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
-  hasError: boolean;
-  onClearError: () => void;
+  hasError?: boolean;
+  onClearError?: () => void;
 };
 
 function SelectEntity({
