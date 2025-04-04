@@ -1,5 +1,8 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import styles from '../../styles/admin/aside-menu-admin.module.scss';
+import { AppDispatch } from '../../store/store';
+import { useDispatch } from 'react-redux';
+import { fetchCategories } from '../../store/admin/categories-slice';
 
 type AsideMenuAdminProps = {
   setCurrentSection: (section: string | null) => void;
@@ -8,6 +11,7 @@ type AsideMenuAdminProps = {
 
 function AsideMenuAdmin({ setCurrentSection, currentSection }: AsideMenuAdminProps) {
   const [isOpen, setIsOpen] = useState(true);
+  const dispatch = useDispatch<AppDispatch>();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -15,6 +19,10 @@ function AsideMenuAdmin({ setCurrentSection, currentSection }: AsideMenuAdminPro
 
   const handleSectionClick = (section: string) => {
     setCurrentSection(section);
+
+    if (section === 'groups') {
+      dispatch(fetchCategories());
+    }
   };
 
   return (

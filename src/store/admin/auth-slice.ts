@@ -37,6 +37,8 @@ export const login = createAsyncThunk<
         return rejectWithValue('Некорректный ответ от сервера.');
       }
 
+      localStorage.setItem('token', data.access_token);
+
       return { token: data.access_token, email };
     } catch (error) {
       return rejectWithValue('Произошла ошибка');
