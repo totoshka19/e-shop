@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { login } from '../../store/admin/auth-slice';
+import { login, resetError } from '../../store/admin/auth-slice';
 import LoginForm from '../../components/admin/login-form';
 import { AppDispatch } from '../../store/store';
 import { useAuth } from '../../hooks/use-auth';
@@ -21,9 +21,21 @@ function AdminPage() {
 
   if (error) {
     return (
-      <div className="error-message">
-        <p>Произошла ошибка: {error}</p>
-        <button onClick={() => handleLogin('', '')}>Попробовать снова</button>
+      <div className="wrapper">
+        <Helmet>
+          <title>Авторизация</title>
+        </Helmet>
+
+        <Layout>
+          <main>
+            <div className="container">
+              <div className={styles['error-message']}>
+                <p>{error}</p>
+                <button onClick={() => dispatch(resetError())}>Попробовать снова</button>
+              </div>
+            </div>
+          </main>
+        </Layout>
       </div>
     );
   }

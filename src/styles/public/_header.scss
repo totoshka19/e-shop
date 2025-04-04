@@ -12,6 +12,7 @@
     position: relative;
     display: flex;
     align-items: center;
+    gap: 8px;
   }
   &__block-drop-down-list {
     position: relative;
@@ -22,6 +23,6 @@
     padding: 6px 18px 6px 13px;
   }
   &__contacts {
-    margin-left: 58px;
+    margin-left: 50px;
   }
 }

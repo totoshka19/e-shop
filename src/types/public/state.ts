@@ -36,6 +36,7 @@ export type CartState = {
 
 export type AuthState = {
   token: string | null;
+  email: string | null;
   status: StatusType;
   error: string | null;
 };
