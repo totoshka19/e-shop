@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import {RootState} from '../../store/store';
+import styles from '../../styles/admin/group-manager.module.scss';
 
 function GroupsList() {
   const groups = useSelector((state: RootState) => state.categories.categories); // Категории = Группы
@@ -16,8 +17,8 @@ function GroupsList() {
   }
 
   return (
-    <div>
-      <h3>Список групп</h3>
+    <div className={styles['group-manager']}>
+      <h2>Список групп</h2>
       <ul>
         {groups.map((group) => (
           <li key={group.id}>
