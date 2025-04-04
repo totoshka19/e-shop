@@ -75,7 +75,10 @@ function AdminPage() {
 
         <LayoutAdmin>
           <div className={styles['content-wrapper']}>
-            <AsideMenuAdmin setCurrentSection={setCurrentSection} />
+            <AsideMenuAdmin
+              setCurrentSection={setCurrentSection}
+              currentSection={currentSection}
+            />
             <main>
               {!currentSection && (
                 <div className={styles['welcome-screen']}>
@@ -89,6 +92,10 @@ function AdminPage() {
                   <div className={styles['content']}>
                     <GroupManager />
                     <SubgroupManager />
+                  </div>
+                  <div className={styles['content']}>
+                    получить список групп
+
                   </div>
                 </div>
               )}
