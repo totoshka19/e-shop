@@ -67,7 +67,12 @@ export const updateCategory = createAsyncThunk<Category, { id: number; name: str
         return rejectWithValue(errorData.message || 'Произошла ошибка при обновлении категории.');
       }
       await dispatch(fetchCategories());
-      return { id, name };
+      return {
+        id,
+        name,
+        slug: '',
+        child: [],
+      };
     } catch (error) {
       const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
       return rejectWithValue(errorMessage);
@@ -96,7 +101,7 @@ export const deleteCategory = createAsyncThunk<number, number, { rejectValue: st
         return rejectWithValue(errorData.message || 'Произошла ошибка при удалении категории.');
       }
 
-      return id; // Возвращаем ID удалённой категории
+      return id;
     } catch (error) {
       const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
       return rejectWithValue(errorMessage);
@@ -122,8 +127,6 @@ const categoriesSlice = createSlice({
         state.status = STATUS_FAILED;
         state.error = action.payload || 'Произошла ошибка';
       })
-
-      // Обработка обновления категории
       .addCase(updateCategory.pending, (state) => {
         state.status = STATUS_LOADING;
         state.error = null;
@@ -133,15 +136,13 @@ const categoriesSlice = createSlice({
         const updatedCategory = action.payload;
         const index = state.categories.findIndex((cat) => cat.id === updatedCategory.id);
         if (index !== -1) {
-          state.categories[index] = updatedCategory; // Обновляем категорию в состоянии
+          state.categories[index] = updatedCategory;
         }
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.status = STATUS_FAILED;
         state.error = action.payload || 'Произошла ошибка при обновлении категории.';
       })
-
-      // Обработка удаления категории
       .addCase(deleteCategory.pending, (state) => {
         state.status = STATUS_LOADING;
         state.error = null;
@@ -149,7 +150,7 @@ const categoriesSlice = createSlice({
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.status = STATUS_SUCCEEDED;
         const deletedCategoryId = action.payload;
-        state.categories = state.categories.filter((cat) => cat.id !== deletedCategoryId); // Удаляем категорию из состояния
+        state.categories = state.categories.filter((cat) => cat.id !== deletedCategoryId);
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = STATUS_FAILED;

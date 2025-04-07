@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../../styles/admin/add-entity.module.scss';
+import {CheckIcon} from './icons';
 
 type AddEntityProps = {
   placeholder: string;
@@ -39,9 +40,7 @@ function AddEntity({ placeholder, onAdd }: AddEntityProps) {
         className={`${styles['input']} ${isError ? styles['error'] : ''}`}
       />
       <button onClick={handleAdd} className={styles['add-btn']}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-        </svg>
+        <CheckIcon />
       </button>
     </div>
   );
