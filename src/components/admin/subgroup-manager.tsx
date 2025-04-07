@@ -2,9 +2,11 @@ import AddEntity from './add-entity';
 import SelectEntity from './select-entity';
 import { useState } from 'react';
 import styles from '../../styles/admin/group-manager.module.scss';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../store/store';
 
 function SubgroupManager() {
-  const groups = ['Группа 1', 'Группа 2', 'Группа 3'];
+  const groups = useSelector((state: RootState) => state.categories.categories);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [hasError, setHasError] = useState(false);
 
@@ -29,7 +31,7 @@ function SubgroupManager() {
       <h2>Добавить подгруппу товаров</h2>
       <div className={styles['group-manager_wrapper']}>
         <SelectEntity
-          options={groups}
+          options={groups.map((group) => group.name)}
           value={selectedGroup}
           onChange={handleSelectChange}
           placeholder="Выберите группу"
