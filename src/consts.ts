@@ -1,4 +1,4 @@
-import { MarketplaceIcons } from './types/product';
+import { MarketplaceIcons } from './types/public/product';
 
 export const URL_API = 'http://api.hirohitoshop.ru/api';
 
@@ -31,3 +31,8 @@ export const marketplaceIcons: MarketplaceIcons = {
   avito: '/images/avito-icon.svg',
   ozon: '/images/ozon-icon.svg',
 };
+
+export const sites = [
+  { id: 'e-shop', name: 'e-shop' },
+  { id: 'note', name: 'note' },
+];

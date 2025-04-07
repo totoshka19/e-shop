@@ -1,0 +1,103 @@
+@use '../src/styles/variables';
+@use '../src/styles/reset';
+@use '../src/styles/global';
+
+.group-manager {
+  margin: 10px;
+  width: 400px;
+  h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: variables.$title-color;
+  }
+  .group-manager_wrapper {
+    display: flex;
+    gap: 10px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid variables.$secondary-color;
+    width: 400px;
+    font-size: 14px;
+    border-radius: 4px;
+    .group-item {
+      height: 34px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid variables.$secondary-color;
+      &:hover {
+        background-color: variables.$secondary-color;
+        cursor: pointer;
+      }
+    }
+    .group-item:last-child {
+      border-bottom: none;
+    }
+    .group-item span {
+      margin-left: 10px;
+    }
+  }
+  .group-actions {
+    position: absolute;
+    right: 0;
+    box-sizing: border-box;
+    display: flex;
+    height: 100%;
+  }
+  .group-actions button {
+    outline: 1px solid variables.$grey-color;
+    width: 43px;
+    height: 100%;
+    background-color: variables.$grey-color;
+    color: variables.$light-background;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .group-actions button:hover {
+    background-color: variables.$primary-color;
+    outline: 1px solid variables.$primary-color;
+  }
+  .group-item:first-child .group-actions .delete-btn {
+    border-top-right-radius: 4px;
+  }
+  .group-item:last-child .group-actions .delete-btn {
+    border-bottom-right-radius: 4px;
+  }
+
+  .edit-mode {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 33px;
+    input {
+      padding-left: 10px;
+      height: 100%;
+      flex: 1;
+      border: none;
+      outline: none;
+    }
+    button {
+      padding: 2px 10px;
+      font-size: 12px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      height: 34px;
+      width: 43.5px;
+      &:first-of-type {
+        background-color: variables.$primary-color;
+        color: variables.$light-background;
+      }
+      &:last-of-type {
+        background-color: variables.$primary-color;
+        color: variables.$light-background;
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+@use 'src/styles/variables';
+@use 'src/styles/reset';
+@use 'src/styles/global';
+
+.characteristics {
+  margin-bottom: 90px;
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  &__title {
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  &__link {
+    @extend .btn;
+    font-size: 14px;
+    width: 234px;
+    height: 55px;
+  }
+  &__block {
+    margin-bottom: 24px;
+  }
+  &__block-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  &__block-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .product__table {
+    width: 50%;
+  }
+}

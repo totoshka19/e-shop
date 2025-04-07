@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import catalogReducer from './catalog-slice';
-import productsReducer from './products-slice';
-import productReducer from './product-slice';
-import reviewsReducer from './reviews-slice';
-import cartReducer from './cart-slice';
-import filterReducer from './filter-slice';
-import authReducer from './auth-slice';
+import catalogReducer from './public/catalog-slice';
+import productsReducer from './public/products-slice';
+import productReducer from './public/product-slice';
+import reviewsReducer from './public/reviews-slice';
+import cartReducer from './public/cart-slice';
+import filterReducer from './public/filter-slice';
+import authReducer from './admin/auth-slice';
+import siteReducer from './admin/site-slice';
+import categoriesReducer from './admin/categories-slice';
 import { initializeMockData } from '../mock/utils';
 
 // !TODO заменить на данные с сервера
@@ -21,6 +23,8 @@ export const store = configureStore({
     cart: cartReducer,
     filter: filterReducer,
     auth: authReducer,
+    site: siteReducer,
+    categories: categoriesReducer,
   },
 });
 
