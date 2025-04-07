@@ -1,271 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin</title>
-    <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-</head>
-
-<body>
-  <style>
-    .red{
-      background-color: red;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-    width: 100%;
-    height: 23px;
-    }
-    .green{
-      background-color: green;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-    width: 100%;
-    height: 23px;
-
-    }
-    .container{
-      padding-top: 25px;
-    }
-  </style>
-
-  <div class="container">
-    <div id="authStatus" >
-      <p> Авторизация</p>
-    </div>
-
-  <!-- Авторизация -->
-
-    <form method="dialog" id="auth">
-        <input type="text" name="email" value="zumianfs@yandex.ru"><br>
-        <input type="text" name="password" value="imSoCringe@3"><br>
-
-        <button id="auth_b">Авторизоваться</button>
-    </form>
-    <hr>
-
-    <p style="font-size:10px; width: 250px; word-break: break-all" id="auth_key">
-
-    </p>
-
-
-    <p>
-        Получить категории
-
-        <form method="get">
-            <button id="getGroup" type="submit">Получить</button>
-        </form>
-
-        <ul id="showCategory">
-
-        </ul>
-
-    </p>
-    <hr>
-
-    <div>
-        <p>Создать группу</p>
-        <form method="dialog" id="createGroupName">
-            <input type="text" name="name">
-            <button onclick="createGroup()"> Создать группу</button>
-        </form>
-    </div>
-
-<hr>
-
-<!-- Продукты -->
-<div>
-<p>Добавить товар</p>
-  <form id="createProduct_f" method="dialog" enctype="multipart/form-data">
-    <p>Название</p>
-    <input name="name" type="text" placeholder="Названиетовара">
-    <p>Короткое описание</p>
-    <input name="short_description" type="text">
-    <p>Полное описание</p>
-    <input name="description" type="text">
-    <p>Категория</p>
-    <input name="category_id" type="text">
-    <p>Цена</p>
-    <input type="text" name="price">
-    <p>Доступен/нет</p>
-    <input name="is_available" type="checkbox">
-    <p>Заглавная картинка ?</p>
-    <input id="product_logo" type="file" name="logo" accept="image/*">
-    <p>Картинки для слайдера ?</p>
-    <input type="file" name="images[]" multiple accept="image/*">
-    <p>Ариткул (он же sku)</p>
-    <input type="text" name="sku">
-    <p>Доступное количество</p>
-    <input type="text" name="available_count">
-    <p>Параметры</p>
-    <input type="text" name="attributes" value="[{'title': 'example-slug','values': {'Страна производства': 'Китай','Форм фактор для HDD': '2.5'}}]">
-    <pre>
-      "attributes": [
-      {
-          "title": "example-slug",               //Название группы арртибудов
-          "values": {                           //Список атрибутов в группе
-              "Страна производства": "Китай",
-              "Форм фактор для HDD": "2.5"
-          }
-      }
-    ]
-    </pre> <!--Я не плачу, это просто слёзы...-->
-    <button id="createProduct_b">Создать товар</button>
-</form>
-<div>
-  <p id="createProduct_result">
-  </p>
-</div>
-</div>
-<script>
-
-  //Добавление товара вручную
-
-  $('#createProduct_b').click(function(e) {
-            e.preventDefault();
-
-            var $logo = {file:"file:"+$('#product_logo')};
-
-            console.log($logo);
-            var $images =[];
-            var $data = {};
-
-            $.ajax({
-                url: 'http://api.hirohitoshop.ru/api/admin/file/upload',
-                type: 'post',
-                data: $logo,
-                dataType: 'json',
-                async: true,
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
-                },
-                success: function(result) {
-                  console.log(result.id);
-                }
-            });
-
-            // создание объекта с именами инпутов и данными из формы
-            $('#createProduct_f').find('input, textearea, select, file').each(function() {
-
-                $data[this.name] = $(this).val();
-            });
-
-            $data.logo = 'img1';
-            $data.images = ['img1','img2'];
-
-
-            // Object.assign({logo:'img1',images:["img1","img2"]}, $data);
-
-            console.log($data);
-
-
-            $.ajax({
-                url: 'http://api.hirohitoshop.ru/api/admin/products/create',
-                type: 'post',
-                data: $data,
-                dataType: 'json',
-                async: true,
-                success: function(result) {
-                  $('#createProduct_result').html(result);
-                  console.log($data);
-                }
-            });
-        })
-
-</script>
-
-моё из формы
-
-{
-  "name": "Пожарная безопасность",
-  "short_description": "Краткое описание 1",
-  "description": "Полное описание 1",
-  "category_id": "18",
-  "price": "2 000",
-  "is_available": "on",
-  "logo": "C:\\fakepath\\1-1.png",
-  "images[]": "C:\\fakepath\\1-1.png",
-  "sku": "322212321241212",
-  "available_count": "12",
-  "attributes": "[{'title': 'example-slug','values': {'Страна производства': 'Китай','Форм фактор для HDD': '2.5'}}]"
-}
-
-
-  из Апидога
-{
-  "name": "Названиетовара",
-  "short_description": "кртаткоеописание",
-  "description": "полноеописание",
-  "price": 1000,
-  "category_id": 1,
-  "is_available": 1,
-  "logo": "9e628a3e-1b6f-45e1-9510-d12030f65da5",
-  "images": ["9e628a9d-5e9a-4a35-a8bc-ca186509315e"],
-  "sku": "rege324rgre-dfgd23",
-  "available_count": 12,
-  "attributes": [
-    {
-        "title": "example-slug",
-        "values": {
-            "Страна производства": "Китай",
-            "Форм фактор для HDD": "2.5"
+    <style>
+        .auth-status {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            width: 100%;
+            height: 23px;
         }
-    }
-  ]
-}
+        .auth-failed {
+            background-color: #dc3545;
+        }
+        .auth-success {
+            background-color: #28a745;
+        }
+        .container {
+            padding-top: 30px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .title-block {
+            border: 1px solid #ced4da;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .attribute-pair {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            background-color: white;
+        }
+        #jsonOutput {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            min-height: 150px;
+        }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="authStatus" class="auth-status"></div>
 
+    <div class="container">
+        <!-- Авторизация -->
+        <div class="form-section">
+            <h3>Авторизация</h3>
+            <form id="auth">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" class="form-control" id="email" name="email" value="zumianfs@yandex.ru">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="password" name="password" value="imSoCringe@3">
+                </div>
+                <button type="button" id="auth_b" class="btn btn-primary">Авторизоваться</button>
+            </form>
+            <div class="mt-3">
+                <small class="text-muted">Токен авторизации:</small>
+                <p class="text-break small bg-light p-2 rounded" id="auth_key"></p>
+            </div>
+        </div>
+
+        <!-- Управление категориями -->
+        <div class="form-section">
+            <h3>Управление категориями</h3>
+            <div class="mb-3">
+                <button type="button" id="getGroup" class="btn btn-info">Получить список категорий</button>
+            </div>
+            <ul id="showCategory" class="list-group mb-3"></ul>
+
+            <div class="mb-3">
+                <h5>Создать новую категорию</h5>
+                <form id="createGroupName">
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Название категории</label>
+                        <input type="text" class="form-control" id="categoryName" name="name">
+                    </div>
+                    <button type="button" onclick="createGroup()" class="btn btn-success">Создать категорию</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Создание товара -->
+        <div class="form-section">
+            <h3>Добавление товара</h3>
+            <form id="createProduct_f" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Название</label>
+                            <input name="name" type="text" class="form-control" placeholder="Название товара">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Короткое описание</label>
+                            <input name="short_description" type="text" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Полное описание</label>
+                            <textarea name="description" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Категория (ID)</label>
+                            <input name="category_id" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Цена</label>
+                            <input type="text" name="price" class="form-control">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input name="is_available" type="checkbox" class="form-check-input" id="isAvailable">
+                            <label class="form-check-label" for="isAvailable">Доступен</label>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Артикул (SKU)</label>
+                            <input type="text" name="sku" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Доступное количество</label>
+                            <input type="text" name="available_count" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Заглавная картинка</label>
+                    <input id="product_logo" type="file" name="logo" class="form-control" accept="image/*">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Картинки для слайдера</label>
+                    <input id="product_images" type="file" name="images" class="form-control" multiple accept="image/*">
+                </div>
+
+                <div class="mb-3">
+                    <h4>Атрибуты товара</h4>
+                    <div id="titlesContainer">
+                        <div class="title-block">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5>Атрибуты #1</h5>
+                                <button type="button" class="btn btn-sm btn-danger remove-title-btn">Удалить</button>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Название группы атрибутов (slug)</label>
+                                <input type="text" class="form-control title-input" required placeholder="example-slug">
+                            </div>
+
+                            <div class="attributes-container">
+                                <div class="attribute-pair">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Атрибут</label>
+                                            <input type="text" class="form-control attr-name" placeholder="Например: Страна производства" required>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label class="form-label">Значение</label>
+                                            <input type="text" class="form-control attr-value" placeholder="Например: Китай" required>
+                                        </div>
+                                        <div class="col-md-1 d-flex align-items-end">
+                                            <button type="button" class="btn btn-sm btn-danger remove-btn">×</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-sm btn-secondary add-attribute-btn">Добавить атрибут</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <button type="button" id="addTitleBtn" class="btn btn-sm btn-info">Добавить группу атрибутов</button>
+                        <button type="button" id="generateJsonBtn" class="btn btn-sm btn-primary">Сгенерировать JSON атрибутов</button>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="form-label">Результат (JSON атрибутов)</label>
+                        <textarea id="jsonOutput" class="form-control" readonly></textarea>
+                    </div>
+                </div>
+
+                <button type="button" id="createProduct_b" class="btn btn-primary mt-3">Создать товар</button>
+            </form>
+
+            <div class="result-box mt-3">
+                <h5>Результат:</h5>
+                <pre id="createProduct_result" class="bg-white p-2 rounded">Здесь будет результат создания товара...</pre>
+            </div>
+        </div>
+    </div>
 
     <script>
-        //Авторизация
-        if(localStorage.getItem('auth-status')==0){
-          $('#authStatus').addClass("red");
-        }else{
-          $('#authStatus').addClass("green");
+        // Инициализация статуса авторизации
+        function updateAuthStatus() {
+            const authStatus = $('#authStatus');
+            if(localStorage.getItem('auth-status') == "1") {
+                authStatus.removeClass('auth-failed').addClass('auth-success');
+                authStatus.text('Авторизован');
+            } else {
+                authStatus.removeClass('auth-success').addClass('auth-failed');
+                authStatus.text('Не авторизован');
+            }
         }
 
+        updateAuthStatus();
+
+        // Авторизация
         $('#auth_b').click(function(e) {
             e.preventDefault();
 
-            var $data = {};
-            $('#auth').find('input, textearea, select').each(function() {
-
+            const $data = {};
+            $('#auth').find('input, textarea, select').each(function() {
                 $data[this.name] = $(this).val();
             });
 
             $.ajax({
                 url: 'http://api.hirohitoshop.ru/api/login',
-                type: 'post',
+                type: 'POST',
                 data: $data,
                 dataType: 'json',
-                async: false,
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
-                },
-
                 success: function(result) {
-                    $auth_key = result.access_token;
-                    $('#auth_key').html($auth_key);
-                    localStorage.setItem('auth-key', $auth_key);
+                    if(result.access_token) {
+                        const authKey = result.access_token;
+                        $('#auth_key').text(authKey);
+                        localStorage.setItem('auth-key', authKey);
+                        localStorage.setItem('auth-status', "1");
 
-                    localStorage.setItem('auth-status', 1);
-
-                    $('#authStatus').delay(36000).queue(function(){
-                      $(this).addClass("red").removeClass('green');
-
-                    });
+                        updateAuthStatus();
+                        alert('Авторизация успешна!');
+                    } else {
+                        throw new Error('Не удалось получить токен');
+                    }
+                },
+                error: function(xhr) {
+                    localStorage.setItem('auth-status', "0");
+                    updateAuthStatus();
+                    alert('Ошибка авторизации: ' + (xhr.responseJSON?.message || xhr.statusText));
                 }
             });
-        })
+        });
 
-        // Получить группы
-
+        // Получить список категорий
         $('#getGroup').click(function(e) {
             e.preventDefault();
+            $('#showCategory').empty();
 
             $.ajax({
                 url: 'http://api.hirohitoshop.ru/api/admin/categories',
@@ -274,62 +277,325 @@
                     xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
                 },
                 success: function(result) {
-                    $.each(result.data, function(key, value) {
-                            $('#showCategory').append("<li>" + value.name + "&nbsp" + "<button onclick='editGroup(" + value.id + ")'>edit</button><button onclick='deleteGroup(" + value.id + ")'>del</button></li><ul><li>" + value.cild + "</li></ul>");
-                            console.log(value.name+" id:"+value.id);
-                        }
-
-                    )
+                    if(result.data && result.data.length) {
+                        $.each(result.data, function(key, value) {
+                            const categoryItem = $(
+                                `<li class="list-group-item d-flex justify-content-between align-items-center">
+                                    ${value.name} (ID: ${value.id})
+                                    <span>
+                                        <button class="btn btn-sm btn-warning me-1" onclick="editGroup(${value.id})">Редактировать</button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteGroup(${value.id})">Удалить</button>
+                                    </span>
+                                </li>`
+                            );
+                            $('#showCategory').append(categoryItem);
+                        });
+                    } else {
+                        $('#showCategory').append('<li class="list-group-item">Категории не найдены</li>');
+                    }
+                },
+                error: function(xhr) {
+                    alert('Ошибка при получении категорий: ' + (xhr.responseJSON?.message || xhr.statusText));
                 }
             });
-        })
+        });
 
-        // Изменить группу
-        function editGroup(e) {
-            console.log(e);
-
+        // Редактировать категорию
+        function editGroup(id) {
+            const newName = prompt('Введите новое название категории:');
+            if(newName) {
+                $.ajax({
+                    url: `http://api.hirohitoshop.ru/api/admin/categories/${id}/update`,
+                    type: 'PUT',
+                    data: { name: newName, slug: newName.toLowerCase().replace(/\s+/g, '-') },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                    },
+                    success: function() {
+                        alert('Категория успешно обновлена!');
+                        $('#getGroup').click();
+                    },
+                    error: function(xhr) {
+                        alert('Ошибка при обновлении категории: ' + (xhr.responseJSON?.message || xhr.statusText));
+                    }
+                });
+            }
         }
 
-        // Удалтить группу
+        // Удалить категорию
         function deleteGroup(id) {
-
-            var $deletUrl = "http://api.hirohitoshop.ru/api/admin/categories/" + id + "/delete";
-            $.ajax({
-                url: $deletUrl,
-                type: 'DELETE',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
-                },
-            });
-            console.log($deletUrl);
-
+            if(confirm('Вы уверены, что хотите удалить эту категорию?')) {
+                $.ajax({
+                    url: `http://api.hirohitoshop.ru/api/admin/categories/${id}/delete`,
+                    type: 'DELETE',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                    },
+                    success: function() {
+                        alert('Категория успешно удалена!');
+                        $('#getGroup').click();
+                    },
+                    error: function(xhr) {
+                        alert('Ошибка при удалении категории: ' + (xhr.responseJSON?.message || xhr.statusText));
+                    }
+                });
+            }
         }
 
-        // Добавить группу
-
+        // Создать категорию
         function createGroup() {
+            const name = $('#categoryName').val();
+            if(!name) {
+                alert('Введите название категории!');
+                return;
+            }
 
-            var $data = {name:'',slug:''};
-
-            $data.name =$('#createGroupName').find('input, textearea, select').val();
-            $data.slug =$('#createGroupName').find('input, textearea, select').val();
-
-
+            const slug = name.toLowerCase().replace(/\s+/g, '-');
+            const $data = { name: name, slug: slug };
 
             $.ajax({
                 url: "http://api.hirohitoshop.ru/api/admin/categories/create",
                 type: 'POST',
                 data: $data,
                 beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + $('#auth_key').text());
+                    xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
                 },
+                success: function() {
+                    alert('Категория успешно создана!');
+                    $('#categoryName').val('');
+                    $('#getGroup').click();
+                },
+                error: function(xhr) {
+                    alert('Ошибка при создании категории: ' + (xhr.responseJSON?.message || xhr.statusText));
+                }
             });
-            console.log($data);
-
-
         }
-    </script>
-    </div>
-</body>
 
+        // Создание товара
+        $('#createProduct_b').click(async function(e) {
+            e.preventDefault();
+            $('#createProduct_result').text('Создание товара...');
+
+            try {
+                // 1. Загружаем логотип
+                let uploadedLogoId = null;
+                const logoFile = $("#product_logo")[0].files[0];
+                if (logoFile) {
+                    const logoForm = new FormData();
+                    logoForm.append("file", logoFile, logoFile.name);
+
+                    const logoResponse = await $.ajax({
+                        url: 'http://api.hirohitoshop.ru/api/admin/file/upload',
+                        type: 'POST',
+                        data: logoForm,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function(xhr) {
+                            xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                        }
+                    });
+
+                    if (logoResponse.data?.id) {
+                        uploadedLogoId = logoResponse.data.id;
+                        console.log("Логотип загружен. ID:", uploadedLogoId);
+                    }
+                }
+
+                // 2. Загружаем изображения для слайдера
+                let uploadedImageIds = [];
+                const imageFiles = $("#product_images")[0].files;
+                if (imageFiles && imageFiles.length) {
+                    const uploadPromises = Array.from(imageFiles).map(file => {
+                        const imageData = new FormData();
+                        imageData.append('file', file, file.name);
+
+                        return $.ajax({
+                            url: 'http://api.hirohitoshop.ru/api/admin/file/upload',
+                            type: 'POST',
+                            data: imageData,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function(xhr) {
+                                xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                            }
+                        }).then(response => response.data?.id);
+                    });
+
+                    uploadedImageIds = await Promise.all(uploadPromises);
+                    console.log('Все изображения загружены. ID:', uploadedImageIds);
+                }
+
+                // 3. Собираем данные формы
+                const formData = {};
+                $('#createProduct_f').find('input, textarea, select').each(function() {
+                    if (this.name) {
+                        if (this.type === 'checkbox') {
+                            formData[this.name] = $(this).is(':checked') ? 1 : 0;
+                        } else {
+                            formData[this.name] = $(this).val();
+                        }
+                    }
+                });
+
+                // Преобразуем числовые поля
+                formData.price = Number(formData.price) || 0;
+                formData.available_count = Number(formData.available_count) || 0;
+                formData.category_id = Number(formData.category_id) || 0;
+
+                // Добавляем ID файлов
+                if (uploadedLogoId) formData.logo = uploadedLogoId;
+                if (uploadedImageIds.length) formData.images = uploadedImageIds;
+
+                // Добавляем атрибуты из JSON
+                const attributesJson = $('#jsonOutput').val();
+                if (attributesJson) {
+                    try {
+                        const attributes = JSON.parse(attributesJson);
+                        formData.attributes = attributes.attributes;
+                    } catch (e) {
+                        console.error('Ошибка парсинга JSON атрибутов:', e);
+                    }
+                }
+
+                console.log('Отправляемые данные:', formData);
+
+                // 4. Отправляем данные товара
+                const result = await $.ajax({
+                    url: 'http://api.hirohitoshop.ru/api/admin/products/create',
+                    type: 'POST',
+                    data: formData,
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                    }
+                });
+
+                $('#createProduct_result').html(JSON.stringify(result, null, 2));
+                alert('Товар успешно создан!');
+                console.log('Товар успешно создан:', result);
+
+            } catch (error) {
+                console.error('Ошибка:', error);
+                const errorMsg = error.responseJSON?.message || error.statusText || error.message;
+                $('#createProduct_result').text('Ошибка: ' + errorMsg);
+                alert('Ошибка при создании товара: ' + errorMsg);
+            }
+        });
+
+        // Управление атрибутами товара
+        $(document).ready(function() {
+            // Добавление нового блока атрибутов
+            $('#addTitleBtn').click(function() {
+                const container = $('#titlesContainer');
+                const titleCount = container.find('.title-block').length + 1;
+
+                const newTitleBlock = $(`
+                    <div class="title-block">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5>Атрибуты #${titleCount}</h5>
+                            <button type="button" class="btn btn-sm btn-danger remove-title-btn">Удалить</button>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Название группы атрибутов (slug)</label>
+                            <input type="text" class="form-control title-input" required placeholder="example-slug">
+                        </div>
+
+                        <div class="attributes-container">
+                            <div class="attribute-pair">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Атрибут</label>
+                                        <input type="text" class="form-control attr-name" placeholder="Например: Страна производства" required>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label">Значение</label>
+                                        <input type="text" class="form-control attr-value" placeholder="Например: Китай" required>
+                                    </div>
+                                    <div class="col-md-1 d-flex align-items-end">
+                                        <button type="button" class="btn btn-sm btn-danger remove-btn">×</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-secondary add-attribute-btn">Добавить атрибут</button>
+                    </div>
+                `);
+
+                container.append(newTitleBlock);
+                initAttributeButtons(newTitleBlock);
+            });
+
+            // Инициализация кнопок управления атрибутами
+            function initAttributeButtons(container) {
+                container.find('.add-attribute-btn').click(function() {
+                    const attributesContainer = $(this).siblings('.attributes-container');
+                    const newAttribute = $(`
+                        <div class="attribute-pair">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Атрибут</label>
+                                    <input type="text" class="form-control attr-name" placeholder="Например: Форм фактор для HDD" required>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">Значение</label>
+                                    <input type="text" class="form-control attr-value" placeholder="Например: 2.5" required>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-end">
+                                    <button type="button" class="btn btn-sm btn-danger remove-btn">×</button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    attributesContainer.append(newAttribute);
+                });
+
+                container.find('.remove-title-btn').click(function() {
+                    if ($('#titlesContainer .title-block').length > 1) {
+                        $(this).closest('.title-block').remove();
+                    } else {
+                        alert('Должна остаться хотя бы одна группа атрибутов');
+                    }
+                });
+            }
+
+            // Обработчики для удаления атрибутов
+            $(document).on('click', '.remove-btn', function() {
+                const attributesContainer = $(this).closest('.attributes-container');
+                if (attributesContainer.find('.attribute-pair').length > 1) {
+                    $(this).closest('.attribute-pair').remove();
+                } else {
+                    alert('Должен остаться хотя бы один атрибут');
+                }
+            });
+
+            // Генерация JSON атрибутов
+            $('#generateJsonBtn').click(function() {
+                const result = { attributes: [] };
+
+                $('.title-block').each(function() {
+                    const title = $(this).find('.title-input').val();
+                    if (!title) return;
+
+                    const values = {};
+                    $(this).find('.attribute-pair').each(function() {
+                        const name = $(this).find('.attr-name').val();
+                        const value = $(this).find('.attr-value').val();
+                        if (name && value) {
+                            values[name] = value;
+                        }
+                    });
+
+                    if (Object.keys(values).length > 0) {
+                        result.attributes.push({ title, values });
+                    }
+                });
+
+                $('#jsonOutput').val(JSON.stringify(result, null, 2));
+            });
+
+            // Инициализация первого блока атрибутов
+            initAttributeButtons($('#titlesContainer .title-block').first());
+        });
+    </script>
+</body>
 </html>
