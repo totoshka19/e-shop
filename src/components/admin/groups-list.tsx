@@ -1,12 +1,29 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import {RootState} from '../../store/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../../store/store';
 import styles from '../../styles/admin/group-manager.module.scss';
+import {deleteCategory, updateCategory} from '../../store/admin/categories-slice';
 
 function GroupsList() {
+  const dispatch = useDispatch<AppDispatch>();
   const groups = useSelector((state: RootState) => state.categories.categories); // Категории = Группы
   const status = useSelector((state: RootState) => state.categories.status);
   const error = useSelector((state: RootState) => state.categories.error);
+
+  // Обработчик удаления категории
+  const handleDelete = (id: number) => {
+    if (window.confirm('Вы уверены, что хотите удалить эту группу?')) {
+      dispatch(deleteCategory(id));
+    }
+  };
+
+  // Обработчик редактирования категории
+  const handleEdit = async (id: number, currentName: string) => {
+    const newName = prompt('Введите новое название группы:', currentName);
+    if (newName && newName !== currentName) {
+      await dispatch(updateCategory({ id, name: newName }));
+    }
+  };
 
   if (status === 'loading') {
     return (
@@ -33,7 +50,12 @@ function GroupsList() {
             <span className={styles['group-name']}>{group.name}</span>
             <div className={styles['group-actions']}>
               {/* Иконка редактирования */}
-              <button className={styles['edit-btn']}>
+              <button
+                className={styles['edit-btn']}
+                onClick={() => {
+                  handleEdit(group.id, group.name);
+                }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -50,7 +72,10 @@ function GroupsList() {
                 </svg>
               </button>
               {/* Иконка удаления */}
-              <button className={styles['delete-btn']}>
+              <button
+                className={styles['delete-btn']}
+                onClick={() => handleDelete(group.id)} // Вызываем обработчик удаления
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
