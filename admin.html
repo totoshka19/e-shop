@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <style>
@@ -60,9 +61,50 @@
             background-color: #e9ecef;
             border-radius: 5px;
         }
+        #categorySelect {
+            height: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tenant-header {
+            background-color: #f8f9fa;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
     </style>
 </head>
 <body>
+
+  <div class="tenant-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h4>Панель администратора</h4>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <select id="tenantsSelect" class="form-select">
+                        <option value="">Загрузка организаций...</option>
+                    </select>
+                    <button class="btn btn-outline-secondary" type="button" id="refreshTenants">
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="authStatus" class="auth-status"></div>
+
+<div class="container">
+    <!-- Остальное содержимое без изменений -->
+</div>
     <div id="authStatus" class="auth-status"></div>
 
     <div class="container">
@@ -90,18 +132,30 @@
         <div class="form-section">
             <h3>Управление категориями</h3>
             <div class="mb-3">
-                <button type="button" id="getGroup" class="btn btn-info">Получить список категорий</button>
+                <button type="button" id="getGroup" class="btn btn-info">
+                    <i class="bi bi-arrow-clockwise"></i> Обновить список категорий
+                </button>
             </div>
-            <ul id="showCategory" class="list-group mb-3"></ul>
+
+            <div class="mb-3">
+                <h5>Текущие категории:</h5>
+                <div id="categoriesList" class="list-group">
+                    <div class="list-group-item text-center text-muted">
+                        Список категорий загружается...
+                    </div>
+                </div>
+            </div>
 
             <div class="mb-3">
                 <h5>Создать новую категорию</h5>
                 <form id="createGroupName">
                     <div class="mb-3">
                         <label for="categoryName" class="form-label">Название категории</label>
-                        <input type="text" class="form-control" id="categoryName" name="name">
+                        <input type="text" class="form-control" id="categoryName" name="name" required>
                     </div>
-                    <button type="button" onclick="createGroup()" class="btn btn-success">Создать категорию</button>
+                    <button type="button" onclick="createGroup()" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Создать категорию
+                    </button>
                 </form>
             </div>
         </div>
@@ -113,49 +167,56 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Название</label>
-                            <input name="name" type="text" class="form-control" placeholder="Название товара">
+                            <label for="productName" class="form-label">Название товара</label>
+                            <input name="name" type="text" id="productName" class="form-control" placeholder="Название товара" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Короткое описание</label>
-                            <input name="short_description" type="text" class="form-control">
+                            <label for="productShortDescription" class="form-label">Короткое описание</label>
+                            <input name="short_description" type="text" id="productShortDescription" class="form-control">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Полное описание</label>
-                            <textarea name="description" class="form-control" rows="3"></textarea>
+                            <label for="productDescription" class="form-label">Полное описание</label>
+                            <textarea name="description" id="productDescription" class="form-control" rows="3"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Категория (ID)</label>
-                            <input name="category_id" type="text" class="form-control">
+                            <label for="categorySelect" class="form-label">Категория</label>
+                            <div class="input-group">
+                                <select name="category_id" class="form-select" id="categorySelect" required>
+                                    <option value="">-- Загрузка категорий... --</option>
+                                </select>
+                                <button class="btn btn-outline-secondary" type="button" id="refreshCategories">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label class="form-label">Цена</label>
-                            <input type="text" name="price" class="form-control">
+                            <label for="productPrice" class="form-label">Цена</label>
+                            <input type="number" id="productPrice" name="price" class="form-control" step="0.01" min="0" required>
                         </div>
                         <div class="mb-3 form-check">
-                            <input name="is_available" type="checkbox" class="form-check-input" id="isAvailable">
-                            <label class="form-check-label" for="isAvailable">Доступен</label>
+                            <input name="is_available" type="checkbox" class="form-check-input" id="isAvailable" checked>
+                            <label class="form-check-label" for="isAvailable">Доступен для заказа</label>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Артикул (SKU)</label>
-                            <input type="text" name="sku" class="form-control">
+                            <label for="productSku" class="form-label">Артикул (SKU)</label>
+                            <input type="text" id="productSku" name="sku" class="form-control" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Доступное количество</label>
-                            <input type="text" name="available_count" class="form-control">
+                            <label for="productAvailableCount" class="form-label">Доступное количество</label>
+                            <input type="number" id="productAvailableCount" name="available_count" class="form-control" min="0" value="1" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Заглавная картинка</label>
-                    <input id="product_logo" type="file" name="logo" class="form-control" accept="image/*">
+                    <label for="product_logo" class="form-label">Заглавная картинка</label>
+                    <input id="product_logo" type="file" name="logo" class="form-control" accept="image/*" required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Картинки для слайдера</label>
+                    <label for="product_images" class="form-label">Дополнительные изображения</label>
                     <input id="product_images" type="file" name="images" class="form-control" multiple accept="image/*">
                 </div>
 
@@ -168,14 +229,14 @@
                                 <button type="button" class="btn btn-sm btn-danger remove-title-btn">Удалить</button>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Название группы атрибутов (slug)</label>
-                                <input type="text" class="form-control title-input" required placeholder="example-slug">
+                                <label class="form-label">Название группы атрибутов</label>
+                                <input type="text" class="form-control title-input" required placeholder="Например: Характеристики">
                             </div>
 
                             <div class="attributes-container">
                                 <div class="attribute-pair">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-5">
                                             <label class="form-label">Атрибут</label>
                                             <input type="text" class="form-control attr-name" placeholder="Например: Страна производства" required>
                                         </div>
@@ -183,20 +244,28 @@
                                             <label class="form-label">Значение</label>
                                             <input type="text" class="form-control attr-value" placeholder="Например: Китай" required>
                                         </div>
-                                        <div class="col-md-1 d-flex align-items-end">
-                                            <button type="button" class="btn btn-sm btn-danger remove-btn">×</button>
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button type="button" class="btn btn-sm btn-danger remove-btn w-100">
+                                                <i class="bi bi-trash"></i> Удалить
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-sm btn-secondary add-attribute-btn">Добавить атрибут</button>
+                            <button type="button" class="btn btn-sm btn-secondary add-attribute-btn">
+                                <i class="bi bi-plus"></i> Добавить атрибут
+                            </button>
                         </div>
                     </div>
 
                     <div class="mt-3">
-                        <button type="button" id="addTitleBtn" class="btn btn-sm btn-info">Добавить группу атрибутов</button>
-                        <button type="button" id="generateJsonBtn" class="btn btn-sm btn-primary">Сгенерировать JSON атрибутов</button>
+                        <button type="button" id="addTitleBtn" class="btn btn-sm btn-info">
+                            <i class="bi bi-collection"></i> Добавить группу атрибутов
+                        </button>
+                        <button type="button" id="generateJsonBtn" class="btn btn-sm btn-primary">
+                            <i class="bi bi-code-square"></i> Сгенерировать JSON
+                        </button>
                     </div>
 
                     <div class="mt-3">
@@ -205,7 +274,9 @@
                     </div>
                 </div>
 
-                <button type="button" id="createProduct_b" class="btn btn-primary mt-3">Создать товар</button>
+                <button type="button" id="createProduct_b" class="btn btn-primary mt-3">
+                    <i class="bi bi-save"></i> Создать товар
+                </button>
             </form>
 
             <div class="result-box mt-3">
@@ -216,135 +287,185 @@
     </div>
 
     <script>
+              // Функция загрузки tenants
+async function loadTenants() {
+    try {
+        $('#tenantsSelect').prop('disabled', true).html('<option value="">Загрузка организаций...</option>');
+
+        const response = await $.ajax({
+            url: 'http://api.hirohitoshop.ru/api/admin/tenants',
+            type: 'GET',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+            },
+            dataType: 'json'
+        });
+        console.log(response);
+
+        console.log('Ответ сервера по tenants:', response); // Для отладки
+
+        const select = $('#tenantsSelect');
+        select.empty();
+
+        if (response.data && response.data.length) {
+            // Добавляем все организации из ответа
+            response.data.forEach(tenant => {
+                console.log('Обрабатываем tenant:', tenant); // Для отладки
+                select.append(`<option value="${tenant.id}">${tenant.name || 'Без названия'}</option>`);
+            });
+
+            // Выбираем сохранённый tenant если есть
+            const savedTenant = localStorage.getItem('current-tenant');
+            if (savedTenant) {
+                select.val(savedTenant);
+            }
+        } else {
+            select.append('<option value="">Нет доступных организаций</option>');
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки организаций:', error);
+        $('#tenantsSelect').html('<option value="">Ошибка загрузки</option>');
+
+        // Показываем более детальную ошибку
+        let errorMsg = error.responseJSON?.message || error.statusText;
+        if (error.status === 401) {
+            errorMsg = "Требуется авторизация";
+        }
+        console.error('Детали ошибки:', errorMsg);
+    } finally {
+        $('#tenantsSelect').prop('disabled', false);
+    }
+}
+
+    </script>
+
+    <script>
         // Инициализация статуса авторизации
         function updateAuthStatus() {
             const authStatus = $('#authStatus');
             if(localStorage.getItem('auth-status') == "1") {
                 authStatus.removeClass('auth-failed').addClass('auth-success');
                 authStatus.text('Авторизован');
+                loadCategories(); // Загружаем категории при авторизации
             } else {
                 authStatus.removeClass('auth-success').addClass('auth-failed');
                 authStatus.text('Не авторизован');
             }
         }
 
-        updateAuthStatus();
+        // Инициализация при загрузке страницы
+        $(document).ready(function() {
+            updateAuthStatus();
+            initAttributeHandlers();
+        });
 
         // Авторизация
         $('#auth_b').click(function(e) {
             e.preventDefault();
 
-            const $data = {};
-            $('#auth').find('input, textarea, select').each(function() {
-                $data[this.name] = $(this).val();
-            });
+            $('#auth_b').click(function(e) {
+    e.preventDefault();
 
-            $.ajax({
-                url: 'http://api.hirohitoshop.ru/api/login',
-                type: 'POST',
-                data: $data,
-                dataType: 'json',
-                success: function(result) {
-                    if(result.access_token) {
-                        const authKey = result.access_token;
-                        $('#auth_key').text(authKey);
-                        localStorage.setItem('auth-key', authKey);
-                        localStorage.setItem('auth-status', "1");
+    const $data = {
+        email: $('#email').val(),
+        password: $('#password').val()
+    };
 
-                        updateAuthStatus();
-                        alert('Авторизация успешна!');
-                    } else {
-                        throw new Error('Не удалось получить токен');
-                    }
-                },
-                error: function(xhr) {
-                    localStorage.setItem('auth-status', "0");
-                    updateAuthStatus();
-                    alert('Ошибка авторизации: ' + (xhr.responseJSON?.message || xhr.statusText));
-                }
-            });
+    $('#auth_b').prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Вход...');
+
+    $.ajax({
+        url: 'http://api.hirohitoshop.ru/api/login',
+        type: 'POST',
+        data: $data,
+        dataType: 'json',
+        success: function(result) {
+            if(result.access_token) {
+                localStorage.setItem('auth-key', result.access_token);
+                localStorage.setItem('auth-status', "1");
+
+                // Загружаем организации после успешной авторизации
+                loadTenants().then(() => {
+                    $('#auth_b').html('<i class="bi bi-check-circle"></i> Успешно');
+                    setTimeout(() => $('#auth_b').html('Авторизоваться'), 2000);
+                });
+            }
+        },
+        error: function(xhr) {
+            console.error('Ошибка авторизации:', xhr.responseJSON);
+            alert('Ошибка: ' + (xhr.responseJSON?.message || 'Неверные данные'));
+            $('#auth_b').prop('disabled', false).html('Авторизоваться');
+        }
+    });
+});
+
         });
 
-        // Получить список категорий
-        $('#getGroup').click(function(e) {
-            e.preventDefault();
-            $('#showCategory').empty();
+        // Загрузка и отображение категорий
+        async function loadCategories() {
+            try {
+                // Показываем состояние загрузки
+                $('#categorySelect').prop('disabled', true).html('<option value="">Загрузка категорий...</option>');
+                $('#categoriesList').html('<div class="list-group-item text-center text-muted">Загрузка категорий...</div>');
 
-            $.ajax({
-                url: 'http://api.hirohitoshop.ru/api/admin/categories',
-                type: 'GET',
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
-                },
-                success: function(result) {
-                    if(result.data && result.data.length) {
-                        $.each(result.data, function(key, value) {
-                            const categoryItem = $(
-                                `<li class="list-group-item d-flex justify-content-between align-items-center">
-                                    ${value.name} (ID: ${value.id})
-                                    <span>
-                                        <button class="btn btn-sm btn-warning me-1" onclick="editGroup(${value.id})">Редактировать</button>
-                                        <button class="btn btn-sm btn-danger" onclick="deleteGroup(${value.id})">Удалить</button>
-                                    </span>
-                                </li>`
-                            );
-                            $('#showCategory').append(categoryItem);
-                        });
-                    } else {
-                        $('#showCategory').append('<li class="list-group-item">Категории не найдены</li>');
-                    }
-                },
-                error: function(xhr) {
-                    alert('Ошибка при получении категорий: ' + (xhr.responseJSON?.message || xhr.statusText));
-                }
-            });
-        });
-
-        // Редактировать категорию
-        function editGroup(id) {
-            const newName = prompt('Введите новое название категории:');
-            if(newName) {
-                $.ajax({
-                    url: `http://api.hirohitoshop.ru/api/admin/categories/${id}/update`,
-                    type: 'PUT',
-                    data: { name: newName, slug: newName.toLowerCase().replace(/\s+/g, '-') },
+                const response = await $.ajax({
+                    url: 'http://api.hirohitoshop.ru/api/admin/categories',
+                    type: 'GET',
                     beforeSend: function(xhr) {
                         xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
-                    },
-                    success: function() {
-                        alert('Категория успешно обновлена!');
-                        $('#getGroup').click();
-                    },
-                    error: function(xhr) {
-                        alert('Ошибка при обновлении категории: ' + (xhr.responseJSON?.message || xhr.statusText));
                     }
                 });
+
+                // Обновляем выпадающий список
+                const select = $('#categorySelect');
+                select.empty();
+                select.append('<option value="">-- Выберите категорию --</option>');
+
+                // Обновляем список категорий
+                const categoriesList = $('#categoriesList');
+                categoriesList.empty();
+
+                if (response.data && response.data.length > 0) {
+                    // Сортируем категории по имени
+                    response.data.sort((a, b) => a.name.localeCompare(b.name)).forEach(category => {
+                        // Добавляем в выпадающий список
+                        select.append(`<option value="${category.id}">${category.name} (ID: ${category.id})</option>`);
+
+                        // Добавляем в список категорий
+                        categoriesList.append(`
+                            <div class="list-group-item category-item">
+                                <span>${category.name} (ID: ${category.id})</span>
+                                <div>
+                                    <button class="btn btn-sm btn-warning me-1" onclick="editGroup(${category.id})">
+                                        <i class="bi bi-pencil"></i> Изменить
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteGroup(${category.id})">
+                                        <i class="bi bi-trash"></i> Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    categoriesList.append('<div class="list-group-item text-center text-muted">Нет доступных категорий</div>');
+                }
+
+            } catch (error) {
+                console.error('Ошибка загрузки категорий:', error);
+                $('#categorySelect').html('<option value="">Ошибка загрузки категорий</option>');
+                $('#categoriesList').html('<div class="list-group-item text-center text-danger">Ошибка загрузки категорий</div>');
+            } finally {
+                $('#categorySelect').prop('disabled', false);
             }
         }
 
-        // Удалить категорию
-        function deleteGroup(id) {
-            if(confirm('Вы уверены, что хотите удалить эту категорию?')) {
-                $.ajax({
-                    url: `http://api.hirohitoshop.ru/api/admin/categories/${id}/delete`,
-                    type: 'DELETE',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
-                    },
-                    success: function() {
-                        alert('Категория успешно удалена!');
-                        $('#getGroup').click();
-                    },
-                    error: function(xhr) {
-                        alert('Ошибка при удалении категории: ' + (xhr.responseJSON?.message || xhr.statusText));
-                    }
-                });
-            }
-        }
+        // Обновление категорий по кнопке
+        $('#refreshCategories, #getGroup').click(function() {
+            loadCategories();
+        });
 
-        // Создать категорию
+        // Создание категории
         function createGroup() {
-            const name = $('#categoryName').val();
+            const name = $('#categoryName').val().trim();
             if(!name) {
                 alert('Введите название категории!');
                 return;
@@ -363,7 +484,7 @@
                 success: function() {
                     alert('Категория успешно создана!');
                     $('#categoryName').val('');
-                    $('#getGroup').click();
+                    loadCategories(); // Обновляем список категорий
                 },
                 error: function(xhr) {
                     alert('Ошибка при создании категории: ' + (xhr.responseJSON?.message || xhr.statusText));
@@ -371,10 +492,185 @@
             });
         }
 
-        // Создание товара
+        // Редактирование категории
+        function editGroup(id) {
+            const newName = prompt('Введите новое название категории:');
+            if(newName && newName.trim()) {
+                $.ajax({
+                    url: `http://api.hirohitoshop.ru/api/admin/categories/${id}/update`,
+                    type: 'PUT',
+                    data: {
+                        name: newName,
+                        slug: newName.toLowerCase().replace(/\s+/g, '-')
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                    },
+                    success: function() {
+                        alert('Категория успешно обновлена!');
+                        loadCategories();
+                    },
+                    error: function(xhr) {
+                        alert('Ошибка при обновлении категории: ' + (xhr.responseJSON?.message || xhr.statusText));
+                    }
+                });
+            }
+        }
+
+        // Удаление категории
+        function deleteGroup(id) {
+            if(confirm('Вы уверены, что хотите удалить эту категорию?')) {
+                $.ajax({
+                    url: `http://api.hirohitoshop.ru/api/admin/categories/${id}/delete`,
+                    type: 'DELETE',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                    },
+                    success: function() {
+                        alert('Категория успешно удалена!');
+                        loadCategories();
+                    },
+                    error: function(xhr) {
+                        alert('Ошибка при удалении категории: ' + (xhr.responseJSON?.message || xhr.statusText));
+                    }
+                });
+            }
+        }
+
+        // Инициализация обработчиков для атрибутов
+        function initAttributeHandlers() {
+            // Добавление новой группы атрибутов
+            $('#addTitleBtn').click(function() {
+                const container = $('#titlesContainer');
+                const titleCount = container.find('.title-block').length + 1;
+
+                const newTitleBlock = $(`
+                    <div class="title-block">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5>Атрибуты #${titleCount}</h5>
+                            <button type="button" class="btn btn-sm btn-danger remove-title-btn">
+                                <i class="bi bi-trash"></i> Удалить
+                            </button>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Название группы атрибутов</label>
+                            <input type="text" class="form-control title-input" required placeholder="Например: Характеристики">
+                        </div>
+
+                        <div class="attributes-container">
+                            <div class="attribute-pair">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label class="form-label">Атрибут</label>
+                                        <input type="text" class="form-control attr-name" placeholder="Например: Страна производства" required>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label">Значение</label>
+                                        <input type="text" class="form-control attr-value" placeholder="Например: Китай" required>
+                                    </div>
+                                    <div class="col-md-2 d-flex align-items-end">
+                                        <button type="button" class="btn btn-sm btn-danger remove-btn w-100">
+                                            <i class="bi bi-trash"></i> Удалить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-sm btn-secondary add-attribute-btn">
+                            <i class="bi bi-plus"></i> Добавить атрибут
+                        </button>
+                    </div>
+                `);
+
+                container.append(newTitleBlock);
+            });
+
+            // Обработчики для динамически создаваемых элементов
+            $(document)
+                .on('click', '.add-attribute-btn', function() {
+                    const attributesContainer = $(this).siblings('.attributes-container');
+                    const newAttribute = $(`
+                        <div class="attribute-pair">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="form-label">Атрибут</label>
+                                    <input type="text" class="form-control attr-name" placeholder="Например: Форм-фактор" required>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">Значение</label>
+                                    <input type="text" class="form-control attr-value" placeholder="Например: 2.5 дюйма" required>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" class="btn btn-sm btn-danger remove-btn w-100">
+                                        <i class="bi bi-trash"></i> Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                    attributesContainer.append(newAttribute);
+                })
+                .on('click', '.remove-btn', function() {
+                    const attributesContainer = $(this).closest('.attributes-container');
+                    if (attributesContainer.find('.attribute-pair').length > 1) {
+                        $(this).closest('.attribute-pair').remove();
+                    } else {
+                        alert('Должен остаться хотя бы один атрибут');
+                    }
+                })
+                .on('click', '.remove-title-btn', function() {
+                    if ($('#titlesContainer .title-block').length > 1) {
+                        $(this).closest('.title-block').remove();
+                    } else {
+                        alert('Должна остаться хотя бы одна группа атрибутов');
+                    }
+                });
+        }
+
+        // Генерация JSON атрибутов
+        $('#generateJsonBtn').click(function() {
+            const result = { attributes: [] };
+
+            $('.title-block').each(function() {
+                const title = $(this).find('.title-input').val();
+                if (!title) return;
+
+                const values = {};
+                $(this).find('.attribute-pair').each(function() {
+                    const name = $(this).find('.attr-name').val();
+                    const value = $(this).find('.attr-value').val();
+                    if (name && value) {
+                        values[name] = value;
+                    }
+                });
+
+                if (Object.keys(values).length > 0) {
+                    result.attributes.push({ title, values });
+                }
+            });
+
+            $('#jsonOutput').val(JSON.stringify(result, null, 2));
+        });
+
+        // Создание товара с проверкой поля name
         $('#createProduct_b').click(async function(e) {
             e.preventDefault();
             $('#createProduct_result').text('Создание товара...');
+
+            // Проверка обязательных полей
+            const productName = $('#productName').val().trim();
+            if (!productName) {
+                alert('Пожалуйста, введите название товара');
+                $('#productName').focus();
+                return;
+            }
+
+            const categoryId = $('#categorySelect').val();
+            if (!categoryId) {
+                alert('Пожалуйста, выберите категорию');
+                return;
+            }
 
             try {
                 // 1. Загружаем логотип
@@ -426,21 +722,16 @@
                 }
 
                 // 3. Собираем данные формы
-                const formData = {};
-                $('#createProduct_f').find('input, textarea, select').each(function() {
-                    if (this.name) {
-                        if (this.type === 'checkbox') {
-                            formData[this.name] = $(this).is(':checked') ? 1 : 0;
-                        } else {
-                            formData[this.name] = $(this).val();
-                        }
-                    }
-                });
-
-                // Преобразуем числовые поля
-                formData.price = Number(formData.price) || 0;
-                formData.available_count = Number(formData.available_count) || 0;
-                formData.category_id = Number(formData.category_id) || 0;
+                const formData = {
+                    name: productName,
+                    short_description: $('#productShortDescription').val().trim(),
+                    description: $('#productDescription').val().trim(),
+                    price: parseFloat($('#productPrice').val()) || 0,
+                    category_id: parseInt(categoryId),
+                    is_available: $('#isAvailable').is(':checked') ? 1 : 0,
+                    available_count: parseInt($('#productAvailableCount').val()) || 0,
+                    sku: $('#productSku').val().trim()
+                };
 
                 // Добавляем ID файлов
                 if (uploadedLogoId) formData.logo = uploadedLogoId;
@@ -479,122 +770,6 @@
                 $('#createProduct_result').text('Ошибка: ' + errorMsg);
                 alert('Ошибка при создании товара: ' + errorMsg);
             }
-        });
-
-        // Управление атрибутами товара
-        $(document).ready(function() {
-            // Добавление нового блока атрибутов
-            $('#addTitleBtn').click(function() {
-                const container = $('#titlesContainer');
-                const titleCount = container.find('.title-block').length + 1;
-
-                const newTitleBlock = $(`
-                    <div class="title-block">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5>Атрибуты #${titleCount}</h5>
-                            <button type="button" class="btn btn-sm btn-danger remove-title-btn">Удалить</button>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Название группы атрибутов (slug)</label>
-                            <input type="text" class="form-control title-input" required placeholder="example-slug">
-                        </div>
-
-                        <div class="attributes-container">
-                            <div class="attribute-pair">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Атрибут</label>
-                                        <input type="text" class="form-control attr-name" placeholder="Например: Страна производства" required>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <label class="form-label">Значение</label>
-                                        <input type="text" class="form-control attr-value" placeholder="Например: Китай" required>
-                                    </div>
-                                    <div class="col-md-1 d-flex align-items-end">
-                                        <button type="button" class="btn btn-sm btn-danger remove-btn">×</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-sm btn-secondary add-attribute-btn">Добавить атрибут</button>
-                    </div>
-                `);
-
-                container.append(newTitleBlock);
-                initAttributeButtons(newTitleBlock);
-            });
-
-            // Инициализация кнопок управления атрибутами
-            function initAttributeButtons(container) {
-                container.find('.add-attribute-btn').click(function() {
-                    const attributesContainer = $(this).siblings('.attributes-container');
-                    const newAttribute = $(`
-                        <div class="attribute-pair">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="form-label">Атрибут</label>
-                                    <input type="text" class="form-control attr-name" placeholder="Например: Форм фактор для HDD" required>
-                                </div>
-                                <div class="col-md-5">
-                                    <label class="form-label">Значение</label>
-                                    <input type="text" class="form-control attr-value" placeholder="Например: 2.5" required>
-                                </div>
-                                <div class="col-md-1 d-flex align-items-end">
-                                    <button type="button" class="btn btn-sm btn-danger remove-btn">×</button>
-                                </div>
-                            </div>
-                        </div>
-                    `);
-                    attributesContainer.append(newAttribute);
-                });
-
-                container.find('.remove-title-btn').click(function() {
-                    if ($('#titlesContainer .title-block').length > 1) {
-                        $(this).closest('.title-block').remove();
-                    } else {
-                        alert('Должна остаться хотя бы одна группа атрибутов');
-                    }
-                });
-            }
-
-            // Обработчики для удаления атрибутов
-            $(document).on('click', '.remove-btn', function() {
-                const attributesContainer = $(this).closest('.attributes-container');
-                if (attributesContainer.find('.attribute-pair').length > 1) {
-                    $(this).closest('.attribute-pair').remove();
-                } else {
-                    alert('Должен остаться хотя бы один атрибут');
-                }
-            });
-
-            // Генерация JSON атрибутов
-            $('#generateJsonBtn').click(function() {
-                const result = { attributes: [] };
-
-                $('.title-block').each(function() {
-                    const title = $(this).find('.title-input').val();
-                    if (!title) return;
-
-                    const values = {};
-                    $(this).find('.attribute-pair').each(function() {
-                        const name = $(this).find('.attr-name').val();
-                        const value = $(this).find('.attr-value').val();
-                        if (name && value) {
-                            values[name] = value;
-                        }
-                    });
-
-                    if (Object.keys(values).length > 0) {
-                        result.attributes.push({ title, values });
-                    }
-                });
-
-                $('#jsonOutput').val(JSON.stringify(result, null, 2));
-            });
-
-            // Инициализация первого блока атрибутов
-            initAttributeButtons($('#titlesContainer .title-block').first());
         });
     </script>
 </body>
