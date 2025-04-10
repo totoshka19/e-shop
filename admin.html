@@ -283,6 +283,12 @@
                 <h5>Результат:</h5>
                 <pre id="createProduct_result" class="bg-white p-2 rounded">Здесь будет результат создания товара...</pre>
             </div>
+
+        </div>
+        <div >
+          <ul id="productList">
+
+          </ul>
         </div>
     </div>
 
@@ -498,7 +504,7 @@ async function loadTenants() {
             if(newName && newName.trim()) {
                 $.ajax({
                     url: `http://api.hirohitoshop.ru/api/admin/categories/${id}/update`,
-                    type: 'PUT',
+                    type: 'PATCH',
                     data: {
                         name: newName,
                         slug: newName.toLowerCase().replace(/\s+/g, '-')
@@ -771,6 +777,47 @@ async function loadTenants() {
                 alert('Ошибка при создании товара: ' + errorMsg);
             }
         });
+    </script>
+
+
+    <script>
+    // вывод списка товаров
+
+                const allproducts = $.ajax({
+                    url: 'http://api.hirohitoshop.ru/api/admin/products',
+                    type: 'GET',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+                    }
+                });
+
+                console.log(allproducts);
+
+                if (allproducts.data && allproducts.data.length > 0) {
+                    // Сортируем категории по имени
+                    allproducts.data.sort((a, b) => a.name.localeCompare(b.name)).forEach(product => {
+                        // Добавляем в выпадающий список
+                        select.append(`<option value="${product.id}">${product.name} (ID: ${product.id})</option>`);
+
+                        // Добавляем в список категорий
+                        categoriesList.append(`
+                            <div class="list-group-item product-item">
+                                <span>${product.name} (ID: ${product.id})</span>
+                                <div>
+                                    <button class="btn btn-sm btn-warning me-1" onclick="editGroup(${product.id})">
+                                        <i class="bi bi-pencil"></i> Изменить
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteGroup(${product.id})">
+                                        <i class="bi bi-trash"></i> Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    categoriesList.append('<div class="list-group-item text-center text-muted">Нет доступных категорий</div>');
+                }
+
     </script>
 </body>
 </html>
