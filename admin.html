@@ -798,34 +798,111 @@ $(document).ready(function() {
   const $productsList = $('#productsList');
 
   function renderProducts(products) {
+    const $productsList = $('#productsList');
+
+    // Очищаем список перед обновлением
+    $productsList.empty();
+
+    // Проверка на пустой список
     if (!products || products.length === 0) {
-      $productsList.html(`
-        <div class="text-center text-gray-500 p-4 bg-gray-50 rounded-lg">
-          Нет доступных товаров
-        </div>
-      `);
-      return;
+        $productsList.html(`
+            <div class="text-center text-muted p-4 bg-light rounded">
+                <i class="bi bi-box-seam"></i> Нет доступных товаров
+            </div>
+        `);
+        return;
     }
-    console.log(products);
 
-    const sortedProducts = products.sort((a, b) => a.name.localeCompare(b.name));
+    try {
+        // Сортируем товары по имени
+        const sortedProducts = [...products].sort((a, b) => a.name.localeCompare(b.name));
 
-    const productsHtml = sortedProducts.map(product => `
-                                <div class="list-group-item category-item">
-                                <img srs ='#' style="height: 50px;width: 50px;"><span>${product.name} (ID: ${product.id})</span>
-                                <div>
-                                    <button class="btn btn-sm btn-warning me-1" onclick="editProduct(${product.id})">
-                                        <i class="bi bi-pencil"></i> Изменить
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteGroduct(${product.id})">
-                                        <i class="bi bi-trash"></i> Удалить
-                                    </button>
-                                </div>
-                            </div>
-    `).join('');
+        // Создаем HTML для каждого товара
+        const productsHtml = sortedProducts.map(product => {
+            // Обработка случая, когда нет изображения
+            const imageUrl = product.logo?.original_url || 'https://via.placeholder.com/50?text=No+Image';
+            const imageAlt = product.name || `Товар ${product.id}`;
 
-    $productsList.html(productsHtml);
-  }
+            return `
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <img src="${imageUrl}"
+                             alt="${imageAlt}"
+                             class="img-thumbnail me-3"
+                             style="width: 50px; height: 50px; object-fit: cover;">
+                        <div>
+                            <h6 class="mb-0">${product.name}</h6>
+                            <small class="text-muted">ID: ${product.id} | SKU: ${product.sku || 'не указан'}</small>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-sm btn-outline-warning edit-product" data-id="${product.id}">
+                            <i class="bi bi-pencil"></i> Изменить
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger delete-product" data-id="${product.id}">
+                            <i class="bi bi-trash"></i> Удалить
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Вставляем HTML в список
+        $productsList.html(`
+            <div class="list-group">
+                ${productsHtml}
+            </div>
+        `);
+
+    } catch (error) {
+        console.error('Ошибка при отображении товаров:', error);
+        $productsList.html(`
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle"></i> Произошла ошибка при загрузке товаров
+            </div>
+        `);
+    }
+}
+
+// Обработчики событий (добавьте в $(document).ready)
+$(document).on('click', '.edit-product', function() {
+    const productId = $(this).data('id');
+    editProduct(productId);
+});
+
+$(document).on('click', '.delete-product', function() {
+    const productId = $(this).data('id');
+    deleteProduct(productId);
+});
+
+// Функции для работы с товарами
+function editProduct(productId) {
+    console.log('Редактирование товара ID:', productId);
+    // Здесь можно открыть модальное окно или перейти на страницу редактирования
+    alert(`Редактирование товара ID: ${productId}`);
+}
+
+async function deleteProduct(productId) {
+    if (!confirm('Вы уверены, что хотите удалить этот товар?')) {
+        return;
+    }
+
+    try {
+        const response = await $.ajax({
+            url: `http://api.hirohitoshop.ru/api/admin/products/${productId}/delete`,
+            type: 'DELETE',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('auth-key')
+            }
+        });
+
+        alert('Товар успешно удален');
+        loadProducts(); // Перезагружаем список товаров
+    } catch (error) {
+        console.error('Ошибка при удалении товара:', error);
+        alert('Не удалось удалить товар: ' + (error.responseJSON?.message || error.statusText));
+    }
+}
 
   function handleError(error) {
     $productsList.html(`
