@@ -286,9 +286,14 @@
 
         </div>
         <div >
-          <ul id="productList">
+          <div class="mb-3">
+            <h5 >Список товаров</h1>
+            <div id="productsList" class="list-group">
+              <div class="list-group-item text-center text-muted">
 
-          </ul>
+              </div>
+            </div>
+          </div>
         </div>
     </div>
 
@@ -420,6 +425,7 @@ async function loadTenants() {
                         xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
                     }
                 });
+                console.log(response);
 
                 // Обновляем выпадающий список
                 const select = $('#categorySelect');
@@ -782,42 +788,77 @@ async function loadTenants() {
 
     <script>
     // вывод списка товаров
+    </script>
 
-                const allproducts = $.ajax({
-                    url: 'http://api.hirohitoshop.ru/api/admin/products',
-                    type: 'GET',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
-                    }
-                });
 
-                console.log(allproducts);
 
-                if (allproducts.data && allproducts.data.length > 0) {
-                    // Сортируем категории по имени
-                    allproducts.data.sort((a, b) => a.name.localeCompare(b.name)).forEach(product => {
-                        // Добавляем в выпадающий список
-                        select.append(`<option value="${product.id}">${product.name} (ID: ${product.id})</option>`);
 
-                        // Добавляем в список категорий
-                        categoriesList.append(`
-                            <div class="list-group-item product-item">
-                                <span>${product.name} (ID: ${product.id})</span>
+<script>
+$(document).ready(function() {
+  const $productsList = $('#productsList');
+
+  function renderProducts(products) {
+    if (!products || products.length === 0) {
+      $productsList.html(`
+        <div class="text-center text-gray-500 p-4 bg-gray-50 rounded-lg">
+          Нет доступных товаров
+        </div>
+      `);
+      return;
+    }
+    console.log(products);
+
+    const sortedProducts = products.sort((a, b) => a.name.localeCompare(b.name));
+
+    const productsHtml = sortedProducts.map(product => `
+                                <div class="list-group-item category-item">
+                                <img srs ='#' style="height: 50px;width: 50px;"><span>${product.name} (ID: ${product.id})</span>
                                 <div>
-                                    <button class="btn btn-sm btn-warning me-1" onclick="editGroup(${product.id})">
+                                    <button class="btn btn-sm btn-warning me-1" onclick="editProduct(${product.id})">
                                         <i class="bi bi-pencil"></i> Изменить
                                     </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteGroup(${product.id})">
+                                    <button class="btn btn-sm btn-danger" onclick="deleteGroduct(${product.id})">
                                         <i class="bi bi-trash"></i> Удалить
                                     </button>
                                 </div>
                             </div>
-                        `);
-                    });
-                } else {
-                    categoriesList.append('<div class="list-group-item text-center text-muted">Нет доступных категорий</div>');
-                }
+    `).join('');
 
-    </script>
+    $productsList.html(productsHtml);
+  }
+
+  function handleError(error) {
+    $productsList.html(`
+      <div class="p-4 text-center text-red-600 bg-red-50 rounded-lg">
+        ${error}
+      </div>
+    `);
+  }
+
+  // Fetch products
+  $.ajax({
+    url: 'http://api.hirohitoshop.ru/api/admin/products',
+    type: 'GET',
+    beforeSend: function(xhr) {
+      xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('auth-key'));
+    },
+    success: function(response) {
+      renderProducts(response.data);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      handleError(errorThrown || 'An error occurred');
+    }
+  });
+});
+
+// Make these functions global so they can be called from onclick handlers
+window.handleEdit = function(productId) {
+  console.log('Edit product:', productId);
+};
+
+window.handleDelete = function(productId) {
+  console.log('Delete product:', productId);
+};
+</script>
 </body>
 </html>
