@@ -1,20 +1,24 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { deleteCategory, updateCategory } from '../../store/admin/categories-slice';
+import { deleteCategory, updateCategory, fetchCategories } from '../../store/admin/categories-slice';
 import styles from '../../styles/admin/group-manager.module.scss';
-import { useState } from 'react';
-import { CheckIcon, CrossIcon, EditIcon, DeleteIcon } from './icons'; // Импортируем новые иконки
+import { useState, useEffect } from 'react';
+import { CheckIcon, CrossIcon, EditIcon, DeleteIcon } from './icons';
 import Popup from './popup';
 
 function GroupsList() {
   const dispatch = useDispatch<AppDispatch>();
   const groups = useSelector((state: RootState) => state.categories.categories); // Категории = Группы
-  const status = useSelector((state: RootState) => state.categories.status);
   const error = useSelector((state: RootState) => state.categories.error);
   const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
   const [newName, setNewName] = useState<string>('');
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
+  const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const handleDelete = (id: number) => {
     setGroupToDelete(id);
@@ -39,8 +43,12 @@ function GroupsList() {
 
   const saveEdit = async (id: number): Promise<void> => {
     if (newName.trim() !== '') {
-      await dispatch(updateCategory({ id, name: newName })).unwrap();
-      setEditingGroupId(null);
+      try {
+        await dispatch(updateCategory({ id, name: newName })).unwrap();
+        setEditingGroupId(null);
+      } catch {
+        setIsErrorPopupOpen(true);
+      }
     }
   };
 
@@ -48,25 +56,14 @@ function GroupsList() {
     setEditingGroupId(null);
   };
 
-  if (status === 'loading') {
-    return (
-      <div className={styles['group-manager']}>
-        <p>Загрузка групп...</p>
-      </div>
-    );
-  }
-
-  if (status === 'failed') {
-    return (
-      <div className={styles['group-manager']}>
-        <p>Ошибка: {error}</p>
-      </div>
-    );
-  }
+  const closeErrorPopup = () => {
+    setIsErrorPopupOpen(false);
+  };
 
   return (
     <div className={styles['group-manager']}>
       <h2>Список групп</h2>
+
       <ul>
         {groups.map((group) => (
           <li key={group.id} className={styles['group-item']}>
@@ -92,15 +89,12 @@ function GroupsList() {
               <>
                 <span className={styles['group-name']}>{group.name}</span>
                 <div className={styles['group-actions']}>
-                  {/* Используем компонент EditIcon */}
                   <button
                     className={styles['edit-btn']}
                     onClick={() => startEdit(group.id, group.name)}
                   >
                     <EditIcon />
                   </button>
-
-                  {/* Используем компонент DeleteIcon */}
                   <button
                     className={styles['delete-btn']}
                     onClick={() => handleDelete(group.id)}
@@ -132,6 +126,19 @@ function GroupsList() {
             <button onClick={cancelDelete}>Нет</button>
           </div>
         </Popup>
+      )}
+
+      {isErrorPopupOpen && (
+        <Popup
+          isOpen={isErrorPopupOpen}
+          message={
+            <>
+              Произошла ошибка: <strong>{error || 'Неизвестная ошибка'}</strong>
+            </>
+          }
+          onClose={closeErrorPopup}
+          type="info"
+        />
       )}
     </div>
   );
