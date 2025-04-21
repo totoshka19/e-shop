@@ -1,9 +1,10 @@
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../../store/store';
-import {deleteCategory, updateCategory} from '../../store/admin/categories-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { deleteCategory, updateCategory } from '../../store/admin/categories-slice';
 import styles from '../../styles/admin/group-manager.module.scss';
-import {useState} from 'react';
-import {CheckIcon, CrossIcon} from './icons';
+import { useState } from 'react';
+import { CheckIcon, CrossIcon } from './icons';
+import Popup from './popup';
 
 function GroupsList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,11 +13,23 @@ function GroupsList() {
   const error = useSelector((state: RootState) => state.categories.error);
   const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
   const [newName, setNewName] = useState<string>('');
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
 
   const handleDelete = (id: number) => {
-    if (window.confirm('Вы уверены, что хотите удалить эту группу?')) {
-      dispatch(deleteCategory(id));
+    setGroupToDelete(id);
+    setIsDeletePopupOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (groupToDelete !== null) {
+      dispatch(deleteCategory(groupToDelete));
     }
+    setIsDeletePopupOpen(false);
+  };
+
+  const cancelDelete = () => {
+    setIsDeletePopupOpen(false);
   };
 
   const startEdit = (id: number, currentName: string) => {
@@ -124,6 +137,26 @@ function GroupsList() {
           </li>
         ))}
       </ul>
+
+      {isDeletePopupOpen && groupToDelete !== null && (
+        <Popup
+          isOpen={isDeletePopupOpen}
+          message={
+            <>
+              Вы уверены, что хотите удалить группу{' '}
+              <strong>{groups.find((group) => group.id === groupToDelete)?.name}</strong>?
+            </>
+          }
+          onClose={cancelDelete}
+          onConfirm={confirmDelete}
+          type="confirmation"
+        >
+          <div className={styles['popup-actions']}>
+            <button onClick={confirmDelete}>Да</button>
+            <button onClick={cancelDelete}>Нет</button>
+          </div>
+        </Popup>
+      )}
     </div>
   );
 }

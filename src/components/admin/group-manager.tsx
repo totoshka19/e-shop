@@ -9,18 +9,15 @@ import Popup from './popup';
 function GroupManager() {
   const dispatch = useDispatch<AppDispatch>();
 
-  // Состояние для управления попапом
-  const [popup, setPopup] = useState<{ isOpen: boolean; message: string }>({
+  const [popup, setPopup] = useState<{ isOpen: boolean; message: React.ReactNode }>({
     isOpen: false,
     message: '',
   });
 
-  // Функция для открытия попапа с сообщением
-  const openPopup = (message: string) => {
+  const openPopup = (message: React.ReactNode) => {
     setPopup({ isOpen: true, message });
   };
 
-  // Функция для закрытия попапа
   const closePopup = () => {
     setPopup({ isOpen: false, message: '' });
   };
@@ -28,9 +25,17 @@ function GroupManager() {
   const handleAddGroup = async (groupName: string) => {
     try {
       await dispatch(createCategory(groupName)).unwrap();
-      openPopup(`Категория успешно добавлена: ${groupName}`);
+      openPopup(
+        <>
+          Категория успешно добавлена: <strong>{groupName}</strong>
+        </>
+      );
     } catch (error) {
-      openPopup('Ошибка при добавлении категории');
+      openPopup(
+        <>
+          Ошибка при добавлении категории: <strong>{groupName}</strong>
+        </>
+      );
     }
   };
 
@@ -40,14 +45,15 @@ function GroupManager() {
       <AddEntity
         placeholder="Введите название группы"
         onAdd={(groupName) => {
-          void handleAddGroup(groupName); // Игнорируем Promise
+          void handleAddGroup(groupName);
         }}
       />
-      {/* Попап */}
+
       <Popup
         isOpen={popup.isOpen}
         message={popup.message}
         onClose={closePopup}
+        type="info"
       />
     </div>
   );
