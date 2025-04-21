@@ -44,6 +44,39 @@ export const fetchCategories = createAsyncThunk<Category[], void, { rejectValue:
   }
 );
 
+export const createCategory = createAsyncThunk<Category, string, { rejectValue: string }>(
+  'categories/createCategory',
+  async (name, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return rejectWithValue('Токен отсутствует.');
+      }
+
+      const response = await fetch(`${URL_API}/admin/categories/create`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name }),
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { message?: string };
+        return rejectWithValue(errorData.message || 'Произошла ошибка при создании категории.');
+      }
+
+      const data = (await response.json()) as { data: Category };
+
+      return data.data;
+    } catch (error) {
+      const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 export const updateCategory = createAsyncThunk<Category, { id: number; name: string }, { rejectValue: string }>(
   'categories/updateCategory',
   async ({ id, name }, { dispatch, rejectWithValue }) => {
@@ -126,6 +159,18 @@ const categoriesSlice = createSlice({
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = STATUS_FAILED;
         state.error = action.payload || 'Произошла ошибка';
+      })
+      .addCase(createCategory.pending, (state) => {
+        state.status = STATUS_LOADING;
+        state.error = null;
+      })
+      .addCase(createCategory.fulfilled, (state, action) => {
+        state.status = STATUS_SUCCEEDED;
+        state.categories.push(action.payload); // Добавляем новую категорию в состояние
+      })
+      .addCase(createCategory.rejected, (state, action) => {
+        state.status = STATUS_FAILED;
+        state.error = action.payload || 'Произошла ошибка при создании категории.';
       })
       .addCase(updateCategory.pending, (state) => {
         state.status = STATUS_LOADING;

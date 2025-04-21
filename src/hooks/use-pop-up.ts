@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 type UsePopUpOptions = {
   onClose: () => void;
-  initialFocusRef?: React.RefObject<HTMLElement>;
-  modalRef: React.RefObject<HTMLDivElement>;
+  initialFocusRef?: React.RefObject<HTMLElement | null>;
+  modalRef: React.RefObject<HTMLDivElement | null>;
   isOpen: boolean;
 };
 
@@ -21,8 +21,9 @@ export const usePopUp = ({ onClose, initialFocusRef, modalRef, isOpen }: UsePopU
 
     window.addEventListener('keydown', handleKeyDown);
 
-    if (initialFocusRef?.current) {
-      initialFocusRef.current.focus();
+    const initialFocusElement = initialFocusRef?.current;
+    if (initialFocusElement) {
+      initialFocusElement.focus();
     }
 
     const preventScroll = (event: Event) => {
@@ -47,7 +48,12 @@ export const usePopUp = ({ onClose, initialFocusRef, modalRef, isOpen }: UsePopU
 
     const handleTabKey = (event: KeyboardEvent) => {
       if (event.key === 'Tab') {
-        const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
+        const modalElement = modalRef.current;
+        if (!modalElement) {
+          return;
+        }
+
+        const focusableElements = modalElement.querySelectorAll<HTMLElement>(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
 
@@ -74,7 +80,8 @@ export const usePopUp = ({ onClose, initialFocusRef, modalRef, isOpen }: UsePopU
   }, [modalRef, isOpen]);
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+    const modalElement = modalRef.current;
+    if (modalElement && !modalElement.contains(event.target as Node)) {
       onClose();
     }
   };
