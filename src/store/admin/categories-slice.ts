@@ -53,14 +53,14 @@ const categoriesSlice = createSlice({
 
         const newCategory = action.payload;
 
-        if (newCategory.parent_id) {
+        if (newCategory.parent_category_id) {
           // Находим родительскую категорию и добавляем новую подкатегорию в её массив child
-          const parentCategory = findCategoryById(state.categories, Number(newCategory.parent_id));
+          const parentCategory = findCategoryById(state.categories, Number(newCategory.parent_category_id));
           if (parentCategory) {
             parentCategory.child.push(newCategory);
           }
         } else {
-          // Если parent_id отсутствует, добавляем категорию в корень
+          // Если parent_category_id отсутствует, добавляем категорию в корень
           state.categories.push(newCategory);
         }
       })

@@ -25,14 +25,27 @@ function GroupManager() {
   };
 
   const handleAddGroup = async (groupName: string) => {
+    if (!groupName.trim()) {
+      console.error('Ошибка: Название категории не может быть пустым.');
+      openPopup('Введите название категории.');
+      return;
+    }
+
     try {
-      await dispatch(createCategory(groupName)).unwrap();
+      console.log('Попытка создания категории с именем:', groupName);
+      await dispatch(
+        createCategory({
+          name: groupName,
+        })
+      ).unwrap();
+      console.log('Категория успешно создана:', groupName);
       openPopup(
         <>
           Категория успешно добавлена: <strong>{groupName}</strong>
         </>
       );
     } catch (error) {
+      console.error('Ошибка при добавлении категории:', error);
       openPopup(
         <>
           Ошибка при добавлении категории: <strong>{groupName}</strong>

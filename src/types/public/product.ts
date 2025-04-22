@@ -13,6 +13,7 @@ export type Category = {
   name: string;
   slug: string;
   child: Category[];
+  parent_category_id?: number;
 };
 
 export type BaseProduct = {

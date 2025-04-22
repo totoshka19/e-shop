@@ -29,22 +29,12 @@ function SubgroupManager() {
   };
 
   const handleAddSubgroup = async (subgroupName: string) => {
-    if (!selectedGroup) {
-      setHasError(true);
-      return;
-    }
-
     const selectedGroupId = groups.find((group) => group.name === selectedGroup)?.id;
-
-    if (!selectedGroupId) {
-      openPopup('Группа не найдена.');
-      return;
-    }
 
     // Выводим в консоль данные, которые отправляются на сервер
     const requestData = {
       name: subgroupName,
-      parent_id: selectedGroupId,
+      parent_category_id: selectedGroupId,
     };
     console.log('Отправляемые данные на сервер:', requestData);
 
@@ -52,21 +42,20 @@ function SubgroupManager() {
       await dispatch(
         createCategory({
           name: subgroupName,
-          parent_id: selectedGroupId,
+          parent_category_id: selectedGroupId, // Передаем parent_category_id
         })
       ).unwrap();
-
       openPopup(
         <>
           Подкатегория <strong>{subgroupName}</strong> успешно добавлена в категорию{' '}
-          <strong>{selectedGroup}</strong>
+          <strong>{selectedGroup}</strong>.
         </>
       );
     } catch (error) {
       openPopup(
         <>
           Ошибка при добавлении подкатегории <strong>{subgroupName}</strong> в категорию{' '}
-          <strong>{selectedGroup}</strong>
+          <strong>{selectedGroup}</strong>.
         </>
       );
     }

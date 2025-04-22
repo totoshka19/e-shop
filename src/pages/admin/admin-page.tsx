@@ -103,7 +103,7 @@ function AdminPage() {
               {currentSection === 'products' && (
                 <div id="products">
                   <div className={styles['content']}>
-                    Товары
+                    <ProductsList />
                   </div>
                 </div>
               )}
