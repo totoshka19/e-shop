@@ -28,7 +28,7 @@ function Popup({ isOpen, message, onClose, onConfirm, type = 'info' }: PopupProp
   return (
     <div className={styles.popup} onClick={handleOverlayClick}>
       <div className={styles['popup-content']} ref={modalRef}>
-        <p>{message}</p> {/* Отображаем сообщение */}
+        <p>{message}</p>
         <div className={styles['popup-actions']}>
           {type === 'info' ? (
             <button onClick={onClose}>Закрыть</button>

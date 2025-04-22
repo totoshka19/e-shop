@@ -115,17 +115,16 @@ function GroupsList() {
             <>
               Вы уверены, что хотите удалить группу{' '}
               <strong>{groups.find((group) => group.id === groupToDelete)?.name}</strong>?
+              <div className={styles['popup-actions']}>
+                <button onClick={confirmDelete}>Да</button>
+                <button onClick={cancelDelete}>Нет</button>
+              </div>
             </>
           }
           onClose={cancelDelete}
           onConfirm={confirmDelete}
           type="confirmation"
-        >
-          <div className={styles['popup-actions']}>
-            <button onClick={confirmDelete}>Да</button>
-            <button onClick={cancelDelete}>Нет</button>
-          </div>
-        </Popup>
+        />
       )}
 
       {isErrorPopupOpen && (

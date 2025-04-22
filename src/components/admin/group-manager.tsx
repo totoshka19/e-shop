@@ -3,7 +3,7 @@ import AddEntity from './add-entity';
 import styles from '../../styles/admin/group-manager.module.scss';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
-import {createCategory} from '../../store/admin/thunks';
+import { createCategory } from '../../store/admin/thunks';
 import Popup from './popup';
 
 // !TODO объединить с SubgroupManager
@@ -26,26 +26,22 @@ function GroupManager() {
 
   const handleAddGroup = async (groupName: string) => {
     if (!groupName.trim()) {
-      console.error('Ошибка: Название категории не может быть пустым.');
       openPopup('Введите название категории.');
       return;
     }
 
     try {
-      console.log('Попытка создания категории с именем:', groupName);
       await dispatch(
         createCategory({
           name: groupName,
         })
       ).unwrap();
-      console.log('Категория успешно создана:', groupName);
       openPopup(
         <>
           Категория успешно добавлена: <strong>{groupName}</strong>
         </>
       );
     } catch (error) {
-      console.error('Ошибка при добавлении категории:', error);
       openPopup(
         <>
           Ошибка при добавлении категории: <strong>{groupName}</strong>

@@ -2,9 +2,9 @@ import AddEntity from './add-entity';
 import SelectEntity from './select-entity';
 import React, { useState } from 'react';
 import styles from '../../styles/admin/group-manager.module.scss';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '../../store/store';
-import {createCategory} from '../../store/admin/thunks';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { createCategory } from '../../store/admin/thunks';
 import Popup from './popup';
 
 // !TODO объединить с GroupManager
@@ -31,18 +31,12 @@ function SubgroupManager() {
   const handleAddSubgroup = async (subgroupName: string) => {
     const selectedGroupId = groups.find((group) => group.name === selectedGroup)?.id;
 
-    // Выводим в консоль данные, которые отправляются на сервер
-    const requestData = {
-      name: subgroupName,
-      parent_category_id: selectedGroupId,
-    };
-    console.log('Отправляемые данные на сервер:', requestData);
-
     try {
       await dispatch(
         createCategory({
           name: subgroupName,
-          parent_category_id: selectedGroupId, // Передаем parent_category_id
+          // eslint-disable-next-line camelcase
+          parent_category_id: selectedGroupId,
         })
       ).unwrap();
       openPopup(
@@ -75,7 +69,6 @@ function SubgroupManager() {
     <div className={styles['group-manager']}>
       <h2>Добавить подгруппу товаров</h2>
       <div className={styles['group-manager_wrapper']}>
-        {/* Выбор родительской категории */}
         <SelectEntity
           options={groups.map((group) => group.name)}
           value={selectedGroup}
@@ -85,7 +78,6 @@ function SubgroupManager() {
           onClearError={clearError}
         />
 
-        {/* Добавление подкатегории */}
         <AddEntity
           placeholder="Введите название подгруппы"
           onAdd={(subgroupName) => {
@@ -94,7 +86,6 @@ function SubgroupManager() {
         />
       </div>
 
-      {/* Попап */}
       <Popup
         isOpen={popup.isOpen}
         message={popup.message}
@@ -106,5 +97,3 @@ function SubgroupManager() {
 }
 
 export default SubgroupManager;
-
-

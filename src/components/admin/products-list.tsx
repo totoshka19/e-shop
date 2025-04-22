@@ -62,7 +62,7 @@ function ProductsList() {
 
   return (
     <div className={styles['group-manager']}>
-      <h2>Список групп</h2>
+      <h2>Список товаров</h2>
 
       <ul>
         {groups.map((group) => (
@@ -115,17 +115,16 @@ function ProductsList() {
             <>
               Вы уверены, что хотите удалить группу{' '}
               <strong>{groups.find((group) => group.id === groupToDelete)?.name}</strong>?
+              <div className={styles['popup-actions']}>
+                <button onClick={confirmDelete}>Да</button>
+                <button onClick={cancelDelete}>Нет</button>
+              </div>
             </>
           }
           onClose={cancelDelete}
           onConfirm={confirmDelete}
           type="confirmation"
-        >
-          <div className={styles['popup-actions']}>
-            <button onClick={confirmDelete}>Да</button>
-            <button onClick={cancelDelete}>Нет</button>
-          </div>
-        </Popup>
+        />
       )}
 
       {isErrorPopupOpen && (

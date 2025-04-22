@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { URL_API } from '../../consts';
-import {Category} from '../../types/public/product';
+import { Category } from '../../types/public/product';
 
 export const fetchCategories = createAsyncThunk<Category[], void, { rejectValue: string }>(
   'categories/fetchCategories',
@@ -40,23 +40,17 @@ export const fetchCategories = createAsyncThunk<Category[], void, { rejectValue:
 
 export const createCategory = createAsyncThunk<Category, { name: string; parent_category_id?: number }, { rejectValue: string }>(
   'categories/createCategory',
+  // eslint-disable-next-line camelcase
   async ({ name, parent_category_id }, { rejectWithValue }) => {
     try {
-      if (!name || name.trim() === "") {
-        console.error('Ошибка: Имя категории обязательно.');
-        return rejectWithValue("Имя категории обязательно.");
+      if (!name || name.trim() === '') {
+        return rejectWithValue('Имя категории обязательно.');
       }
 
       const token = localStorage.getItem('token');
       if (!token) {
-        console.error('Ошибка: Токен отсутствует.');
         return rejectWithValue('Токен отсутствует.');
       }
-
-      console.log('Отправляем запрос на создание категории:', {
-        name: name.trim(),
-        parent_category_id,
-      });
 
       const response = await fetch(`${URL_API}/admin/categories/create`, {
         method: 'POST',
@@ -65,25 +59,22 @@ export const createCategory = createAsyncThunk<Category, { name: string; parent_
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: name.trim(), // Убираем лишние пробелы
-          parent_category_id, // Может быть undefined
+          name: name.trim(),
+          // eslint-disable-next-line camelcase
+          parent_category_id,
         }),
       });
 
       if (!response.ok) {
         const errorData = (await response.json()) as { message?: string };
-        console.error('Ошибка при создании категории:', errorData.message || 'Неизвестная ошибка');
         return rejectWithValue(errorData.message || 'Произошла ошибка при создании категории.');
       }
 
       const data = (await response.json()) as { data: Category };
 
-      console.log('Категория успешно создана:', data.data);
-
       return data.data;
     } catch (error) {
       const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
-      console.error('Неожиданная ошибка при создании категории:', errorMessage);
       return rejectWithValue(errorMessage);
     }
   }
@@ -111,6 +102,7 @@ export const updateCategory = createAsyncThunk<Category, { id: number; name: str
         const errorData = (await response.json()) as { message?: string };
         return rejectWithValue(errorData.message || 'Произошла ошибка при обновлении категории.');
       }
+
       await dispatch(fetchCategories());
       return {
         id,

@@ -11,6 +11,7 @@ import AsideMenuAdmin from '../../components/admin/aside-menu-admin';
 import GroupManager from '../../components/admin/group-manager';
 import SubgroupManager from '../../components/admin/subgroup-manager';
 import GroupsList from '../../components/admin/groups-list';
+import ProductsList from '../../components/admin/products-list';
 import styles from '../../styles/admin/admin-page.module.scss';
 
 function AdminPage() {
