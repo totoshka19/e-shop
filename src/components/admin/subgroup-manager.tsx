@@ -29,6 +29,11 @@ function SubgroupManager() {
   };
 
   const handleAddSubgroup = async (subgroupName: string) => {
+    if (!selectedGroup) {
+      setHasError(true);
+      return;
+    }
+
     const selectedGroupId = groups.find((group) => group.name === selectedGroup)?.id;
 
     try {
@@ -41,20 +46,21 @@ function SubgroupManager() {
       ).unwrap();
       openPopup(
         <>
-          Подкатегория <strong>{subgroupName}</strong> успешно добавлена в категорию{' '}
+          Подгруппа <strong>{subgroupName}</strong> успешно добавлена в группу{' '}
           <strong>{selectedGroup}</strong>.
         </>
       );
     } catch (error) {
       openPopup(
         <>
-          Ошибка при добавлении подкатегории <strong>{subgroupName}</strong> в категорию{' '}
+          Ошибка при добавлении подгруппы <strong>{subgroupName}</strong> в группу{' '}
           <strong>{selectedGroup}</strong>.
         </>
       );
     }
 
     setSelectedGroup('');
+    setHasError(false);
   };
 
   const handleSelectChange = (value: string) => {

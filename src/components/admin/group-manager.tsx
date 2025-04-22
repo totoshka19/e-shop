@@ -26,7 +26,7 @@ function GroupManager() {
 
   const handleAddGroup = async (groupName: string) => {
     if (!groupName.trim()) {
-      openPopup('Введите название категории.');
+      openPopup('Введите название группы.');
       return;
     }
 
@@ -38,13 +38,13 @@ function GroupManager() {
       ).unwrap();
       openPopup(
         <>
-          Категория успешно добавлена: <strong>{groupName}</strong>
+          Группа успешно добавлена: <strong>{groupName}</strong>
         </>
       );
     } catch (error) {
       openPopup(
         <>
-          Ошибка при добавлении категории: <strong>{groupName}</strong>
+          Ошибка при добавлении группы: <strong>{groupName}</strong>
         </>
       );
     }

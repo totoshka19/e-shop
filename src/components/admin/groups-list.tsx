@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import {deleteCategory, fetchCategories, updateCategory} from '../../store/admin/thunks';
 import styles from '../../styles/admin/group-manager.module.scss';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CheckIcon, CrossIcon, EditIcon, DeleteIcon } from './icons';
 import Popup from './popup';
 
@@ -15,6 +15,7 @@ function GroupsList() {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
+  const [errorPopupMessage, setErrorPopupMessage] = useState<React.ReactNode>('');
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -27,9 +28,28 @@ function GroupsList() {
 
   const confirmDelete = () => {
     if (groupToDelete !== null) {
+      const foundGroup = groups.find((group) => group.id === groupToDelete);
+      if (!foundGroup) {
+        return;
+      }
+
+      if (Array.isArray(foundGroup.child) && foundGroup.child.length > 0) {
+        const subcategoriesList = foundGroup.child.map((s) => s.name).join('\n');
+        setErrorPopupMessage(
+          <>
+            Нельзя удалить группу <strong>{foundGroup.name}</strong>, потому что у неё есть
+            подгруппы:<br />
+            <strong>{subcategoriesList}</strong>
+          </>
+        );
+        setIsDeletePopupOpen(false);
+        setIsErrorPopupOpen(true);
+        return;
+      }
+
       dispatch(deleteCategory(groupToDelete));
+      setIsDeletePopupOpen(false);
     }
-    setIsDeletePopupOpen(false);
   };
 
   const cancelDelete = () => {
@@ -58,6 +78,7 @@ function GroupsList() {
 
   const closeErrorPopup = () => {
     setIsErrorPopupOpen(false);
+    setErrorPopupMessage('');
   };
 
   return (
@@ -115,10 +136,6 @@ function GroupsList() {
             <>
               Вы уверены, что хотите удалить группу{' '}
               <strong>{groups.find((group) => group.id === groupToDelete)?.name}</strong>?
-              <div className={styles['popup-actions']}>
-                <button onClick={confirmDelete}>Да</button>
-                <button onClick={cancelDelete}>Нет</button>
-              </div>
             </>
           }
           onClose={cancelDelete}
@@ -130,11 +147,7 @@ function GroupsList() {
       {isErrorPopupOpen && (
         <Popup
           isOpen={isErrorPopupOpen}
-          message={
-            <>
-              Произошла ошибка: <strong>{error || 'Неизвестная ошибка'}</strong>
-            </>
-          }
+          message={errorPopupMessage || error || 'Неизвестная ошибка'}
           onClose={closeErrorPopup}
           type="info"
         />

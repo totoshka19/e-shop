@@ -10,13 +10,12 @@ const initialState: CategoriesState = {
   error: null,
 };
 
-// Вспомогательная функция для поиска категории по ID
 function findCategoryById(categories: Category[], id: number): Category | undefined {
   for (const category of categories) {
     if (category.id === id) {
       return category;
     }
-    if (category.child.length > 0) {
+    if (Array.isArray(category.child) && category.child.length > 0) {
       const found = findCategoryById(category.child, id);
       if (found) {
         return found;
@@ -54,13 +53,11 @@ const categoriesSlice = createSlice({
         const newCategory = action.payload;
 
         if (newCategory.parent_category_id) {
-          // Находим родительскую категорию и добавляем новую подкатегорию в её массив child
           const parentCategory = findCategoryById(state.categories, Number(newCategory.parent_category_id));
           if (parentCategory) {
             parentCategory.child.push(newCategory);
           }
         } else {
-          // Если parent_category_id отсутствует, добавляем категорию в корень
           state.categories.push(newCategory);
         }
       })
@@ -75,10 +72,22 @@ const categoriesSlice = createSlice({
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.status = STATUS_SUCCEEDED;
         const updatedCategory = action.payload;
-        const index = state.categories.findIndex((cat) => cat.id === updatedCategory.id);
-        if (index !== -1) {
-          state.categories[index] = updatedCategory;
-        }
+
+        const updateCategoryRecursive = (categories: Category[]): boolean => {
+          for (let i = 0; i < categories.length; i++) {
+            if (categories[i].id === updatedCategory.id) {
+              categories[i] = updatedCategory;
+              return true;
+            }
+            if (Array.isArray(categories[i].child)) {
+              if (updateCategoryRecursive(categories[i].child)) {
+                return true;
+              }
+            }
+          }
+          return false;
+        };
+        updateCategoryRecursive(state.categories);
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.status = STATUS_FAILED;
@@ -91,7 +100,18 @@ const categoriesSlice = createSlice({
       .addCase(deleteCategory.fulfilled, (state, action) => {
         state.status = STATUS_SUCCEEDED;
         const deletedCategoryId = action.payload;
-        state.categories = state.categories.filter((cat) => cat.id !== deletedCategoryId);
+
+        const removeCategory = (categories: Category[]): Category[] => categories.filter((category) => {
+          if (category.id === deletedCategoryId) {
+            return false;
+          }
+          if (Array.isArray(category.child)) {
+            category.child = removeCategory(category.child);
+          }
+          return true;
+        });
+
+        state.categories = removeCategory(state.categories);
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = STATUS_FAILED;
