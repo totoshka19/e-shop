@@ -3,7 +3,7 @@ import AddEntity from './add-entity';
 import styles from '../../styles/admin/group-manager.module.scss';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
-import { createCategory } from '../../store/admin/categories-slice';
+import {createCategory} from '../../store/admin/thunks';
 import Popup from './popup';
 
 function GroupManager() {

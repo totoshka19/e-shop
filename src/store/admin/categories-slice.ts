@@ -2,12 +2,29 @@ import { createSlice } from '@reduxjs/toolkit';
 import { STATUS_FAILED, STATUS_IDLE, STATUS_LOADING, STATUS_SUCCEEDED} from '../../consts';
 import { CategoriesState } from '../../types/admin/state-admin';
 import {createCategory, deleteCategory, fetchCategories, updateCategory} from './thunks';
+import {Category} from '../../types/public/product';
 
 const initialState: CategoriesState = {
   categories: [],
   status: STATUS_IDLE,
   error: null,
 };
+
+// Вспомогательная функция для поиска категории по ID
+function findCategoryById(categories: Category[], id: number): Category | undefined {
+  for (const category of categories) {
+    if (category.id === id) {
+      return category;
+    }
+    if (category.child.length > 0) {
+      const found = findCategoryById(category.child, id);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return undefined;
+}
 
 const categoriesSlice = createSlice({
   name: 'categories',
@@ -33,7 +50,19 @@ const categoriesSlice = createSlice({
       })
       .addCase(createCategory.fulfilled, (state, action) => {
         state.status = STATUS_SUCCEEDED;
-        state.categories.push(action.payload); // Добавляем новую категорию в состояние
+
+        const newCategory = action.payload;
+
+        if (newCategory.parent_id) {
+          // Находим родительскую категорию и добавляем новую подкатегорию в её массив child
+          const parentCategory = findCategoryById(state.categories, Number(newCategory.parent_id));
+          if (parentCategory) {
+            parentCategory.child.push(newCategory);
+          }
+        } else {
+          // Если parent_id отсутствует, добавляем категорию в корень
+          state.categories.push(newCategory);
+        }
       })
       .addCase(createCategory.rejected, (state, action) => {
         state.status = STATUS_FAILED;

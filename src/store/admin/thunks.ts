@@ -38,9 +38,9 @@ export const fetchCategories = createAsyncThunk<Category[], void, { rejectValue:
   }
 );
 
-export const createCategory = createAsyncThunk<Category, string, { rejectValue: string }>(
+export const createCategory = createAsyncThunk<Category, { name: string; parent_id?: number }, { rejectValue: string }>(
   'categories/createCategory',
-  async (name, { rejectWithValue }) => {
+  async ({ name, parent_id }, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -53,7 +53,7 @@ export const createCategory = createAsyncThunk<Category, string, { rejectValue: 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ name, parent_id }),
       });
 
       if (!response.ok) {
