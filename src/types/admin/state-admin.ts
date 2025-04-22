@@ -1,4 +1,5 @@
 import { StatusType } from '../../consts';
+import {Category} from '../public/product';
 
 export type Site = {
   id: string;
@@ -7,13 +8,6 @@ export type Site = {
 
 export type SiteState = {
   selectedSite: Site | null;
-};
-
-export type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  child: Category[];
 };
 
 export type CategoriesState = {
