@@ -7,6 +7,8 @@ import {AppDispatch, RootState} from '../../store/store';
 import {createCategory} from '../../store/admin/thunks';
 import Popup from './popup';
 
+// !TODO объединить с GroupManager
+
 function SubgroupManager() {
   const dispatch = useDispatch<AppDispatch>();
   const groups = useSelector((state: RootState) => state.categories.categories);
@@ -38,6 +40,13 @@ function SubgroupManager() {
       openPopup('Группа не найдена.');
       return;
     }
+
+    // Выводим в консоль данные, которые отправляются на сервер
+    const requestData = {
+      name: subgroupName,
+      parent_id: selectedGroupId,
+    };
+    console.log('Отправляемые данные на сервер:', requestData);
 
     try {
       await dispatch(

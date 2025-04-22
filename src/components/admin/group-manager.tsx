@@ -6,6 +6,8 @@ import { AppDispatch } from '../../store/store';
 import {createCategory} from '../../store/admin/thunks';
 import Popup from './popup';
 
+// !TODO объединить с SubgroupManager
+
 function GroupManager() {
   const dispatch = useDispatch<AppDispatch>();
 
