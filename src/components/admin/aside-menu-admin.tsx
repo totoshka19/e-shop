@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from '../../styles/admin/aside-menu-admin.module.scss';
 import { AppDispatch } from '../../store/store';
 import { useDispatch } from 'react-redux';
-import { fetchCategories } from '../../store/admin/categories-slice';
+import { fetchCategories } from '../../store/admin/thunks';
 
 type AsideMenuAdminProps = {
   setCurrentSection: (section: string | null) => void;

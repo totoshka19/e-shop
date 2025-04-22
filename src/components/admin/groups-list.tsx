@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { deleteCategory, updateCategory, fetchCategories } from '../../store/admin/categories-slice';
+import {deleteCategory, fetchCategories, updateCategory} from '../../store/admin/thunks';
 import styles from '../../styles/admin/group-manager.module.scss';
 import { useState, useEffect } from 'react';
 import { CheckIcon, CrossIcon, EditIcon, DeleteIcon } from './icons';
