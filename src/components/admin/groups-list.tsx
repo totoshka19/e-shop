@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import {deleteCategory, fetchCategories, updateCategory} from '../../store/admin/thunks';
+import { deleteCategory, fetchCategories, updateCategory } from '../../store/admin/thunks';
 import styles from '../../styles/admin/group-manager.module.scss';
 import React, { useState, useEffect } from 'react';
-import { CheckIcon, CrossIcon, EditIcon, DeleteIcon } from './icons';
+import { CheckIcon, CrossIcon, EditIcon, DeleteIcon, PlusIcon, MinusIcon } from './icons'; // Импортируем новые иконки
 import Popup from './popup';
 
 function GroupsList() {
@@ -16,6 +16,7 @@ function GroupsList() {
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const [errorPopupMessage, setErrorPopupMessage] = useState<React.ReactNode>('');
+  const [expandedGroups, setExpandedGroups] = useState<number[]>([]);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -81,6 +82,14 @@ function GroupsList() {
     setErrorPopupMessage('');
   };
 
+  const toggleGroup = (groupId: number) => {
+    setExpandedGroups((prev) =>
+      prev.includes(groupId)
+        ? prev.filter((id) => id !== groupId)
+        : [...prev, groupId]
+    );
+  };
+
   return (
     <div className={styles['group-manager']}>
       <h2>Список групп</h2>
@@ -88,42 +97,75 @@ function GroupsList() {
       <ul>
         {groups.map((group) => (
           <li key={group.id} className={styles['group-item']}>
-            {editingGroupId === group.id ? (
-              <div className={styles['edit-mode']}>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  autoFocus
-                />
+            <div className={styles['group-header']}>
+              {/* Кнопка плюсика/минуса */}
+              {Array.isArray(group.child) && group.child.length > 0 && (
                 <button
-                  onClick={() => void saveEdit(group.id)}
-                  className={styles['save-btn']}
+                  className={styles['toggle-btn']}
+                  onClick={() => toggleGroup(group.id)}
                 >
-                  <CheckIcon />
+                  {expandedGroups.includes(group.id) ? (
+                    <MinusIcon color="#555" />
+                  ) : (
+                    <PlusIcon color="#555" />
+                  )}
                 </button>
-                <button onClick={cancelEdit} className={styles['cancel-btn']}>
-                  <CrossIcon />
-                </button>
-              </div>
-            ) : (
-              <>
-                <span className={styles['group-name']}>{group.name}</span>
-                <div className={styles['group-actions']}>
+              )}
+
+              {/* Режим редактирования */}
+              {editingGroupId === group.id ? (
+                <div className={styles['edit-mode']}>
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    autoFocus
+                  />
                   <button
-                    className={styles['edit-btn']}
-                    onClick={() => startEdit(group.id, group.name)}
+                    onClick={() => void saveEdit(group.id)}
+                    className={styles['save-btn']}
                   >
-                    <EditIcon />
+                    <CheckIcon />
                   </button>
-                  <button
-                    className={styles['delete-btn']}
-                    onClick={() => handleDelete(group.id)}
-                  >
-                    <DeleteIcon />
+                  <button onClick={cancelEdit} className={styles['cancel-btn']}>
+                    <CrossIcon />
                   </button>
                 </div>
-              </>
+              ) : (
+                <>
+                  {/* Название группы */}
+                  <span className={styles['group-name']}>{group.name}</span>
+
+                  {/* Кнопки действий */}
+                  <div className={styles['group-actions']}>
+                    <button
+                      className={styles['edit-btn']}
+                      onClick={() => startEdit(group.id, group.name)}
+                    >
+                      <EditIcon />
+                    </button>
+                    <button
+                      className={styles['delete-btn']}
+                      onClick={() => handleDelete(group.id)}
+                    >
+                      <DeleteIcon />
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Подгруппы */}
+            {expandedGroups.includes(group.id) &&
+              Array.isArray(group.child) &&
+              group.child.length > 0 && (
+              <ul className={styles['subgroups']}>
+                {group.child.map((subgroup) => (
+                  <li key={subgroup.id} className={styles['subgroup-item']}>
+                    <span className={styles['subgroup-name']}>{subgroup.name}</span>
+                  </li>
+                ))}
+              </ul>
             )}
           </li>
         ))}

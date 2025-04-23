@@ -4,9 +4,8 @@
 
 .content-wrapper {
   display: flex;
-  height: calc(100vh - 51px);
-  overflow: hidden;
   gap: 10px;
+  min-height: 100vh;
 
   .content {
     display: flex;
