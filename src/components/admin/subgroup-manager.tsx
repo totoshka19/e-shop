@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from '../../styles/admin/group-manager.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { createCategory } from '../../store/admin/thunks';
+import {createCategory, fetchCategories} from '../../store/admin/thunks';
 import Popup from './popup';
 
 // !TODO объединить с GroupManager
@@ -43,23 +43,25 @@ function SubgroupManager() {
     }
 
     try {
+      // Создаем подгруппу
       await dispatch(
         createCategory({
           name: newSubgroupName,
           // eslint-disable-next-line camelcase
-          parent_category_id: selectedGroupId,
+          parent_category_id: selectedGroupId, // Передаем ID родительской категории
         })
-      )
-        .unwrap()
-        .then(() => {
-          openPopup(
-            <>
-              Подгруппа <strong>{newSubgroupName}</strong> успешно добавлена в группу{' '}
-              <strong>{selectedGroup}</strong>.
-            </>
-          );
-          setSubgroupName('');
-        });
+      ).unwrap();
+
+      // Обновляем список категорий
+      dispatch(fetchCategories()).then(() => {
+        openPopup(
+          <>
+            Подгруппа <strong>{newSubgroupName}</strong> успешно добавлена в группу{' '}
+            <strong>{selectedGroup}</strong>.
+          </>
+        );
+        setSubgroupName(''); // Очищаем поле ввода
+      });
     } catch (error) {
       openPopup(
         <>

@@ -3,7 +3,7 @@ import AddEntity from './add-entity';
 import styles from '../../styles/admin/group-manager.module.scss';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
-import { createCategory } from '../../store/admin/thunks';
+import {createCategory, fetchCategories} from '../../store/admin/thunks';
 import Popup from './popup';
 
 // !TODO объединить с SubgroupManager
@@ -33,6 +33,9 @@ function GroupManager() {
           name: newGroupName,
         })
       ).unwrap();
+
+      await dispatch(fetchCategories());
+
       openPopup(
         <>
           Группа успешно добавлена: <strong>{newGroupName}</strong>
