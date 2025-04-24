@@ -1,17 +1,24 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import { deleteCategory, fetchCategories, updateCategory } from '../../store/admin/thunks';
+import {
+  deleteCategory,
+  fetchCategories,
+  updateCategory,
+} from '../../store/admin/thunks';
 import styles from '../../styles/admin/group-manager.module.scss';
 import React, { useState, useEffect } from 'react';
 import { CheckIcon, CrossIcon, EditIcon, DeleteIcon, PlusIcon, MinusIcon } from './icons'; // Импортируем новые иконки
 import Popup from './popup';
+import {Category} from '../../types/public/product';
 
 function GroupsList() {
   const dispatch = useDispatch<AppDispatch>();
   const groups = useSelector((state: RootState) => state.categories.categories); // Категории = Группы
   const error = useSelector((state: RootState) => state.categories.error);
   const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
-  const [newName, setNewName] = useState<string>('');
+  const [newGroupName, setNewGroupName] = useState<string>('');
+  const [editingSubgroupId, setEditingSubgroupId] = useState<number | null>(null);
+  const [newSubgroupName, setNewSubgroupName] = useState<string>('');
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
@@ -57,23 +64,25 @@ function GroupsList() {
     setIsDeletePopupOpen(false);
   };
 
-  const startEdit = (id: number, currentName: string) => {
+  const startEditGroup = (id: number, currentName: string) => {
     setEditingGroupId(id);
-    setNewName(currentName);
+    setNewGroupName(currentName);
   };
 
-  const saveEdit = async (id: number): Promise<void> => {
-    if (newName.trim() !== '') {
+  const saveEditGroup = async (id: number): Promise<void> => {
+    if (newGroupName.trim() !== '') {
       try {
-        await dispatch(updateCategory({ id, name: newName })).unwrap();
+        const currentExpandedGroups = expandedGroups; // Сохраняем текущее состояние
+        await dispatch(updateCategory({ id, name: newGroupName })).unwrap();
         setEditingGroupId(null);
+        setExpandedGroups(currentExpandedGroups); // Восстанавливаем состояние
       } catch {
         setIsErrorPopupOpen(true);
       }
     }
   };
 
-  const cancelEdit = () => {
+  const cancelEditGroup = () => {
     setEditingGroupId(null);
   };
 
@@ -88,6 +97,43 @@ function GroupsList() {
         ? prev.filter((id) => id !== groupId)
         : [...prev, groupId]
     );
+  };
+
+  const startEditSubgroup = (id: number, currentName: string) => {
+    setEditingSubgroupId(id); // Устанавливаем ID редактируемой подгруппы
+    setNewSubgroupName(currentName); // Устанавливаем текущее имя подгруппы
+  };
+
+  const saveEditSubgroup = async (subgroup: Category): Promise<void> => {
+    if (newSubgroupName.trim() !== '') {
+      try {
+        const currentExpandedGroups = expandedGroups; // Сохраняем текущее состояние
+        await dispatch(
+          updateCategory({
+            id: subgroup.id,
+            name: newSubgroupName,
+            // eslint-disable-next-line camelcase
+            parent_category_id: subgroup.parent_category_id,
+          })
+        ).unwrap();
+        setEditingSubgroupId(null); // Выходим из режима редактирования
+        setExpandedGroups(currentExpandedGroups); // Восстанавливаем состояние
+      } catch {
+        setIsErrorPopupOpen(true); // Показываем ошибку при неудаче
+      }
+    }
+  };
+
+  const cancelEditSubgroup = () => {
+    setEditingSubgroupId(null); // Выходим из режима редактирования
+  };
+
+  const handleDeleteSubgroup = async (subgroup: Category) => {
+    try {
+      await dispatch(deleteCategory({ subgroupId: subgroup.id })).unwrap();
+    } catch {
+      setIsErrorPopupOpen(true); // Показываем ошибку при неудаче
+    }
   };
 
   return (
@@ -117,17 +163,17 @@ function GroupsList() {
                 <div className={styles['edit-mode']}>
                   <input
                     type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
+                    value={newGroupName}
+                    onChange={(e) => setNewGroupName(e.target.value)}
                     autoFocus
                   />
                   <button
-                    onClick={() => void saveEdit(group.id)}
+                    onClick={() => void saveEditGroup(group.id)}
                     className={styles['save-btn']}
                   >
                     <CheckIcon />
                   </button>
-                  <button onClick={cancelEdit} className={styles['cancel-btn']}>
+                  <button onClick={cancelEditGroup} className={styles['cancel-btn']}>
                     <CrossIcon />
                   </button>
                 </div>
@@ -140,7 +186,7 @@ function GroupsList() {
                   <div className={styles['group-actions']}>
                     <button
                       className={styles['edit-btn']}
-                      onClick={() => startEdit(group.id, group.name)}
+                      onClick={() => startEditGroup(group.id, group.name)}
                     >
                       <EditIcon />
                     </button>
@@ -162,7 +208,44 @@ function GroupsList() {
               <ul className={styles['subgroups']}>
                 {group.child.map((subgroup) => (
                   <li key={subgroup.id} className={styles['subgroup-item']}>
-                    <span className={styles['subgroup-name']}>{subgroup.name}</span>
+                    {/* Режим редактирования подгруппы */}
+                    {editingSubgroupId === subgroup.id ? (
+                      <div className={styles['edit-mode']}>
+                        <input
+                          type="text"
+                          value={newSubgroupName}
+                          onChange={(e) => setNewSubgroupName(e.target.value)}
+                          autoFocus
+                        />
+                        <button
+                          onClick={() => void saveEditSubgroup(subgroup)}
+                          className={styles['save-btn']}
+                        >
+                          <CheckIcon />
+                        </button>
+                        <button onClick={cancelEditSubgroup} className={styles['cancel-btn']}>
+                          <CrossIcon />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <span className={styles['subgroup-name']}>{subgroup.name}</span>
+                        <div className={styles['group-actions']}>
+                          <button
+                            className={styles['edit-btn']}
+                            onClick={() => startEditSubgroup(subgroup.id, subgroup.name)}
+                          >
+                            <EditIcon />
+                          </button>
+                          <button
+                            className={styles['delete-btn']}
+                            onClick={() => void handleDeleteSubgroup(subgroup)}
+                          >
+                            <DeleteIcon />
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </li>
                 ))}
               </ul>

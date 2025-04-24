@@ -51,7 +51,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    height: 34px;
+    min-height: 34px;
   }
 
   .toggle-btn {
@@ -86,7 +86,6 @@
     align-items: center;
     justify-content: center;
   }
-
   .group-actions button:hover {
     background-color: variables.$primary-color;
     outline: 1px solid variables.$primary-color;
@@ -142,13 +141,15 @@
   }
 
   .group-item ul {
-border: none;
+    border: none;
+    width: 100%;
   }
 
   .subgroup-item {
     display: flex;
     align-items: center;
-    height: 34px;
+    min-height: 34px;
+    height: 100%;
     color: variables.$title-color;
 
     border-top: 1px solid variables.$secondary-color;

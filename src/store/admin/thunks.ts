@@ -67,7 +67,7 @@ export const createCategory = createAsyncThunk<Category, { name: string; parent_
 
       if (!response.ok) {
         const errorData = (await response.json()) as { message?: string };
-        return rejectWithValue(errorData.message || 'Произошла ошибка при создании категории.');
+        return rejectWithValue(errorData.message || 'Произошла ошибка, попробуйте еще раз.');
       }
 
       const data = (await response.json()) as { data: Category };
@@ -80,9 +80,10 @@ export const createCategory = createAsyncThunk<Category, { name: string; parent_
   }
 );
 
-export const updateCategory = createAsyncThunk<Category, { id: number; name: string }, { rejectValue: string }>(
+export const updateCategory = createAsyncThunk<Category, { id: number; name: string; parent_category_id?: number }, { rejectValue: string }>(
   'categories/updateCategory',
-  async ({ id, name }, { dispatch, rejectWithValue }) => {
+  // eslint-disable-next-line camelcase
+  async ({ id, name, parent_category_id }, { dispatch, rejectWithValue }) => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -95,12 +96,13 @@ export const updateCategory = createAsyncThunk<Category, { id: number; name: str
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name }),
+        // eslint-disable-next-line camelcase
+        body: JSON.stringify({ name, parent_category_id }),
       });
 
       if (!response.ok) {
         const errorData = (await response.json()) as { message?: string };
-        return rejectWithValue(errorData.message || 'Произошла ошибка при обновлении категории.');
+        return rejectWithValue(errorData.message || 'Произошла ошибка, попробуйте еще раз.');
       }
 
       await dispatch(fetchCategories());
@@ -135,7 +137,7 @@ export const deleteCategory = createAsyncThunk<number, number, { rejectValue: st
 
       if (!response.ok) {
         const errorData = (await response.json()) as { message?: string };
-        return rejectWithValue(errorData.message || 'Произошла ошибка при удалении категории.');
+        return rejectWithValue(errorData.message || 'Произошла ошибка, попробуйте еще раз.');
       }
 
       return id;
