@@ -4,15 +4,16 @@ import {CheckIcon} from './icons';
 
 type AddEntityProps = {
   placeholder: string;
-  onAdd: (name: string) => void;
+  value: string;
+  onChange: (value: string) => void;
+  onAdd: (value: string) => void;
 };
 
-function AddEntity({ placeholder, onAdd }: AddEntityProps) {
-  const [entityName, setEntityName] = useState('');
+function AddEntity({ placeholder, value, onChange, onAdd }: AddEntityProps) {
   const [isError, setIsError] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEntityName(event.target.value);
+    onChange(event.target.value);
     setIsError(false);
   };
 
@@ -21,8 +22,8 @@ function AddEntity({ placeholder, onAdd }: AddEntityProps) {
   };
 
   const handleAdd = () => {
-    if (entityName.trim()) {
-      onAdd(entityName);
+    if (value.trim()) {
+      onAdd(value);
       setIsError(false);
     } else {
       setIsError(true);
@@ -34,7 +35,7 @@ function AddEntity({ placeholder, onAdd }: AddEntityProps) {
       <input
         type="text"
         placeholder={placeholder}
-        value={entityName}
+        value={value}
         onChange={handleInputChange}
         onFocus={handleInputFocus}
         className={`${styles['input']} ${isError ? styles['error'] : ''}`}

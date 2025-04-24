@@ -16,6 +16,8 @@ function GroupManager() {
     message: '',
   });
 
+  const [groupName, setGroupName] = useState<string>('');
+
   const openPopup = (message: React.ReactNode) => {
     setPopup({ isOpen: true, message });
   };
@@ -24,27 +26,23 @@ function GroupManager() {
     setPopup({ isOpen: false, message: '' });
   };
 
-  const handleAddGroup = async (groupName: string) => {
-    if (!groupName.trim()) {
-      openPopup('Введите название группы.');
-      return;
-    }
-
+  const handleAddGroup = async (newGroupName: string) => {
     try {
       await dispatch(
         createCategory({
-          name: groupName,
+          name: newGroupName,
         })
       ).unwrap();
       openPopup(
         <>
-          Группа успешно добавлена: <strong>{groupName}</strong>
+          Группа успешно добавлена: <strong>{newGroupName}</strong>
         </>
       );
+      setGroupName(''); // Очищаем поле ввода
     } catch (error) {
       openPopup(
         <>
-          Ошибка при добавлении группы: <strong>{groupName}</strong>
+          Ошибка при добавлении группы: <strong>{newGroupName}</strong>
         </>
       );
     }
@@ -55,8 +53,10 @@ function GroupManager() {
       <h2>Добавить группу товаров</h2>
       <AddEntity
         placeholder="Введите название группы"
-        onAdd={(groupName) => {
-          void handleAddGroup(groupName);
+        value={groupName}
+        onChange={(value) => setGroupName(value)}
+        onAdd={(newGroupName) => {
+          void handleAddGroup(newGroupName);
         }}
       />
 

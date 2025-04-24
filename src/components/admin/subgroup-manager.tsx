@@ -13,6 +13,7 @@ function SubgroupManager() {
   const dispatch = useDispatch<AppDispatch>();
   const groups = useSelector((state: RootState) => state.categories.categories);
   const [selectedGroup, setSelectedGroup] = useState('');
+  const [subgroupName, setSubgroupName] = useState('');
   const [hasError, setHasError] = useState(false);
 
   const [popup, setPopup] = useState<{ isOpen: boolean; message: React.ReactNode }>({
@@ -28,39 +29,45 @@ function SubgroupManager() {
     setPopup({ isOpen: false, message: '' });
   };
 
-  const handleAddSubgroup = async (subgroupName: string) => {
+  const handleAddSubgroup = async (newSubgroupName: string) => {
     if (!selectedGroup) {
       setHasError(true);
       return;
     }
 
-    const selectedGroupId = groups.find((group) => group.name === selectedGroup)?.id;
+    const selectedGroupId: number | undefined = groups.find((group) => group.name === selectedGroup)?.id;
+
+    if (!selectedGroupId) {
+      setHasError(true);
+      return;
+    }
 
     try {
       await dispatch(
         createCategory({
-          name: subgroupName,
+          name: newSubgroupName,
           // eslint-disable-next-line camelcase
           parent_category_id: selectedGroupId,
         })
-      ).unwrap();
-      openPopup(
-        <>
-          Подгруппа <strong>{subgroupName}</strong> успешно добавлена в группу{' '}
-          <strong>{selectedGroup}</strong>.
-        </>
-      );
+      )
+        .unwrap()
+        .then(() => {
+          openPopup(
+            <>
+              Подгруппа <strong>{newSubgroupName}</strong> успешно добавлена в группу{' '}
+              <strong>{selectedGroup}</strong>.
+            </>
+          );
+          setSubgroupName('');
+        });
     } catch (error) {
       openPopup(
         <>
-          Ошибка при добавлении подгруппы <strong>{subgroupName}</strong> в группу{' '}
+          Ошибка при добавлении подгруппы <strong>{newSubgroupName}</strong> в группу{' '}
           <strong>{selectedGroup}</strong>.
         </>
       );
     }
-
-    setSelectedGroup('');
-    setHasError(false);
   };
 
   const handleSelectChange = (value: string) => {
@@ -86,8 +93,10 @@ function SubgroupManager() {
 
         <AddEntity
           placeholder="Введите название подгруппы"
-          onAdd={(subgroupName) => {
-            void handleAddSubgroup(subgroupName);
+          value={subgroupName}
+          onChange={(value: string) => setSubgroupName(value.trim())}
+          onAdd={(newSubgroupName: string) => {
+            void handleAddSubgroup(newSubgroupName);
           }}
         />
       </div>
