@@ -7,14 +7,14 @@ import {
 } from '../../store/admin/thunks';
 import styles from '../../styles/admin/group-manager.module.scss';
 import React, {useState, useEffect, useRef} from 'react';
-import { CheckIcon, CrossIcon, EditIcon, DeleteIcon, PlusIcon, MinusIcon } from './icons'; // Импортируем новые иконки
+import { CheckIcon, CrossIcon, EditIcon, DeleteIcon, PlusIcon, MinusIcon } from './icons';
 import Popup from './popup';
 import {Category} from '../../types/public/product';
 import {useAutoResizeTextArea} from '../../hooks/use-auto-resize-text-area';
 
 function GroupsList() {
   const dispatch = useDispatch<AppDispatch>();
-  const groups = useSelector((state: RootState) => state.categories.categories); // Категории = Группы
+  const groups = useSelector((state: RootState) => state.categories.categories);
   const error = useSelector((state: RootState) => state.categories.error);
   const [editingGroupId, setEditingGroupId] = useState<number | null>(null);
   const [newGroupName, setNewGroupName] = useState<string>('');
@@ -116,7 +116,7 @@ function GroupsList() {
   const saveEditGroup = async (id: number): Promise<void> => {
     if (newGroupName.trim() !== '') {
       try {
-        const currentExpandedGroups = [...expandedGroups]; // Сохраняем копию
+        const currentExpandedGroups = [...expandedGroups];
         await dispatch(updateCategory({ id, name: newGroupName })).unwrap();
         setEditingGroupId(null);
         setExpandedGroups(currentExpandedGroups);
@@ -144,14 +144,14 @@ function GroupsList() {
   };
 
   const startEditSubgroup = (id: number, currentName: string) => {
-    setEditingSubgroupId(id); // Устанавливаем ID редактируемой подгруппы
-    setNewSubgroupName(currentName); // Устанавливаем текущее имя подгруппы
+    setEditingSubgroupId(id);
+    setNewSubgroupName(currentName);
   };
 
   const saveEditSubgroup = async (subgroup: Category): Promise<void> => {
     if (newSubgroupName.trim() !== '') {
       try {
-        const currentExpandedGroups = expandedGroups; // Сохраняем текущее состояние
+        const currentExpandedGroups = expandedGroups;
         await dispatch(
           updateCategory({
             id: subgroup.id,
@@ -160,16 +160,16 @@ function GroupsList() {
             parent_category_id: subgroup.parent_category_id,
           })
         ).unwrap();
-        setEditingSubgroupId(null); // Выходим из режима редактирования
-        setExpandedGroups(currentExpandedGroups); // Восстанавливаем состояние
+        setEditingSubgroupId(null);
+        setExpandedGroups(currentExpandedGroups);
       } catch {
-        setIsErrorPopupOpen(true); // Показываем ошибку при неудаче
+        setIsErrorPopupOpen(true);
       }
     }
   };
 
   const cancelEditSubgroup = () => {
-    setEditingSubgroupId(null); // Выходим из режима редактирования
+    setEditingSubgroupId(null);
   };
 
   const handleDeleteSubgroup = (subgroup: Category) => {
@@ -196,7 +196,6 @@ function GroupsList() {
         {groups.map((group) => (
           <li key={group.id} className={styles['group-item']}>
             <div className={styles['group-header']}>
-              {/* Кнопка плюсика/минуса */}
               {Array.isArray(group.child) && group.child.length > 0 && (
                 <button
                   className={styles['toggle-btn']}
@@ -210,7 +209,6 @@ function GroupsList() {
                 </button>
               )}
 
-              {/* Режим редактирования */}
               {editingGroupId === group.id ? (
                 <div className={styles['edit-mode']}>
                   <textarea
@@ -232,10 +230,8 @@ function GroupsList() {
                 </div>
               ) : (
                 <>
-                  {/* Название группы */}
                   <span className={styles['group-name']}>{group.name}</span>
 
-                  {/* Кнопки действий */}
                   <div className={styles['group-actions']}>
                     <button
                       className={styles['edit-btn']}
@@ -254,14 +250,12 @@ function GroupsList() {
               )}
             </div>
 
-            {/* Подгруппы */}
             {expandedGroups.includes(group.id) &&
               Array.isArray(group.child) &&
               group.child.length > 0 && (
               <ul className={styles['subgroups']}>
                 {group.child.map((subgroup) => (
                   <li key={subgroup.id} className={styles['subgroup-item']}>
-                    {/* Режим редактирования подгруппы */}
                     {editingSubgroupId === subgroup.id ? (
                       <div className={styles['edit-mode']}>
                         <textarea

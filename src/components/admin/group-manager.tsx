@@ -41,7 +41,7 @@ function GroupManager() {
           Группа успешно добавлена: <strong>{newGroupName}</strong>
         </>
       );
-      setGroupName(''); // Очищаем поле ввода
+      setGroupName('');
     } catch (error) {
       openPopup(
         <>

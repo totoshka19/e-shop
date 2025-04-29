@@ -81,7 +81,7 @@ export const createCategory = createAsyncThunk<Category, { name: string; parent_
 );
 
 export const updateCategory = createAsyncThunk<
-  number, // мы больше не возвращаем категорию, только ID
+  number,
   { id: number; name: string; parent_category_id?: number },
   { rejectValue: string }
   >(
@@ -109,10 +109,8 @@ export const updateCategory = createAsyncThunk<
           return rejectWithValue(errorData.message || 'Произошла ошибка, попробуйте еще раз.');
         }
 
-        // После успешного обновления на бэке — просто запросим всё заново
         await dispatch(fetchCategories());
 
-        // Возвращаем только ID для внутренней логики
         return id;
       } catch (error) {
         const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';

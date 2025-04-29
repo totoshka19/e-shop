@@ -43,16 +43,14 @@ function SubgroupManager() {
     }
 
     try {
-      // Создаем подгруппу
       await dispatch(
         createCategory({
           name: newSubgroupName,
           // eslint-disable-next-line camelcase
-          parent_category_id: selectedGroupId, // Передаем ID родительской категории
+          parent_category_id: selectedGroupId,
         })
       ).unwrap();
 
-      // Обновляем список категорий
       dispatch(fetchCategories()).then(() => {
         openPopup(
           <>
@@ -60,7 +58,7 @@ function SubgroupManager() {
             <strong>{selectedGroup}</strong>.
           </>
         );
-        setSubgroupName(''); // Очищаем поле ввода
+        setSubgroupName('');
       });
     } catch (error) {
       openPopup(
