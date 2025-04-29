@@ -172,9 +172,9 @@ function GroupsList() {
 
   const handleDeleteSubgroup = async (subgroup: Category) => {
     try {
-      await dispatch(deleteCategory({ subgroupId: subgroup.id })).unwrap();
+      await dispatch(deleteCategory(subgroup.id)).unwrap();
     } catch {
-      setIsErrorPopupOpen(true); // Показываем ошибку при неудаче
+      setIsErrorPopupOpen(true);
     }
   };
 
