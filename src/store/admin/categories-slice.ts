@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { STATUS_FAILED, STATUS_IDLE, STATUS_LOADING, STATUS_SUCCEEDED} from '../../consts';
 import { CategoriesState } from '../../types/admin/state-admin';
-import {createCategory, deleteCategory, fetchCategories, updateCategory} from './thunks';
+import {createCategory, deleteCategory, fetchCategories, updateCategory} from './caregories-thunks';
 import {Category} from '../../types/public/product';
 
 const initialState: CategoriesState = {

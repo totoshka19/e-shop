@@ -4,7 +4,7 @@ import {
   deleteCategory,
   fetchCategories,
   updateCategory,
-} from '../../store/admin/thunks';
+} from '../../store/admin/caregories-thunks';
 import styles from '../../styles/admin/group-manager.module.scss';
 import React, {useState, useEffect, useRef} from 'react';
 import { CheckIcon, CrossIcon, EditIcon, DeleteIcon, PlusIcon, MinusIcon } from './icons';

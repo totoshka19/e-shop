@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store"; // путь до твоего store.ts
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store'; // путь до твоего store.ts
 
 interface SiteConfig {
   shopName: string;
@@ -18,24 +18,26 @@ export default function SiteSettings() {
   const token = useSelector((state: RootState) => state.auth.token);
 
   const [form, setForm] = useState<SiteConfig>({
-    shopName: "",
-    phone: "",
-    email: "",
-    yookassaIdentificator: "",
-    yookassaSecret: "",
-    wbToken: "",
+    shopName: '',
+    phone: '',
+    email: '',
+    yookassaIdentificator: '',
+    yookassaSecret: '',
+    wbToken: '',
     logo: null,
-    logoPreview: "",
+    logoPreview: '',
   });
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     const fetchConfig = async () => {
       try {
-        const response = await axios.get("/api/admin/config", {
+        const response = await axios.get('/api/admin/config', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -45,11 +47,11 @@ export default function SiteSettings() {
           setForm((prev) => ({
             ...prev,
             ...response.data,
-            logoPreview: response.data.logo || "",
+            logoPreview: response.data.logo || '',
           }));
         }
       } catch (error) {
-        console.error("Ошибка при загрузке настроек:", error);
+        console.error('Ошибка при загрузке настроек:', error);
       }
     };
 
@@ -75,29 +77,31 @@ export default function SiteSettings() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!token) return;
+    if (!token) {
+      return;
+    }
 
     setLoading(true);
 
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => {
-      if (key !== "logoPreview" && value) {
+      if (key !== 'logoPreview' && value) {
         formData.append(key, value as Blob | string);
       }
     });
 
     try {
-      await axios.post("/api/admin/config/update", formData, {
+      await axios.post('/api/admin/config/update', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       });
 
-      alert("Настройки успешно обновлены!");
+      alert('Настройки успешно обновлены!');
     } catch (error) {
-      console.error("Ошибка при обновлении настроек:", error);
-      alert("Произошла ошибка");
+      console.error('Ошибка при обновлении настроек:', error);
+      alert('Произошла ошибка');
     } finally {
       setLoading(false);
     }
@@ -118,12 +122,12 @@ export default function SiteSettings() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              { label: "Название магазина", name: "shopName" },
-              { label: "Телефон", name: "phone" },
-              { label: "Email", name: "email" },
-              { label: "YooKassa ID", name: "yookassaIdentificator" },
-              { label: "YooKassa Secret", name: "yookassaSecret" },
-              { label: "WB Token", name: "wbToken" },
+              { label: 'Название магазина', name: 'shopName' },
+              { label: 'Телефон', name: 'phone' },
+              { label: 'Email', name: 'email' },
+              { label: 'YooKassa ID', name: 'yookassaIdentificator' },
+              { label: 'YooKassa Secret', name: 'yookassaSecret' },
+              { label: 'WB Token', name: 'wbToken' },
             ].map(({ label, name }) => (
               <div key={name}>
                 <label htmlFor={name} className="block mb-2 font-semibold text-gray-700">
@@ -170,7 +174,7 @@ export default function SiteSettings() {
             disabled={loading}
             className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? "Сохранение..." : "Сохранить изменения"}
+            {loading ? 'Сохранение...' : 'Сохранить изменения'}
           </button>
         </form>
       )}

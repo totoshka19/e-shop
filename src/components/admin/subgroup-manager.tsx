@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import styles from '../../styles/admin/group-manager.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
-import {createCategory, fetchCategories} from '../../store/admin/thunks';
+import {createCategory, fetchCategories} from '../../store/admin/caregories-thunks';
 import Popup from './popup';
 
 // !TODO объединить с GroupManager

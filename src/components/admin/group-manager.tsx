@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import AddEntity from './add-entity';
-import styles from '../../styles/admin/group-manager.module.scss';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
-import {createCategory, fetchCategories} from '../../store/admin/thunks';
+import {createCategory, fetchCategories} from '../../store/admin/caregories-thunks';
 import Popup from './popup';
+import styles from '../../styles/admin/group-manager.module.scss';
 
 // !TODO объединить с SubgroupManager
 

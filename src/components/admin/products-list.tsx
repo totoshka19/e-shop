@@ -1,12 +1,8 @@
-
-import styles from '../../styles/admin/group-manager.module.scss';
-
-
 function ProductsList() {
 
 
   return (
-    <div className={styles['group-manager']}>
+    <div>
       <h2>Список товаров</h2>
 
 
