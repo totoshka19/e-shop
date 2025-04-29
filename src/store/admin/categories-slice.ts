@@ -69,25 +69,8 @@ const categoriesSlice = createSlice({
         state.status = STATUS_LOADING;
         state.error = null;
       })
-      .addCase(updateCategory.fulfilled, (state, action) => {
+      .addCase(updateCategory.fulfilled, (state) => {
         state.status = STATUS_SUCCEEDED;
-        const updatedCategory = action.payload;
-
-        const updateCategoryRecursive = (categories: Category[]): boolean => {
-          for (let i = 0; i < categories.length; i++) {
-            if (categories[i].id === updatedCategory.id) {
-              categories[i] = updatedCategory;
-              return true;
-            }
-            if (Array.isArray(categories[i].child)) {
-              if (updateCategoryRecursive(categories[i].child)) {
-                return true;
-              }
-            }
-          }
-          return false;
-        };
-        updateCategoryRecursive(state.categories);
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.status = STATUS_FAILED;

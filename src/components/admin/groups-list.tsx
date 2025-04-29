@@ -102,10 +102,10 @@ function GroupsList() {
   const saveEditGroup = async (id: number): Promise<void> => {
     if (newGroupName.trim() !== '') {
       try {
-        const currentExpandedGroups = expandedGroups; // Сохраняем текущее состояние
+        const currentExpandedGroups = [...expandedGroups]; // Сохраняем копию
         await dispatch(updateCategory({ id, name: newGroupName })).unwrap();
         setEditingGroupId(null);
-        setExpandedGroups(currentExpandedGroups); // Восстанавливаем состояние
+        setExpandedGroups(currentExpandedGroups);
       } catch {
         setIsErrorPopupOpen(true);
       }

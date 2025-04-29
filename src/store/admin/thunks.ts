@@ -80,44 +80,46 @@ export const createCategory = createAsyncThunk<Category, { name: string; parent_
   }
 );
 
-export const updateCategory = createAsyncThunk<Category, { id: number; name: string; parent_category_id?: number }, { rejectValue: string }>(
-  'categories/updateCategory',
-  // eslint-disable-next-line camelcase
-  async ({ id, name, parent_category_id }, { dispatch, rejectWithValue }) => {
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        return rejectWithValue('Токен отсутствует.');
+export const updateCategory = createAsyncThunk<
+  number, // мы больше не возвращаем категорию, только ID
+  { id: number; name: string; parent_category_id?: number },
+  { rejectValue: string }
+  >(
+    'categories/updateCategory',
+    // eslint-disable-next-line camelcase
+    async ({ id, name, parent_category_id }, { dispatch, rejectWithValue }) => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          return rejectWithValue('Токен отсутствует.');
+        }
+
+        const response = await fetch(`${URL_API}/admin/categories/${id}/update`, {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          // eslint-disable-next-line camelcase
+          body: JSON.stringify({ name, parent_category_id }),
+        });
+
+        if (!response.ok) {
+          const errorData = (await response.json()) as { message?: string };
+          return rejectWithValue(errorData.message || 'Произошла ошибка, попробуйте еще раз.');
+        }
+
+        // После успешного обновления на бэке — просто запросим всё заново
+        await dispatch(fetchCategories());
+
+        // Возвращаем только ID для внутренней логики
+        return id;
+      } catch (error) {
+        const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
+        return rejectWithValue(errorMessage);
       }
-
-      const response = await fetch(`${URL_API}/admin/categories/${id}/update`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        // eslint-disable-next-line camelcase
-        body: JSON.stringify({ name, parent_category_id }),
-      });
-
-      if (!response.ok) {
-        const errorData = (await response.json()) as { message?: string };
-        return rejectWithValue(errorData.message || 'Произошла ошибка, попробуйте еще раз.');
-      }
-
-      await dispatch(fetchCategories());
-      return {
-        id,
-        name,
-        slug: '',
-        child: [],
-      };
-    } catch (error) {
-      const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
-      return rejectWithValue(errorMessage);
     }
-  }
-);
+  );
 
 export const deleteCategory = createAsyncThunk<number, number, { rejectValue: string }>(
   'categories/deleteCategory',
