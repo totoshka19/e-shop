@@ -27,20 +27,21 @@
     width: 400px;
     font-size: 14px;
     border-radius: 4px;
+    overflow: hidden;
+  }
 
-    .group-item {
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid variables.$secondary-color;
+  .group-item {
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid variables.$secondary-color;
 
-      &:last-child {
-        border-bottom: none;
-      }
+    &:last-child {
+      border-bottom: none;
+    }
 
-      span {
-        margin-left: 10px;
-      }
+    span {
+      margin-left: 10px;
     }
   }
 
@@ -92,11 +93,9 @@
   }
 
   .group-item:first-child .group-actions .delete-btn {
-    border-top-right-radius: 4px;
   }
 
   .group-item:last-child .group-actions .delete-btn {
-    border-bottom-right-radius: 4px;
   }
 
   .edit-mode {
@@ -143,6 +142,7 @@
   .group-item ul {
     border: none;
     width: 100%;
+    border-radius: 0;
   }
 
   .subgroup-item {
