@@ -10,6 +10,7 @@ const initialState: CategoriesState = {
   error: null,
 };
 
+// !TODO вынести в utils.ts
 function findCategoryById(categories: Category[], id: number): Category | undefined {
   for (const category of categories) {
     if (category.id === id) {
