@@ -11,7 +11,11 @@ import AsideMenuAdmin from '../../components/admin/aside-menu-admin';
 import GroupManager from '../../components/admin/group-manager';
 import SubgroupManager from '../../components/admin/subgroup-manager';
 import GroupsList from '../../components/admin/groups-list';
+<<<<<<< Updated upstream
 import ProductsList from '../../components/admin/products-list';
+=======
+import Settings from '../../components/admin/Settings';
+>>>>>>> Stashed changes
 import styles from '../../styles/admin/admin-page.module.scss';
 
 function AdminPage() {
@@ -128,7 +132,7 @@ function AdminPage() {
               {currentSection === 'site' && (
                 <div id="site">
                   <div className={styles['content']}>
-                    Управление сайтом
+                  <Settings />
                   </div>
                 </div>
               )}
