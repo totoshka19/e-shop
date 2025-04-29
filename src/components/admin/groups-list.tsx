@@ -32,6 +32,30 @@ function GroupsList() {
   useAutoResizeTextArea(subgroupTextareaRef, newSubgroupName);
 
   useEffect(() => {
+    if (editingGroupId !== null && groupTextareaRef.current) {
+      const el = groupTextareaRef.current;
+      if ('focus' in el) {
+        el.focus();
+      }
+      if ('setSelectionRange' in el) {
+        el.setSelectionRange(el.value.length, el.value.length);
+      }
+    }
+  }, [editingGroupId]);
+
+  useEffect(() => {
+    if (editingSubgroupId !== null && subgroupTextareaRef.current) {
+      const el = subgroupTextareaRef.current;
+      if ('focus' in el) {
+        el.focus();
+      }
+      if ('setSelectionRange' in el) {
+        el.setSelectionRange(el.value.length, el.value.length);
+      }
+    }
+  }, [editingSubgroupId]);
+
+  useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
