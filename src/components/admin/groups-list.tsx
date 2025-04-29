@@ -22,6 +22,8 @@ function GroupsList() {
   const [newSubgroupName, setNewSubgroupName] = useState<string>('');
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [groupToDelete, setGroupToDelete] = useState<number | null>(null);
+  const [isSubgroupDeletePopupOpen, setIsSubgroupDeletePopupOpen] = useState(false);
+  const [subgroupToDelete, setSubgroupToDelete] = useState<Category | null>(null);
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const [errorPopupMessage, setErrorPopupMessage] = useState<React.ReactNode>('');
   const [expandedGroups, setExpandedGroups] = useState<number[]>([]);
@@ -170,12 +172,20 @@ function GroupsList() {
     setEditingSubgroupId(null); // Выходим из режима редактирования
   };
 
-  const handleDeleteSubgroup = async (subgroup: Category) => {
-    try {
-      await dispatch(deleteCategory(subgroup.id)).unwrap();
-    } catch {
-      setIsErrorPopupOpen(true);
+  const handleDeleteSubgroup = (subgroup: Category) => {
+    setSubgroupToDelete(subgroup);
+    setIsSubgroupDeletePopupOpen(true);
+  };
+
+  const confirmDeleteSubgroup = () => {
+    if (subgroupToDelete !== null) {
+      dispatch(deleteCategory(subgroupToDelete.id));
+      setIsSubgroupDeletePopupOpen(false);
     }
+  };
+
+  const cancelDeleteSubgroup = () => {
+    setIsSubgroupDeletePopupOpen(false);
   };
 
   return (
@@ -309,6 +319,21 @@ function GroupsList() {
           }
           onClose={cancelDelete}
           onConfirm={confirmDelete}
+          type="confirmation"
+        />
+      )}
+
+      {isSubgroupDeletePopupOpen && subgroupToDelete !== null && (
+        <Popup
+          isOpen={isSubgroupDeletePopupOpen}
+          message={
+            <>
+              Вы уверены, что хотите удалить подгруппу{' '}
+              <strong>{subgroupToDelete.name}</strong>?
+            </>
+          }
+          onClose={cancelDeleteSubgroup}
+          onConfirm={confirmDeleteSubgroup}
           type="confirmation"
         />
       )}
