@@ -5,6 +5,8 @@
 .group-manager {
   margin: 10px;
   width: 400px;
+  min-height: 34px;
+  height: 100%;
 
   h2 {
     margin-bottom: 10px;
@@ -32,11 +34,6 @@
       gap: 10px;
       border-bottom: 1px solid variables.$secondary-color;
 
-      &:hover {
-        //background-color: variables.$secondary-color;
-        //cursor: pointer;
-      }
-
       &:last-child {
         border-bottom: none;
       }
@@ -52,6 +49,7 @@
     align-items: center;
     gap: 10px;
     min-height: 34px;
+    height: 100%;
   }
 
   .toggle-btn {
@@ -73,7 +71,9 @@
   .group-actions {
     display: flex;
     margin-left: auto;
-    height: 100%;
+    min-height: 34px;
+    align-self: stretch;
+    flex-shrink: 0;
   }
 
   .group-actions button {
@@ -103,7 +103,8 @@
     display: flex;
     align-items: center;
     width: 100%;
-    height: 33px;
+    min-height: 34px;
+    align-self: stretch;
 
     input {
       padding-left: 10px;
@@ -134,12 +135,6 @@
     }
   }
 
-  .subgroups {
-    //margin-left: 30px;
-    //padding: 0;
-    //list-style: none;
-  }
-
   .group-item ul {
     border: none;
     width: 100%;
@@ -151,18 +146,10 @@
     min-height: 34px;
     height: 100%;
     color: variables.$title-color;
-
     border-top: 1px solid variables.$secondary-color;
-
-    //&:hover {
-    //  background-color: lighten(variables.$secondary-color, 10%);
-    //  cursor: default;
-    //}
 
     span {
       padding-left: 40px;
     }
-
-
   }
 }
