@@ -7,17 +7,24 @@ export const useAutoResizeTextArea = (
   const previousValueRef = useRef<string>(value);
 
   useEffect(() => {
+    const ta = textAreaRef.current;
+    if (!ta) {
+      return;
+    }
+
+    // Всегда сбрасываем высоту перед расчетом новой
+    ta.style.height = 'auto';
+    
     // Проверяем, действительно ли изменилось значение
     if (previousValueRef.current !== value) {
       previousValueRef.current = value;
-
-      const ta = textAreaRef.current;
-      if (!ta) {
-        return;
-      }
-
-      ta.style.height = 'auto';
-      ta.style.height = `${ta.scrollHeight}px`;
+      
+      // Устанавливаем минимальную высоту
+      const minHeight = 34; // Минимальная высота в пикселях
+      const scrollHeight = ta.scrollHeight;
+      
+      // Устанавливаем новую высоту, но не меньше минимальной
+      ta.style.height = `${Math.max(scrollHeight, minHeight)}px`;
     }
   }, [textAreaRef, value]);
 };
