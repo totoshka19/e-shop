@@ -40,9 +40,12 @@ function GroupsList() {
       if ('setSelectionRange' in el) {
         el.setSelectionRange(el.value.length, el.value.length);
       }
-      // Сбрасываем высоту при входе в режим редактирования
-      el.style.height = 'auto';
-      el.style.height = `${el.scrollHeight}px`;
+      if ('style' in el) {
+        el.style.height = 'auto';
+      }
+      if ('style' in el) {
+        el.style.height = `${el.scrollHeight}px`;
+      }
     }
   }, [editingGroupId]);
 
@@ -55,9 +58,12 @@ function GroupsList() {
       if ('setSelectionRange' in el) {
         el.setSelectionRange(el.value.length, el.value.length);
       }
-      // Сбрасываем высоту при входе в режим редактирования
-      el.style.height = 'auto';
-      el.style.height = `${el.scrollHeight}px`;
+      if ('style' in el) {
+        el.style.height = 'auto';
+      }
+      if ('style' in el) {
+        el.style.height = `${el.scrollHeight}px`;
+      }
     }
   }, [editingSubgroupId]);
 
