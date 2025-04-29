@@ -106,12 +106,15 @@
     min-height: 34px;
     align-self: stretch;
 
-    input {
-      padding-left: 10px;
-      height: 100%;
+    textarea {
       flex: 1;
+      height: 100%;
+      margin-left: 10px;
+      resize: none; /* запрещаем ручное изменение */
       border: none;
       outline: none;
+      background: transparent;
+      overflow: hidden;
     }
 
     button {

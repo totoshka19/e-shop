@@ -6,10 +6,11 @@ import {
   updateCategory,
 } from '../../store/admin/thunks';
 import styles from '../../styles/admin/group-manager.module.scss';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { CheckIcon, CrossIcon, EditIcon, DeleteIcon, PlusIcon, MinusIcon } from './icons'; // Импортируем новые иконки
 import Popup from './popup';
 import {Category} from '../../types/public/product';
+import {useAutoResizeTextArea} from '../../hooks/use-auto-resize-text-area';
 
 function GroupsList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,6 +25,11 @@ function GroupsList() {
   const [isErrorPopupOpen, setIsErrorPopupOpen] = useState(false);
   const [errorPopupMessage, setErrorPopupMessage] = useState<React.ReactNode>('');
   const [expandedGroups, setExpandedGroups] = useState<number[]>([]);
+
+  const groupTextareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const subgroupTextareaRef = useRef<HTMLTextAreaElement | null>(null);
+  useAutoResizeTextArea(groupTextareaRef, newGroupName);
+  useAutoResizeTextArea(subgroupTextareaRef, newSubgroupName);
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -161,11 +167,12 @@ function GroupsList() {
               {/* Режим редактирования */}
               {editingGroupId === group.id ? (
                 <div className={styles['edit-mode']}>
-                  <input
-                    type="text"
+                  <textarea
+                    ref={groupTextareaRef}
                     value={newGroupName}
                     onChange={(e) => setNewGroupName(e.target.value)}
                     autoFocus
+                    className={styles['edit-textarea']}
                   />
                   <button
                     onClick={() => void saveEditGroup(group.id)}
@@ -211,11 +218,12 @@ function GroupsList() {
                     {/* Режим редактирования подгруппы */}
                     {editingSubgroupId === subgroup.id ? (
                       <div className={styles['edit-mode']}>
-                        <input
-                          type="text"
+                        <textarea
+                          ref={subgroupTextareaRef}
                           value={newSubgroupName}
                           onChange={(e) => setNewSubgroupName(e.target.value)}
                           autoFocus
+                          className={styles['edit-textarea']}
                         />
                         <button
                           onClick={() => void saveEditSubgroup(subgroup)}
