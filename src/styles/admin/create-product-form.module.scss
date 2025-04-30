@@ -1,0 +1,89 @@
+@use '../src/styles/variables';
+@use '../src/styles/reset';
+@use '../src/styles/global';
+
+
+.product-manager {
+  margin: 10px 10px 30px;
+  max-width: 800px;
+  width: 100%;
+
+  h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: variables.$title-color;
+
+  }
+  .form {
+    padding: 10px;
+    border: 1px solid variables.$secondary-color;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: variables.$light-background;
+  }
+
+  .field {
+    margin-bottom: 15px;
+  }
+
+  .field label {
+    color: variables.$title-color;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .field input[type="text"],
+  .field input[type="number"],
+  .field textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid variables.$secondary-color;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+
+  .field input[type="checkbox"] {
+    margin-right: 10px;
+  }
+
+  .values {
+    margin-top: 10px;
+  }
+
+  .attributePair {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .attributePair input {
+    flex: 1;
+  }
+
+  .attributeActions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .addFieldBtn {
+    @extend .btn;
+    padding: 10px 20px;
+    background-color: variables.$grey-color;
+    color: variables.$light-background;
+  }
+
+  .submit-btn {
+    @extend .btn;
+    background-color: variables.$primary-color;
+    padding: 10px 20px;
+  }
+}
+
+
+

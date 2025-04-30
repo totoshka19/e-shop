@@ -14,6 +14,7 @@ import GroupsList from '../../components/admin/groups-list';
 import ProductsList from '../../components/admin/products-list';
 import Settings from '../../components/admin/Settings';
 import styles from '../../styles/admin/admin-page.module.scss';
+import CreateProductForm from '../../components/admin/create-product-form';
 
 function AdminPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -104,6 +105,9 @@ function AdminPage() {
 
               {currentSection === 'products' && (
                 <div id="products">
+                  <div className={styles['content']}>
+                    <CreateProductForm />
+                  </div>
                   <div className={styles['content']}>
                     <ProductsList />
                   </div>

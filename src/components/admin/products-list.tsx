@@ -32,7 +32,7 @@ function ProductsList() {
     { id: 4, name: 'Артикул', value: product.sku },
     { id: 5, name: 'Количество', value: product.available_count.toString() },
     { id: 6, name: 'В наличии', value: product.is_available ? 'Да' : 'Нет' },
-    { id: 7, name: 'В фид', value: product.to_feed ? 'Да' : 'Нет' },
+    { id: 7, name: 'Отправить в Яндекс товары', value: product.to_feed ? 'Да' : 'Нет' },
     { id: 8, name: 'Логотип', value: product.logo || 'Нет' },
   ];
 

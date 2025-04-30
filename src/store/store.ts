@@ -25,7 +25,7 @@ export const store = configureStore({
     filter: filterReducer,
     auth: authReducer,
     site: siteReducer,
-    categories: categoriesReducer,
+    categories: categoriesReducer, // !TODO потом переименовать в adminСategories: adminСategoriesReducer и может вообще разделить store на public и admin
     adminProducts: adminProductsReducer,
   },
 });
