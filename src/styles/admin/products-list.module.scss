@@ -1,4 +1,6 @@
-@use '../src/styles/variables' as variables;
+@use '../src/styles/variables';
+@use '../src/styles/reset';
+@use '../src/styles/global';
 
 .products-manager {
   margin: 10px;
@@ -9,6 +11,112 @@
   h2 {
     margin-bottom: 10px;
     font-size: 18px;
+    color: variables.$title-color;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid variables.$secondary-color;
+    width: 100%;
+    font-size: 14px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .product-item {
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid variables.$secondary-color;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    span {
+      margin-left: 10px;
+    }
+  }
+
+  .product-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 34px;
+    height: 100%;
+  }
+
+  .toggle-btn {
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin-left: 10px;
+    color: variables.$primary-color;
+
+    &:hover {
+      color: darken(variables.$primary-color, 10%);
+    }
+  }
+
+  .product-actions {
+    display: flex;
+    margin-left: auto;
+    min-height: 34px;
+    align-self: stretch;
+    flex-shrink: 0;
+  }
+
+  .product-actions button {
+    outline: 1px solid variables.$grey-color;
+    width: 43px;
+    height: 100%;
+    background-color: variables.$grey-color;
+    color: variables.$light-background;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: variables.$primary-color;
+      outline: 1px solid variables.$primary-color;
+    }
+  }
+
+  .product-item ul {
+    border: none;
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .characteristic-item {
+    display: flex;
+    align-items: center;
+    min-height: 34px;
+    height: 100%;
+    color: variables.$title-color;
+    border-top: 1px solid variables.$secondary-color;
+  }
+
+  .characteristic-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding-left: 40px;
+    gap: 10px;
+  }
+
+  .characteristic-name {
+    color: variables.$grey-color;
+    min-width: 120px;
+  }
+
+  .characteristic-value {
     color: variables.$title-color;
   }
 }
