@@ -1,8 +1,9 @@
+import styles from '../../styles/admin/products-list.module.scss';
+
 function ProductsList() {
 
-
   return (
-    <div>
+    <div className={styles['products-manager']}>
       <h2>Список товаров</h2>
 
 

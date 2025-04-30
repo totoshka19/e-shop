@@ -32,15 +32,15 @@ export type BaseProduct = {
 
 export type Product = {
   id: number;
-  name: string | null;
+  name: string;
   description: string;
   short_description: string;
   price: number;
-  sku: string | null;
+  sku: string;
   available_count: number;
   is_available: boolean;
   to_feed: boolean;
-  category: Category;
+  category?: Category;
   images: string[];
   logo: string | null;
   marketplace: Marketplace[];

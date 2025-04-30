@@ -8,6 +8,7 @@ import filterReducer from './public/filter-slice';
 import authReducer from './admin/auth-slice';
 import siteReducer from './admin/site-slice';
 import categoriesReducer from './admin/categories-slice';
+import adminProductsReducer from './admin/products-slice';
 import { initializeMockData } from '../mock/utils';
 
 // !TODO заменить на данные с сервера
@@ -25,6 +26,7 @@ export const store = configureStore({
     auth: authReducer,
     site: siteReducer,
     categories: categoriesReducer,
+    adminProducts: adminProductsReducer,
   },
 });
 
