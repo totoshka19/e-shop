@@ -106,14 +106,14 @@ function AdminPage() {
 
               {currentSection === 'products' && (
                 <div id="products">
+                  <button 
+                    className={styles['create-product-btn']}
+                    onClick={() => setShowCreateForm(!showCreateForm)}
+                  >
+                    {showCreateForm ? 'Скрыть форму' : 'Создать товар'}
+                  </button>
                   <div className={styles['content']}>
-                    <button
-                      className={styles['create-product-btn']}
-                      onClick={() => setShowCreateForm(!showCreateForm)}
-                    >
-                      {showCreateForm ? 'Скрыть форму' : 'Добавить новый товар'}
-                    </button>
-                    {showCreateForm && <CreateProductForm />}
+                    {showCreateForm && <CreateProductForm onClose={() => setShowCreateForm(false)} />}
                   </div>
                   <div className={styles['content']}>
                     <ProductsList />

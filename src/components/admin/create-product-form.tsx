@@ -10,7 +10,11 @@ interface Attribute {
   values: Record<string, string>;
 }
 
-const CreateProductForm = () => {
+interface CreateProductFormProps {
+  onClose: () => void;
+}
+
+const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [formData, setFormData] = useState<Omit<Product, 'id'>>({
