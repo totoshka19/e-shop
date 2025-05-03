@@ -4,9 +4,13 @@
 
 .group-manager {
   margin: 10px;
-  width: 400px;
+  width: 100%;
   min-height: 34px;
   height: 100%;
+
+  @media (min-width: 1201px) {
+    width: 400px;
+  }
 
   h2 {
     margin-bottom: 10px;
@@ -17,6 +21,11 @@
   .group-manager_wrapper {
     display: flex;
     gap: 10px;
+    flex-wrap: nowrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
   }
 
   ul {
@@ -24,7 +33,7 @@
     padding: 0;
     margin: 0;
     border: 1px solid variables.$secondary-color;
-    width: 400px;
+    width: 100%;
     font-size: 14px;
     border-radius: 4px;
     overflow: hidden;
@@ -42,6 +51,7 @@
 
     span {
       margin-left: 10px;
+      word-break: break-word;
     }
   }
 
@@ -51,6 +61,11 @@
     gap: 10px;
     min-height: 34px;
     height: 100%;
+    flex-wrap: wrap;
+
+    @media (max-width: 480px) {
+      padding: 5px;
+    }
   }
 
   .toggle-btn {
@@ -63,9 +78,11 @@
     cursor: pointer;
     margin-left: 10px;
     color: variables.$primary-color;
+    flex-shrink: 0;
 
     &:hover {
-      color: darken(variables.$primary-color, 10%);
+      color: variables.$primary-color;
+      opacity: 0.8;
     }
   }
 
@@ -87,6 +104,7 @@
     align-items: center;
     justify-content: center;
   }
+
   .group-actions button:hover {
     background-color: variables.$primary-color;
     outline: 1px solid variables.$primary-color;
@@ -104,17 +122,19 @@
     width: 100%;
     min-height: 34px;
     align-self: stretch;
+    flex-wrap: wrap;
 
     textarea {
       flex: 1;
       height: 100%;
       margin-left: 10px;
-      resize: none; /* запрещаем ручное изменение */
+      resize: none;
       border: none;
       outline: none;
       background: transparent;
       overflow: hidden;
       padding: 0;
+      min-width: 200px;
     }
 
     button {
@@ -126,6 +146,7 @@
       min-height: 34px;
       height: 100%;
       width: 43.5px;
+      flex-shrink: 0;
 
       &:first-of-type {
         background-color: variables.$primary-color;
@@ -152,9 +173,15 @@
     height: 100%;
     color: variables.$title-color;
     border-top: 1px solid variables.$secondary-color;
+    flex-wrap: wrap;
+
+    @media (max-width: 480px) {
+      padding: 5px;
+    }
 
     span {
       padding-left: 40px;
+      word-break: break-word;
     }
   }
 }
