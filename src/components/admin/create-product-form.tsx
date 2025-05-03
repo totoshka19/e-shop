@@ -213,25 +213,27 @@ const CreateProductForm = () => {
         </div>
 
         <div className={styles.field}>
-          <label>
+          <label className={styles.customCheckbox}>
             <input
               type="checkbox"
               name="is_available"
               checked={formData.is_available}
               onChange={handleChange}
             />
-        В наличии
+            <span className={styles.checkmark}></span>
+            В наличии
           </label>
         </div>
 
         <div className={styles.field}>
-          <label>
+          <label className={styles.customCheckbox}>
             <input
               type="checkbox"
               name="to_feed"
               checked={formData.to_feed}
               onChange={handleChange}
             />
+            <span className={styles.checkmark}></span>
             Отправить в Яндекс товары
           </label>
         </div>
