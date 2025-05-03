@@ -53,6 +53,38 @@
     min-height: 60px;
   }
 
+  .field input[type="file"] {
+    width: 100%;
+    border-radius: 4px;
+    background-color: rgba(variables.$light-background, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: variables.$primary-color;
+      background-color: rgba(variables.$primary-color, 0.05);
+    }
+
+    &::-webkit-file-upload-button {
+      padding: 8px 16px;
+      background-color: variables.$primary-color;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
+    }
+  }
+
+  h4 {
+    margin: 20px 0 15px;
+    font-size: 16px;
+    color: variables.$title-color;
+    font-weight: 600;
+    padding-bottom: 8px;
+    border-bottom: 2px solid variables.$primary-color;
+  }
+
   .customCheckbox {
     position: relative;
     padding-left: 30px;
@@ -121,10 +153,7 @@
 
   .attributeGroup {
     margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid variables.$secondary-color;
-    border-radius: 4px;
-    background-color: rgba(variables.$light-background, 0.8);
+    padding: 10px 0;
   }
 
   .attributeActions {
@@ -138,6 +167,7 @@
     padding: 10px 20px;
     background-color: variables.$grey-color;
     color: variables.$light-background;
+    margin-bottom: 20px;
   }
 
   .submit-btn {

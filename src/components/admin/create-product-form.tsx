@@ -33,9 +33,7 @@ const CreateProductForm = () => {
     attributes: [],
   });
 
-  const [attributes, setAttributes] = useState<Attribute[]>([
-    { title: '', values: {} },
-  ]);
+  const [attributes, setAttributes] = useState<Attribute[]>([]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -248,7 +246,7 @@ const CreateProductForm = () => {
           <input type="file" name="images" multiple onChange={handleFileChange} />
         </div>
 
-        <h4>Атрибуты товара</h4>
+        {attributes.length > 0 && <h4>Атрибуты товара</h4>}
         {attributes.map((group, index) => (
           <div key={index} className={styles.attributeGroup}>
             <div className={styles.field}>
