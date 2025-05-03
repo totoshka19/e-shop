@@ -62,6 +62,10 @@ const CreateProductForm = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
     if (!files || files.length === 0) {
+      const nameElement = document.getElementById(`${name}-name`);
+      if (nameElement) {
+        nameElement.textContent = '';
+      }
       return;
     }
 
@@ -70,11 +74,19 @@ const CreateProductForm = () => {
         ...prev,
         logo: files[0],
       }));
+      const nameElement = document.getElementById('logo-name');
+      if (nameElement) {
+        nameElement.textContent = files[0].name;
+      }
     } else if (name === 'images') {
       setFormData((prev) => ({
         ...prev,
         images: Array.from(files),
       }));
+      const nameElement = document.getElementById('images-name');
+      if (nameElement) {
+        nameElement.textContent = `${files.length} файлов выбрано`;
+      }
     }
   };
 
@@ -236,14 +248,33 @@ const CreateProductForm = () => {
           </label>
         </div>
 
-        <div className={styles.field}>
+        <div className={`${styles.field} ${styles['file-field']}`}>
           <label>Логотип</label>
-          <input type="file" name="logo" onChange={handleFileChange} />
+          <input 
+            type="file" 
+            name="logo" 
+            onChange={handleFileChange}
+            id="logo-input"
+          />
+          <label htmlFor="logo-input" className={styles['file-button']}>
+            Выбрать файл
+          </label>
+          <span className={styles['file-name']} id="logo-name"></span>
         </div>
 
-        <div className={styles.field}>
+        <div className={`${styles.field} ${styles['file-field']}`}>
           <label>Изображения</label>
-          <input type="file" name="images" multiple onChange={handleFileChange} />
+          <input 
+            type="file" 
+            name="images" 
+            multiple 
+            onChange={handleFileChange}
+            id="images-input"
+          />
+          <label htmlFor="images-input" className={styles['file-button']}>
+            Выбрать файлы
+          </label>
+          <span className={styles['file-name']} id="images-name"></span>
         </div>
 
         {attributes.length > 0 && <h4>Атрибуты товара</h4>}
