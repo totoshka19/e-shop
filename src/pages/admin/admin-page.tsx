@@ -20,6 +20,7 @@ function AdminPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { token, status, error } = useAuth();
   const [currentSection, setCurrentSection] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -106,7 +107,13 @@ function AdminPage() {
               {currentSection === 'products' && (
                 <div id="products">
                   <div className={styles['content']}>
-                    <CreateProductForm />
+                    <button
+                      className={styles['create-product-btn']}
+                      onClick={() => setShowCreateForm(!showCreateForm)}
+                    >
+                      {showCreateForm ? 'Скрыть форму' : 'Добавить новый товар'}
+                    </button>
+                    {showCreateForm && <CreateProductForm />}
                   </div>
                   <div className={styles['content']}>
                     <ProductsList />
