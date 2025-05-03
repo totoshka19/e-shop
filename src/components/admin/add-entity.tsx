@@ -7,9 +7,10 @@ type AddEntityProps = {
   value: string;
   onChange: (value: string) => void;
   onAdd: (value: string) => void;
+  className?: string;
 };
 
-function AddEntity({ placeholder, value, onChange, onAdd }: AddEntityProps) {
+function AddEntity({ placeholder, value, onChange, onAdd, className }: AddEntityProps) {
   const [isError, setIsError] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +32,7 @@ function AddEntity({ placeholder, value, onChange, onAdd }: AddEntityProps) {
   };
 
   return (
-    <div className={styles['input-group']}>
+    <div className={`${styles['input-group']} ${className || ''}`}>
       <input
         type="text"
         placeholder={placeholder}

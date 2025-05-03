@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import {createCategory, fetchCategories} from '../../store/admin/caregories-thunks';
 import Popup from './popup';
+import addEntityStyles from '../../styles/admin/add-entity.module.scss';
 
 // !TODO объединить с GroupManager
 
@@ -91,14 +92,16 @@ function SubgroupManager() {
           onClearError={clearError}
         />
 
-        <AddEntity
-          placeholder="Введите название подгруппы"
-          value={subgroupName}
-          onChange={(value: string) => setSubgroupName(value.trim())}
-          onAdd={(newSubgroupName: string) => {
-            void handleAddSubgroup(newSubgroupName);
-          }}
-        />
+        <div className={addEntityStyles['subgroup-input']}>
+          <AddEntity
+            placeholder="Введите название подгруппы"
+            value={subgroupName}
+            onChange={(value: string) => setSubgroupName(value.trim())}
+            onAdd={(newSubgroupName: string) => {
+              void handleAddSubgroup(newSubgroupName);
+            }}
+          />
+        </div>
       </div>
 
       <Popup

@@ -7,6 +7,7 @@
   width: 100%;
   min-height: 34px;
   height: 100%;
+  position: relative;
 
   @media (min-width: 1201px) {
     width: 400px;
@@ -22,9 +23,14 @@
     display: flex;
     gap: 10px;
     flex-wrap: nowrap;
+    margin-bottom: 20px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1413px) {
       flex-direction: column;
+      gap: 10px;
+      margin-bottom: -24px;
+      position: relative;
+      z-index: 1;
     }
   }
 
@@ -37,6 +43,8 @@
     font-size: 14px;
     border-radius: 4px;
     overflow: hidden;
+    position: relative;
+    z-index: 0;
   }
 
   .group-item {
