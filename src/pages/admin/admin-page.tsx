@@ -106,7 +106,7 @@ function AdminPage() {
 
               {currentSection === 'products' && (
                 <div id="products">
-                  <button 
+                  <button
                     className={styles['create-product-btn']}
                     onClick={() => setShowCreateForm(!showCreateForm)}
                   >

@@ -34,3 +34,13 @@ export type ProductsState = {
   status: typeof STATUS_IDLE | typeof STATUS_LOADING | typeof STATUS_SUCCEEDED | typeof STATUS_FAILED;
   error: string | null;
 };
+
+export type FileUploadResponse = {
+  data: {
+    id: string;
+    name: string;
+    file_name: string;
+    mime_type: string;
+    original_url: string;
+  };
+};

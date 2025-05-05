@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { URL_API } from '../../consts';
-import { Product } from '../../types/admin/state-admin';
+import {FileUploadResponse, Product} from '../../types/admin/state-admin';
 
 export const fetchProducts = createAsyncThunk<Product[], void, { rejectValue: string }>(
   'products/fetchProducts',
@@ -62,8 +62,41 @@ export const createProduct = createAsyncThunk<Product, Product, { rejectValue: s
         return rejectWithValue(errorData.message || 'Ошибка создания товара');
       }
 
-      const createdProduct = (await response.json()) as Product;
-      return createdProduct;
+      return (await response.json()) as Product;
+    } catch (error) {
+      const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
+export const uploadFile = createAsyncThunk<string, File, { rejectValue: string }>(
+  'products/uploadFile',
+  async (file, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return rejectWithValue('Токен отсутствует.');
+      }
+
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      const response = await fetch(`${URL_API}/admin/file/upload`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { message?: string };
+        return rejectWithValue(errorData.message || 'Ошибка загрузки файла');
+      }
+
+      const data = (await response.json()) as FileUploadResponse;
+      return data.data.id;
     } catch (error) {
       const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
       return rejectWithValue(errorMessage);
