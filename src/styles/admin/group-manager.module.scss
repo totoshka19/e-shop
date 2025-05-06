@@ -25,9 +25,10 @@
     flex-wrap: nowrap;
     margin-bottom: 20px;
 
-    @media (max-width: 1413px) {
+    @media (max-width: 1540px) {
       flex-direction: column;
       gap: 10px;
+      align-items: stretch;
       margin-bottom: -24px;
       position: relative;
       z-index: 1;
@@ -47,6 +48,19 @@
       max-width: 400px;
       min-width: 300px;
       flex-shrink: 0;
+    }
+
+    :global(.group-select-width) {
+      width: 400px;
+      max-width: 400px;
+      min-width: 300px;
+      flex-shrink: 0;
+
+      @media (max-width: 1200px) {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
     }
   }
 
@@ -207,12 +221,5 @@
       padding-left: 40px;
       word-break: break-word;
     }
-  }
-
-  :global(.group-select-width) {
-    width: 400px;
-    max-width: 400px;
-    min-width: 300px;
-    flex-shrink: 0;
   }
 }
