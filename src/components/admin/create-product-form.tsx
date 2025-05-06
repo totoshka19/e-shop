@@ -5,8 +5,8 @@ import { Product } from '../../types/admin/state-admin';
 import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/create-product-form.module.scss';
 import { fetchCategories } from '../../store/admin/caregories-thunks';
-import { Category } from '../../types/public/product';
 import SelectEntity from './select-entity';
+import { CrossIcon } from './icons';
 
 type Attribute = {
   title: string;
@@ -25,7 +25,7 @@ type FormData = {
   category_id: number;
   is_available: boolean;
   sku: string;
-  available_count: number;
+  available_count: string;
   to_feed: boolean;
   attributes: Attribute[];
 }
@@ -64,7 +64,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     category_id: 0,
     is_available: true,
     sku: '',
-    available_count: 0,
+    available_count: '',
     to_feed: true,
     attributes: [],
   });
@@ -104,7 +104,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
   ) => {
     const { name, value, type } = e.target;
 
-    if (name === 'price') {
+    if (name === 'price' || name === 'available_count') {
       // Разрешаем только цифры
       const numericValue = value.replace(/[^\d]/g, '');
       setFormData((prev) => ({
@@ -273,7 +273,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         price: parseInt(formData.price) || 0,
         category_id: formData.category_id,
         is_available: formData.is_available ? 1 : 0,
-        available_count: formData.available_count,
+        available_count: parseInt(formData.available_count) || 0,
         sku: formData.sku,
         to_feed: formData.to_feed,
         attributes: formData.attributes,
@@ -386,10 +386,11 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         <div className={styles.field}>
           <label>Доступное количество</label>
           <input
-            type="number"
+            type="text"
             name="available_count"
             value={formData.available_count}
             onChange={handleChange}
+            placeholder="0"
             required
           />
         </div>
@@ -434,10 +435,15 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
             </label>
           </div>
 
-          <p className={styles['file-name']} id="logo-name">
+          <p className={styles['file-name']} id="logo-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {logo.loading && 'Загрузка...'}
             {logo.error && <span style={{ color: 'red' }}>{logo.error}</span>}
             {!logo.loading && !logo.error && logo.name}
+            {!logo.loading && !logo.error && logo.name && (
+              <span className={styles.cross} onClick={() => console.log(`Файл ${logo.name} удален`)}>
+                <CrossIcon />
+              </span>
+            )}
           </p>
         </div>
 
@@ -458,10 +464,15 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
           <div className={styles['file-name']} id="images-name">
             {images.map((img, i) => (
-              <p key={i}>
+              <p key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 {img.loading && `Загрузка: ${img.name}...`}
                 {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
                 {!img.loading && !img.error && img.name}
+                {!img.loading && !img.error && img.name && (
+                  <span className={styles.cross} onClick={() => console.log(`Файл ${img.name} удален`)}>
+                    <CrossIcon />
+                  </span>
+                )}
               </p>
             ))}
           </div>
