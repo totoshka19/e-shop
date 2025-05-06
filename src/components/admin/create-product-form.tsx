@@ -74,46 +74,69 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [logo, setLogo] = useState<FileUploadState>({ id: null, name: '', loading: false, error: null });
   const [images, setImages] = useState<FileUploadState[]>([]);
+  const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  const validateField = (name: string, value: any) => {
+    switch (name) {
+      case 'name':
+        return value.trim() !== '';
+      case 'short_description':
+        return value.trim() !== '';
+      case 'description':
+        return value.trim() !== '';
+      case 'price':
+        return value > 0;
+      case 'category_id':
+        return value > 0;
+      case 'sku':
+        return value.trim() !== '';
+      default:
+        return true;
+    }
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
+    let newValue = value;
+    
     if (type === 'number') {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: parseFloat(value) || 0,
-      }));
+      newValue = parseFloat(value) || 0;
     } else if (type === 'checkbox') {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: checked,
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      newValue = (e.target as HTMLInputElement).checked;
     }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: newValue,
+    }));
+
+    setValidationErrors(prev => ({
+      ...prev,
+      [name]: !validateField(name, newValue)
+    }));
   };
 
   const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       setLogo({ id: null, name: '', loading: false, error: null });
+      setValidationErrors(prev => ({ ...prev, logo: true }));
       return;
     }
     setLogo({ id: null, name: file.name, loading: true, error: null });
     try {
       const id = await dispatch(uploadFile(file)).unwrap();
       setLogo({ id, name: file.name, loading: false, error: null });
+      setValidationErrors(prev => ({ ...prev, logo: false }));
     } catch {
       setLogo({ id: null, name: file.name, loading: false, error: 'Ошибка загрузки' });
+      setValidationErrors(prev => ({ ...prev, logo: true }));
     }
   };
 
@@ -213,6 +236,18 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
   const isUploading = logo.loading || images.some((img) => img.loading);
 
+  const isFormValid = () => {
+    return (
+      formData.name.trim() !== '' &&
+      formData.short_description.trim() !== '' &&
+      formData.description.trim() !== '' &&
+      formData.price > 0 &&
+      formData.category_id > 0 &&
+      formData.sku.trim() !== '' &&
+      logo.id !== null
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -249,48 +284,59 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
       <form className={styles.form} onSubmit={handleSubmit}>
 
         <div className={styles.field}>
-          <label>Название</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+          <label>Название {validationErrors.name && <span style={{ color: 'red' }}>*</span>}</label>
+          <input 
+            type="text" 
+            name="name" 
+            value={formData.name} 
+            onChange={handleChange} 
+            required 
+            className={validationErrors.name ? styles.error : ''}
+          />
         </div>
 
         <div className={styles.field}>
-          <label>Краткое описание</label>
+          <label>Краткое описание {validationErrors.short_description && <span style={{ color: 'red' }}>*</span>}</label>
           <textarea
             name="short_description"
             value={formData.short_description}
             onChange={handleChange}
             required
+            className={validationErrors.short_description ? styles.error : ''}
           />
         </div>
 
         <div className={styles.field}>
-          <label>Полное описание</label>
+          <label>Полное описание {validationErrors.description && <span style={{ color: 'red' }}>*</span>}</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             required
+            className={validationErrors.description ? styles.error : ''}
           />
         </div>
 
         <div className={styles.field}>
-          <label>Цена, руб.</label>
+          <label>Цена, руб. {validationErrors.price && <span style={{ color: 'red' }}>*</span>}</label>
           <input
             type="number"
             name="price"
             value={formData.price}
             onChange={handleChange}
             required
+            className={validationErrors.price ? styles.error : ''}
           />
         </div>
 
         <div className={styles.field}>
-          <label>Группа</label>
+          <label>Группа {validationErrors.category_id && <span style={{ color: 'red' }}>*</span>}</label>
           <SelectEntity
             options={categories.map(group => group.name)}
             value={categories.find(g => g.id === selectedGroup)?.name || ''}
             onChange={handleGroupChange}
             placeholder="Выберите группу"
+            className={validationErrors.category_id ? styles.error : ''}
           />
         </div>
 
@@ -311,8 +357,15 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         )}
 
         <div className={styles.field}>
-          <label>Артикул (SKU)</label>
-          <input type="text" name="sku" value={formData.sku} onChange={handleChange} required />
+          <label>Артикул (SKU) {validationErrors.sku && <span style={{ color: 'red' }}>*</span>}</label>
+          <input 
+            type="text" 
+            name="sku" 
+            value={formData.sku} 
+            onChange={handleChange} 
+            required 
+            className={validationErrors.sku ? styles.error : ''}
+          />
         </div>
 
         <div className={styles.field}>
@@ -353,12 +406,13 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         </div>
 
         <div className={`${styles.field} ${styles['file-field']}`}>
-          <label>Заглавная картинка</label>
+          <label>Заглавная картинка {validationErrors.logo && <span style={{ color: 'red' }}>*</span>}</label>
           <input
             type="file"
             name="logo"
             onChange={handleLogoChange}
             id="logo-input"
+            className={validationErrors.logo ? styles.error : ''}
           />
           <label htmlFor="logo-input" className={styles['file-button']}>
             Выбрать файл
@@ -449,7 +503,10 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
           Добавить группу атрибутов
         </button>
 
-        <button type="submit" className={styles['submit-btn']} disabled={isUploading}>
+        <button 
+          type="submit" 
+          className={`${styles['submit-btn']} ${(!isFormValid() || isUploading) ? styles.disabled : ''}`}
+        >
           {isUploading ? 'Загрузка файлов...' : 'Создать товар'}
         </button>
       </form>

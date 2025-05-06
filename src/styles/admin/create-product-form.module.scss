@@ -42,6 +42,16 @@
     margin-bottom: 15px;
     position: relative;
 
+    &.error {
+      input, textarea, select {
+        border-color: red;
+        &:focus {
+          border-color: red;
+          box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.2);
+        }
+      }
+    }
+
     :global(.select-entity) {
       width: 100%;
       max-width: 100%;
@@ -299,5 +309,11 @@
     @extend .btn;
     background-color: variables.$primary-color;
     padding: 10px 20px;
+
+    &.disabled {
+      background-color: variables.$grey-color;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 }
