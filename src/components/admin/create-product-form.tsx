@@ -21,7 +21,7 @@ type FormData = {
   name: string;
   short_description: string;
   description: string;
-  price: number;
+  price: string;
   category_id: number;
   is_available: boolean;
   sku: string;
@@ -60,7 +60,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     name: '',
     short_description: '',
     description: '',
-    price: 0,
+    price: '',
     category_id: 0,
     is_available: true,
     sku: '',
@@ -89,7 +89,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
       case 'description':
         return value.trim() !== '';
       case 'price':
-        return value > 0;
+        return value.trim() !== '';
       case 'category_id':
         return value > 0;
       case 'sku':
@@ -103,22 +103,38 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
-    let newValue = value;
-    
-    if (type === 'number') {
-      newValue = parseFloat(value) || 0;
-    } else if (type === 'checkbox') {
-      newValue = (e.target as HTMLInputElement).checked;
+
+    if (name === 'price') {
+      // Разрешаем только цифры
+      const numericValue = value.replace(/[^\d]/g, '');
+      setFormData((prev) => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+      return;
     }
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+    if (type === 'number') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: parseFloat(value) || 0,
+      }));
+    } else if (type === 'checkbox') {
+      const checked = (e.target as HTMLInputElement).checked;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: checked,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
 
-    setValidationErrors(prev => ({
+    setValidationErrors((prev) => ({
       ...prev,
-      [name]: !validateField(name, newValue)
+      [name]: !validateField(name, value)
     }));
   };
 
@@ -126,17 +142,17 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     const file = e.target.files?.[0];
     if (!file) {
       setLogo({ id: null, name: '', loading: false, error: null });
-      setValidationErrors(prev => ({ ...prev, logo: true }));
+      setValidationErrors((prev) => ({ ...prev, logo: true }));
       return;
     }
     setLogo({ id: null, name: file.name, loading: true, error: null });
     try {
       const id = await dispatch(uploadFile(file)).unwrap();
       setLogo({ id, name: file.name, loading: false, error: null });
-      setValidationErrors(prev => ({ ...prev, logo: false }));
+      setValidationErrors((prev) => ({ ...prev, logo: false }));
     } catch {
       setLogo({ id: null, name: file.name, loading: false, error: 'Ошибка загрузки' });
-      setValidationErrors(prev => ({ ...prev, logo: true }));
+      setValidationErrors((prev) => ({ ...prev, logo: true }));
     }
   };
 
@@ -213,22 +229,22 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
   };
 
   const handleGroupChange = (value: string) => {
-    const group = categories.find(g => g.name === value);
+    const group = categories.find((g) => g.name === value);
     const groupId = group?.id || null;
     setSelectedGroup(groupId);
     setSelectedSubgroup(null);
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       category_id: 0
     }));
   };
 
   const handleSubgroupChange = (value: string) => {
-    const selectedGroupObj = categories.find(g => g.id === selectedGroup);
-    const subgroup = selectedGroupObj?.child.find(s => s.name === value);
+    const selectedGroupObj = categories.find((g) => g.id === selectedGroup);
+    const subgroup = selectedGroupObj?.child.find((s) => s.name === value);
     const subgroupId = subgroup?.id || null;
     setSelectedSubgroup(subgroupId);
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       category_id: subgroupId || 0
     }));
@@ -236,17 +252,16 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
   const isUploading = logo.loading || images.some((img) => img.loading);
 
-  const isFormValid = () => {
-    return (
-      formData.name.trim() !== '' &&
+  const isFormValid = () => (
+    formData.name.trim() !== '' &&
       formData.short_description.trim() !== '' &&
       formData.description.trim() !== '' &&
-      formData.price > 0 &&
+      formData.price.trim() !== '' &&
       formData.category_id > 0 &&
       formData.sku.trim() !== '' &&
-      logo.id !== null
-    );
-  };
+      logo.id !== null &&
+      images.length > 0 && images.every((img) => img.id !== null)
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,7 +270,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         name: formData.name,
         short_description: formData.short_description,
         description: formData.description,
-        price: formData.price,
+        price: parseInt(formData.price) || 0,
         category_id: formData.category_id,
         is_available: formData.is_available ? 1 : 0,
         available_count: formData.available_count,
@@ -285,12 +300,12 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
         <div className={styles.field}>
           <label>Название {validationErrors.name && <span style={{ color: 'red' }}>*</span>}</label>
-          <input 
-            type="text" 
-            name="name" 
-            value={formData.name} 
-            onChange={handleChange} 
-            required 
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
             className={validationErrors.name ? styles.error : ''}
           />
         </div>
@@ -318,22 +333,22 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         </div>
 
         <div className={styles.field}>
-          <label>Цена, руб. {validationErrors.price && <span style={{ color: 'red' }}>*</span>}</label>
+          <label>Цена, руб.</label>
           <input
-            type="number"
+            type="text"
             name="price"
             value={formData.price}
             onChange={handleChange}
+            placeholder="0"
             required
-            className={validationErrors.price ? styles.error : ''}
           />
         </div>
 
         <div className={styles.field}>
           <label>Группа {validationErrors.category_id && <span style={{ color: 'red' }}>*</span>}</label>
           <SelectEntity
-            options={categories.map(group => group.name)}
-            value={categories.find(g => g.id === selectedGroup)?.name || ''}
+            options={categories.map((group) => group.name)}
+            value={categories.find((g) => g.id === selectedGroup)?.name || ''}
             onChange={handleGroupChange}
             placeholder="Выберите группу"
             className={validationErrors.category_id ? styles.error : ''}
@@ -345,11 +360,11 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
             <label>Подгруппа</label>
             <SelectEntity
               options={categories
-                .find(group => group.id === selectedGroup)
-                ?.child.map(subgroup => subgroup.name) || []}
+                .find((group) => group.id === selectedGroup)
+                ?.child.map((subgroup) => subgroup.name) || []}
               value={categories
-                .find(group => group.id === selectedGroup)
-                ?.child.find(subgroup => subgroup.id === selectedSubgroup)?.name || ''}
+                .find((group) => group.id === selectedGroup)
+                ?.child.find((subgroup) => subgroup.id === selectedSubgroup)?.name || ''}
               onChange={handleSubgroupChange}
               placeholder="Выберите подгруппу"
             />
@@ -358,12 +373,12 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
         <div className={styles.field}>
           <label>Артикул (SKU) {validationErrors.sku && <span style={{ color: 'red' }}>*</span>}</label>
-          <input 
-            type="text" 
-            name="sku" 
-            value={formData.sku} 
-            onChange={handleChange} 
-            required 
+          <input
+            type="text"
+            name="sku"
+            value={formData.sku}
+            onChange={handleChange}
+            required
             className={validationErrors.sku ? styles.error : ''}
           />
         </div>
@@ -406,46 +421,52 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         </div>
 
         <div className={`${styles.field} ${styles['file-field']}`}>
-          <label>Заглавная картинка {validationErrors.logo && <span style={{ color: 'red' }}>*</span>}</label>
-          <input
-            type="file"
-            name="logo"
-            onChange={handleLogoChange}
-            id="logo-input"
-            className={validationErrors.logo ? styles.error : ''}
-          />
-          <label htmlFor="logo-input" className={styles['file-button']}>
-            Выбрать файл
-          </label>
-          <span className={styles['file-name']} id="logo-name">
+          <div className={`${styles.field} ${styles['file-field_wrapper']}`}>
+            <label>Заглавная картинка</label>
+            <input
+              type="file"
+              name="logo"
+              onChange={handleLogoChange}
+              id="logo-input"
+            />
+            <label htmlFor="logo-input" className={styles['file-button']}>
+              Выбрать файл
+            </label>
+          </div>
+
+          <p className={styles['file-name']} id="logo-name">
             {logo.loading && 'Загрузка...'}
             {logo.error && <span style={{ color: 'red' }}>{logo.error}</span>}
             {!logo.loading && !logo.error && logo.name}
-          </span>
+          </p>
         </div>
 
         <div className={`${styles.field} ${styles['file-field']}`}>
-          <label>Дополнительные изображения</label>
-          <input
-            type="file"
-            name="images"
-            multiple
-            onChange={handleImagesChange}
-            id="images-input"
-          />
-          <label htmlFor="images-input" className={styles['file-button']}>
-            Выбрать файлы
-          </label>
+          <div className={`${styles.field} ${styles['file-field_wrapper']}`}>
+            <label>Дополнительные изображения</label>
+            <input
+              type="file"
+              name="images"
+              multiple
+              onChange={handleImagesChange}
+              id="images-input"
+            />
+            <label htmlFor="images-input" className={styles['file-button']}>
+              Выбрать файлы
+            </label>
+          </div>
+
+          <div className={styles['file-name']} id="images-name">
+            {images.map((img, i) => (
+              <p key={i}>
+                {img.loading && `Загрузка: ${img.name}...`}
+                {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
+                {!img.loading && !img.error && img.name}
+              </p>
+            ))}
+          </div>
         </div>
-        <span className={styles['file-name']} id="images-name">
-          {images.map((img, i) => (
-            <div key={i}>
-              {img.loading && `Загрузка: ${img.name}...`}
-              {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
-              {!img.loading && !img.error && img.name}
-            </div>
-          ))}
-        </span>
+
 
         {attributes.length > 0 && <h4>Атрибуты товара</h4>}
         {attributes.map((group, index) => (
@@ -503,8 +524,8 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
           Добавить группу атрибутов
         </button>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className={`${styles['submit-btn']} ${(!isFormValid() || isUploading) ? styles.disabled : ''}`}
         >
           {isUploading ? 'Загрузка файлов...' : 'Создать товар'}

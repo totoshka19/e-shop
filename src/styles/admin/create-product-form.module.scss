@@ -82,6 +82,13 @@
     }
 
     &.file-field {
+      display: flex;
+      gap: 20px;
+
+      .file-field_wrapper {
+        width: 30%;
+      }
+
       input[type="file"] {
         position: absolute;
         width: 1px;
@@ -100,21 +107,17 @@
         }
       }
 
-      .file-button {
-        display: inline-block;
-        padding: 8px 16px;
-        background-color: variables.$primary-color;
-        color: variables.$title-color;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
+      p {
+        margin-bottom: 10px;
       }
 
-      .file-name {
+      .file-button {
+        @extend .btn;
         display: inline-block;
-        margin-left: 10px;
-        color: variables.$title-color;
+        padding: 8px 16px;
+        cursor: pointer;
+        background-color: variables.$grey-color;
+        color: variables.$light-background;
       }
     }
   }
@@ -302,7 +305,7 @@
     padding: 10px 20px;
     background-color: variables.$grey-color;
     color: variables.$light-background;
-    margin-bottom: 20px;
+    margin: 20px 0;
   }
 
   .submit-btn {
