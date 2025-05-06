@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/products-list.module.scss';
 import { PlusIcon, MinusIcon, EditIcon, DeleteIcon } from './icons';
 import { fetchProducts } from '../../store/admin/products-thunks';
-import { Product, ProductFile } from '../../types/admin/state-admin';
+import { Product } from '../../types/admin/state-admin';
 
 function ProductsList() {
   const dispatch = useDispatch<AppDispatch>();
