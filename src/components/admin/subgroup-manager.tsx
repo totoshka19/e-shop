@@ -84,6 +84,7 @@ function SubgroupManager() {
       <h2>Добавить подгруппу товаров</h2>
       <div className={styles['group-manager_wrapper']}>
         <SelectEntity
+          className="group-select-width"
           options={groups.map((group) => group.name)}
           value={selectedGroup}
           onChange={handleSelectChange}

@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { createProduct, uploadFile } from '../../store/admin/products-thunks';
 import { Product } from '../../types/admin/state-admin';
+import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/create-product-form.module.scss';
-import {AppDispatch} from '../../store/store';
+import { fetchCategories } from '../../store/admin/caregories-thunks';
+import { Category } from '../../types/public/product';
+import SelectEntity from './select-entity';
 
-interface Attribute {
+type Attribute = {
   title: string;
   values: Record<string, string>;
 }
 
-interface CreateProductFormProps {
+type CreateProductFormProps = {
   onClose: () => void;
 }
 
-interface FormData {
+type FormData = {
   name: string;
   short_description: string;
   description: string;
@@ -27,7 +30,7 @@ interface FormData {
   attributes: Attribute[];
 }
 
-interface ProductData {
+type ProductData = {
   name: string;
   short_description: string;
   description: string;
@@ -51,6 +54,7 @@ type FileUploadState = {
 
 const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
   const dispatch = useDispatch<AppDispatch>();
+  const categories = useSelector((state: RootState) => state.categories.categories);
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -65,9 +69,15 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     attributes: [],
   });
 
+  const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
+  const [selectedSubgroup, setSelectedSubgroup] = useState<number | null>(null);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [logo, setLogo] = useState<FileUploadState>({ id: null, name: '', loading: false, error: null });
   const [images, setImages] = useState<FileUploadState[]>([]);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -109,20 +119,35 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
   const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const newStates: FileUploadState[] = files.map(f => ({ id: null, name: f.name, loading: true, error: null }));
-    setImages(newStates);
+    if (files.length === 0) {
+      return;
+    }
+
+    // Добавляем новые файлы к уже существующим
+    const newStates: FileUploadState[] = files.map((f) => ({
+      id: null,
+      name: f.name,
+      loading: true,
+      error: null,
+    }));
+
+    setImages((prev) => [...prev, ...newStates]);
+
+    // Индекс для новых файлов относительно общего массива
+    const startIdx = images.length;
+
     await Promise.all(files.map(async (file, i) => {
       try {
         const id = await dispatch(uploadFile(file)).unwrap();
-        setImages(prev => {
+        setImages((prev) => {
           const copy = [...prev];
-          copy[i] = { id, name: file.name, loading: false, error: null };
+          copy[startIdx + i] = { id, name: file.name, loading: false, error: null };
           return copy;
         });
       } catch {
-        setImages(prev => {
+        setImages((prev) => {
           const copy = [...prev];
-          copy[i] = { id: null, name: file.name, loading: false, error: 'Ошибка загрузки' };
+          copy[startIdx + i] = { id: null, name: file.name, loading: false, error: 'Ошибка загрузки' };
           return copy;
         });
       }
@@ -164,7 +189,29 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     }));
   };
 
-  const isUploading = logo.loading || images.some(img => img.loading);
+  const handleGroupChange = (value: string) => {
+    const group = categories.find(g => g.name === value);
+    const groupId = group?.id || null;
+    setSelectedGroup(groupId);
+    setSelectedSubgroup(null);
+    setFormData(prev => ({
+      ...prev,
+      category_id: 0
+    }));
+  };
+
+  const handleSubgroupChange = (value: string) => {
+    const selectedGroupObj = categories.find(g => g.id === selectedGroup);
+    const subgroup = selectedGroupObj?.child.find(s => s.name === value);
+    const subgroupId = subgroup?.id || null;
+    setSelectedSubgroup(subgroupId);
+    setFormData(prev => ({
+      ...prev,
+      category_id: subgroupId || 0
+    }));
+  };
+
+  const isUploading = logo.loading || images.some((img) => img.loading);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,8 +228,13 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         to_feed: formData.to_feed,
         attributes: formData.attributes,
       };
-      if (logo.id) productData.logo = logo.id;
-      if (images.length) productData.images = images.filter(img => img.id).map(img => img.id!);
+      if (logo.id) {
+        productData.logo = logo.id;
+      }
+      if (images.length) {
+        productData.images = images.filter((img) => img.id).map((img) => img.id!);
+      }
+      console.log('Отправляемые данные на сервер:', productData);
       await dispatch(createProduct(productData as unknown as Product)).unwrap();
       onClose();
     } catch (error) {
@@ -233,15 +285,30 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         </div>
 
         <div className={styles.field}>
-          <label>ID категории</label>
-          <input
-            type="number"
-            name="category_id"
-            value={formData.category_id}
-            onChange={handleChange}
-            required
+          <label>Группа</label>
+          <SelectEntity
+            options={categories.map(group => group.name)}
+            value={categories.find(g => g.id === selectedGroup)?.name || ''}
+            onChange={handleGroupChange}
+            placeholder="Выберите группу"
           />
         </div>
+
+        {selectedGroup && (
+          <div className={styles.field}>
+            <label>Подгруппа</label>
+            <SelectEntity
+              options={categories
+                .find(group => group.id === selectedGroup)
+                ?.child.map(subgroup => subgroup.name) || []}
+              value={categories
+                .find(group => group.id === selectedGroup)
+                ?.child.find(subgroup => subgroup.id === selectedSubgroup)?.name || ''}
+              onChange={handleSubgroupChange}
+              placeholder="Выберите подгруппу"
+            />
+          </div>
+        )}
 
         <div className={styles.field}>
           <label>Артикул (SKU)</label>
@@ -286,7 +353,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         </div>
 
         <div className={`${styles.field} ${styles['file-field']}`}>
-          <label>Логотип</label>
+          <label>Заглавная картинка</label>
           <input
             type="file"
             name="logo"
@@ -304,7 +371,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         </div>
 
         <div className={`${styles.field} ${styles['file-field']}`}>
-          <label>Изображения</label>
+          <label>Дополнительные изображения</label>
           <input
             type="file"
             name="images"
@@ -315,16 +382,16 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
           <label htmlFor="images-input" className={styles['file-button']}>
             Выбрать файлы
           </label>
-          <span className={styles['file-name']} id="images-name">
-            {images.map((img, i) => (
-              <span key={i}>
-                {img.loading && `Загрузка: ${img.name}... `}
-                {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error} </span>}
-                {!img.loading && !img.error && img.name + ' '}
-              </span>
-            ))}
-          </span>
         </div>
+        <span className={styles['file-name']} id="images-name">
+          {images.map((img, i) => (
+            <div key={i}>
+              {img.loading && `Загрузка: ${img.name}...`}
+              {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
+              {!img.loading && !img.error && img.name}
+            </div>
+          ))}
+        </span>
 
         {attributes.length > 0 && <h4>Атрибуты товара</h4>}
         {attributes.map((group, index) => (

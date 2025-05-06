@@ -7,6 +7,7 @@ type SelectEntityProps = {
   placeholder: string;
   hasError?: boolean;
   onClearError?: () => void;
+  className?: string;
 };
 
 function SelectEntity({
@@ -16,6 +17,7 @@ function SelectEntity({
   placeholder,
   hasError = false,
   onClearError,
+  className,
 }: SelectEntityProps) {
   const handleInteraction = () => {
     if (hasError && onClearError) {
@@ -24,7 +26,7 @@ function SelectEntity({
   };
 
   return (
-    <div className={`${styles['select-entity']} ${hasError ? styles['error'] : ''}`}>
+    <div className={`${styles['select-entity']} ${hasError ? styles['error'] : ''} ${className || ''}`}>
       <select
         id="select-entity"
         value={value}
