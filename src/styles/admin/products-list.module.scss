@@ -61,7 +61,8 @@
     color: variables.$primary-color;
 
     &:hover {
-      color: darken(variables.$primary-color, 10%);
+      color: variables.$primary-color;
+      opacity: 0.8;
     }
   }
 
