@@ -5,11 +5,32 @@ import styles from '../../styles/admin/products-list.module.scss';
 import { PlusIcon, MinusIcon, EditIcon, DeleteIcon } from './icons';
 import { fetchProducts, deleteProduct } from '../../store/admin/products-thunks';
 import { Product } from '../../types/admin/state-admin';
+import Popup from './popup';
+
+// Вспомогательная функция для отображения логотипа без вложенных тернарников
+const getLogoValue = (logo: Product['logo']) => {
+  if (!logo) {
+    return 'Нет';
+  }
+  if (typeof logo === 'object') {
+    if (logo.original_url) {
+      return (
+        <a href={logo.original_url} target="_blank" rel="noopener noreferrer">
+          {logo.file_name || 'Ссылка'}
+        </a>
+      );
+    }
+    return logo.file_name || 'Файл';
+  }
+  return logo;
+};
 
 function ProductsList() {
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector((state: RootState) => state.adminProducts.products);
   const [expandedProducts, setExpandedProducts] = useState<number[]>([]);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -23,10 +44,22 @@ function ProductsList() {
     );
   };
 
-  const handleDelete = (productId: number) => {
-    if (window.confirm('Вы уверены, что хотите удалить этот товар?')) {
-      dispatch(deleteProduct(productId));
+  const handleDeleteClick = (product: Product) => {
+    setProductToDelete(product);
+    setIsDeletePopupOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (productToDelete) {
+      dispatch(deleteProduct(productToDelete.id));
+      setIsDeletePopupOpen(false);
+      setProductToDelete(null);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeletePopupOpen(false);
+    setProductToDelete(null);
   };
 
   // Преобразуем поля продукта в массив характеристик
@@ -42,13 +75,7 @@ function ProductsList() {
     {
       id: 8,
       name: 'Логотип',
-      value: product.logo
-        ? (typeof product.logo === 'object'
-          ? ((product.logo).original_url
-            ? <a href={(product.logo).original_url} target="_blank" rel="noopener noreferrer">{(product.logo).file_name || 'Ссылка'}</a>
-            : (product.logo).file_name || 'Файл')
-          : product.logo)
-        : 'Нет'
+      value: getLogoValue(product.logo),
     },
   ];
 
@@ -57,54 +84,67 @@ function ProductsList() {
       <h2>Список товаров</h2>
 
       <ul>
-        {products.map((product) => (
-          <li key={product.id} className={styles['product-item']}>
-            <div className={styles['product-header']}>
-              <button
-                className={styles['toggle-btn']}
-                onClick={() => toggleProduct(product.id)}
-              >
-                {expandedProducts.includes(product.id) ? (
-                  <MinusIcon color="#555" />
-                ) : (
-                  <PlusIcon color="#555" />
-                )}
-              </button>
-
-              <span className={styles['product-name']}>{product.name}</span>
-
-              <div className={styles['product-actions']}>
-                <button className={styles['edit-btn']}>
-                  <EditIcon />
-                </button>
+        {products.map((product) => {
+          const isExpanded = expandedProducts.includes(product.id);
+          const toggleIcon = isExpanded ? <MinusIcon color="#555" /> : <PlusIcon color="#555" />;
+          return (
+            <li key={product.id} className={styles['product-item']}>
+              <div className={styles['product-header']}>
                 <button
-                  className={styles['delete-btn']}
-                  onClick={() => handleDelete(product.id)}
+                  className={styles['toggle-btn']}
+                  onClick={() => toggleProduct(product.id)}
                 >
-                  <DeleteIcon />
+                  {toggleIcon}
                 </button>
-              </div>
-            </div>
 
-            {expandedProducts.includes(product.id) && (
-              <ul className={styles['characteristics']}>
-                {getProductCharacteristics(product).map((characteristic) => (
-                  <li key={`${product.id}-${characteristic.id}`} className={styles['characteristic-item']}>
-                    <div className={styles['characteristic-content']}>
-                      <span className={styles['characteristic-name']}>
-                        {characteristic.name}
-                      </span>
-                      <span className={styles['characteristic-value']}>
-                        {characteristic.value}
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
+                <span className={styles['product-name']}>{product.name}</span>
+
+                <div className={styles['product-actions']}>
+                  <button className={styles['edit-btn']}>
+                    <EditIcon />
+                  </button>
+                  <button
+                    className={styles['delete-btn']}
+                    onClick={() => handleDeleteClick(product)}
+                  >
+                    <DeleteIcon />
+                  </button>
+                </div>
+              </div>
+
+              {isExpanded && (
+                <ul className={styles['characteristics']}>
+                  {getProductCharacteristics(product).map((characteristic) => (
+                    <li key={`${product.id}-${characteristic.id}`} className={styles['characteristic-item']}>
+                      <div className={styles['characteristic-content']}>
+                        <span className={styles['characteristic-name']}>
+                          {characteristic.name}
+                        </span>
+                        <span className={styles['characteristic-value']}>
+                          {characteristic.value}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          );
+        })}
       </ul>
+
+      <Popup
+        isOpen={isDeletePopupOpen}
+        message={
+          <>
+            Вы уверены, что хотите удалить товар{' '}
+            <strong>{productToDelete?.name}</strong>?
+          </>
+        }
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        type="confirmation"
+      />
     </div>
   );
 }
