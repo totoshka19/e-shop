@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/products-list.module.scss';
 import { PlusIcon, MinusIcon, EditIcon, DeleteIcon } from './icons';
-import { fetchProducts } from '../../store/admin/products-thunks';
+import { fetchProducts, deleteProduct } from '../../store/admin/products-thunks';
 import { Product } from '../../types/admin/state-admin';
 
 function ProductsList() {
@@ -21,6 +21,12 @@ function ProductsList() {
         ? prev.filter((id) => id !== productId)
         : [...prev, productId]
     );
+  };
+
+  const handleDelete = (productId: number) => {
+    if (window.confirm('Вы уверены, что хотите удалить этот товар?')) {
+      dispatch(deleteProduct(productId));
+    }
   };
 
   // Преобразуем поля продукта в массив характеристик
@@ -71,7 +77,10 @@ function ProductsList() {
                 <button className={styles['edit-btn']}>
                   <EditIcon />
                 </button>
-                <button className={styles['delete-btn']}>
+                <button
+                  className={styles['delete-btn']}
+                  onClick={() => handleDelete(product.id)}
+                >
                   <DeleteIcon />
                 </button>
               </div>

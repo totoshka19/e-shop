@@ -6,7 +6,7 @@ import {
   STATUS_SUCCEEDED,
   STATUS_FAILED
 } from '../../consts';
-import { createProduct, fetchProducts } from './products-thunks';
+import { createProduct, fetchProducts, deleteProduct } from './products-thunks';
 
 const initialState: ProductsState = {
   products: [],
@@ -48,7 +48,22 @@ const productsSlice = createSlice({
         state.status = STATUS_FAILED;
         state.error = action.payload || 'Ошибка создания товара';
       });
-  },
+
+    // --- DELETE PRODUCT ---
+    builder
+      .addCase(deleteProduct.pending, (state) => {
+        state.status = STATUS_LOADING;
+        state.error = null;
+      })
+      .addCase(deleteProduct.fulfilled, (state, action: PayloadAction<number>) => {
+        state.status = STATUS_SUCCEEDED;
+        state.products = state.products.filter((product) => product.id !== action.payload);
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
+        state.status = STATUS_FAILED;
+        state.error = action.payload || 'Ошибка удаления товара';
+      });
+  }
 });
 
 export default productsSlice.reducer;
