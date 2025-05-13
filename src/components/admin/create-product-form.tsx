@@ -80,20 +80,18 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const validateField = (name: string, value: any) => {
+  const validateField = (name: string, value: string | number | boolean) => {
     switch (name) {
       case 'name':
-        return value.trim() !== '';
       case 'short_description':
-        return value.trim() !== '';
       case 'description':
-        return value.trim() !== '';
-      case 'price':
-        return value.trim() !== '';
-      case 'category_id':
-        return value > 0;
       case 'sku':
-        return value.trim() !== '';
+        return typeof value === 'string' && value.trim() !== '';
+      case 'price':
+      case 'available_count':
+        return typeof value === 'string' && value.trim() !== '';
+      case 'category_id':
+        return typeof value === 'number' && value > 0;
       default:
         return true;
     }
@@ -270,10 +268,10 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         name: formData.name,
         short_description: formData.short_description,
         description: formData.description,
-        price: parseInt(formData.price) || 0,
+        price: parseInt(formData.price, 10) || 0,
         category_id: formData.category_id,
         is_available: formData.is_available ? 1 : 0,
-        available_count: parseInt(formData.available_count) || 0,
+        available_count: parseInt(formData.available_count, 10) || 0,
         sku: formData.sku,
         to_feed: formData.to_feed,
         attributes: formData.attributes,
@@ -282,14 +280,12 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         productData.logo = logo.id;
       }
       if (images.length) {
-        productData.images = images.filter((img) => img.id).map((img) => img.id!);
+        productData.images = images.filter((img) => img.id).map((img) => img.id as string);
       }
-      console.log('Отправляемые данные на сервер:', productData);
       await dispatch(createProduct(productData as unknown as Product)).unwrap();
       onClose();
     } catch (error) {
-      console.error('Ошибка при создании товара:', error);
-      alert((error as Error).message || 'Ошибка при создании товара');
+      // Можно добавить пользовательское уведомление об ошибке
     }
   };
 
@@ -440,7 +436,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
             {logo.error && <span style={{ color: 'red' }}>{logo.error}</span>}
             {!logo.loading && !logo.error && logo.name}
             {!logo.loading && !logo.error && logo.name && (
-              <span className={styles.cross} onClick={() => console.log(`Файл ${logo.name} удален`)}>
+              <span className={styles.cross}>
                 <CrossIcon />
               </span>
             )}
@@ -463,13 +459,13 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
           </div>
 
           <div className={styles['file-name']} id="images-name">
-            {images.map((img, i) => (
-              <p key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {images.map((img) => (
+              <p key={img.id || img.name} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 {img.loading && `Загрузка: ${img.name}...`}
                 {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
                 {!img.loading && !img.error && img.name}
                 {!img.loading && !img.error && img.name && (
-                  <span className={styles.cross} onClick={() => console.log(`Файл ${img.name} удален`)}>
+                  <span className={styles.cross}>
                     <CrossIcon />
                   </span>
                 )}
@@ -480,54 +476,37 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
 
         {attributes.length > 0 && <h4>Атрибуты товара</h4>}
-        {attributes.map((group, index) => (
-          <div key={index} className={styles.attributeGroup}>
+        {attributes.map((group) => (
+          <div key={group.title || JSON.stringify(group.values)} className={styles.attributeGroup}>
             <div className={styles.field}>
               <label>Заголовок группы атрибутов</label>
               <input
                 type="text"
                 value={group.title}
                 onChange={(e) =>
-                  handleAttributeChange(index, 'title', undefined, e.target.value)}
+                  handleAttributeChange(attributes.findIndex(g => g === group), 'title', undefined, e.target.value)}
                 placeholder="Например: Характеристики"
               />
             </div>
-
             <div className={styles.values}>
-              {Object.entries(group.values).map(([key, value], i) => (
-                <div key={i} className={styles.attributePair}>
+              {Object.entries(group.values).map(([key, value]) => (
+                <div key={key} className={styles.attributePair}>
                   <input
                     type="text"
                     value={key}
-                    onChange={(e) =>
-                      handleAttributeChange(index, 'values', e.target.value, value)}
-                    placeholder="Ключ"
+                    readOnly
                   />
                   <input
                     type="text"
                     value={value}
-                    onChange={(e) =>
-                      handleAttributeChange(index, 'values', key, e.target.value)}
-                    placeholder="Значение"
+                    onChange={(e) => handleAttributeChange(attributes.findIndex(g => g === group), 'values', key, e.target.value)}
                   />
                 </div>
               ))}
             </div>
-
-            <div className={styles.attributeActions}>
-              <button
-                type="button"
-                onClick={() =>
-                  handleAttributeChange(index, 'values', 'новый_ключ', 'новое_значение')}
-              >
-            Добавить атрибут
-              </button>
-              {attributes.length > 1 && (
-                <button type="button" onClick={() => removeAttributeGroup(index)}>
+            <button type="button" onClick={() => removeAttributeGroup(attributes.findIndex(g => g === group))}>
               Удалить группу
-                </button>
-              )}
-            </div>
+            </button>
           </div>
         ))}
 
