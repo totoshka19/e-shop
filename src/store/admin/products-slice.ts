@@ -40,9 +40,9 @@ const productsSlice = createSlice({
         state.status = STATUS_LOADING;
         state.error = null;
       })
-      .addCase(createProduct.fulfilled, (state, action: PayloadAction<Product>) => {
+      .addCase(createProduct.fulfilled, (state) => {
         state.status = STATUS_SUCCEEDED;
-        state.products.push(action.payload); // добавляем новый товар
+        // Не добавляем товар локально, ждем fetchProducts
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.status = STATUS_FAILED;

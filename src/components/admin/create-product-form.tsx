@@ -7,6 +7,7 @@ import styles from '../../styles/admin/create-product-form.module.scss';
 import { fetchCategories } from '../../store/admin/caregories-thunks';
 import SelectEntity from './select-entity';
 import { CrossIcon } from './icons';
+import { fetchProducts } from '../../store/admin/products-thunks';
 
 type Attribute = {
   title: string;
@@ -58,13 +59,18 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
+    // eslint-disable-next-line camelcase
     short_description: '',
     description: '',
     price: '',
+    // eslint-disable-next-line camelcase
     category_id: 0,
+    // eslint-disable-next-line camelcase
     is_available: true,
     sku: '',
+    // eslint-disable-next-line camelcase
     available_count: '',
+    // eslint-disable-next-line camelcase
     to_feed: true,
     attributes: [],
   });
@@ -233,6 +239,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     setSelectedSubgroup(null);
     setFormData((prev) => ({
       ...prev,
+      // eslint-disable-next-line camelcase
       category_id: 0
     }));
   };
@@ -244,6 +251,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     setSelectedSubgroup(subgroupId);
     setFormData((prev) => ({
       ...prev,
+      // eslint-disable-next-line camelcase
       category_id: subgroupId || 0
     }));
   };
@@ -266,13 +274,18 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     try {
       const productData: ProductData = {
         name: formData.name,
+        // eslint-disable-next-line camelcase
         short_description: formData.short_description,
         description: formData.description,
         price: parseInt(formData.price, 10) || 0,
+        // eslint-disable-next-line camelcase
         category_id: formData.category_id,
+        // eslint-disable-next-line camelcase
         is_available: formData.is_available ? 1 : 0,
+        // eslint-disable-next-line camelcase
         available_count: parseInt(formData.available_count, 10) || 0,
         sku: formData.sku,
+        // eslint-disable-next-line camelcase
         to_feed: formData.to_feed,
         attributes: formData.attributes,
       };
@@ -283,6 +296,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
         productData.images = images.filter((img) => img.id).map((img) => img.id as string);
       }
       await dispatch(createProduct(productData as unknown as Product)).unwrap();
+      await dispatch(fetchProducts());
       onClose();
     } catch (error) {
       // Можно добавить пользовательское уведомление об ошибке
@@ -292,7 +306,10 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
   return (
     <div className={styles['product-manager']}>
       <h2>Создать товар</h2>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={(e) => {
+        void handleSubmit(e);
+      }}
+      >
 
         <div className={styles.field}>
           <label>Название {validationErrors.name && <span style={{ color: 'red' }}>*</span>}</label>
@@ -423,7 +440,9 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
             <input
               type="file"
               name="logo"
-              onChange={handleLogoChange}
+              onChange={(e) => {
+                void handleLogoChange(e);
+              }}
               id="logo-input"
             />
             <label htmlFor="logo-input" className={styles['file-button']}>
@@ -450,7 +469,9 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
               type="file"
               name="images"
               multiple
-              onChange={handleImagesChange}
+              onChange={(e) => {
+                void handleImagesChange(e);
+              }}
               id="images-input"
             />
             <label htmlFor="images-input" className={styles['file-button']}>
@@ -484,7 +505,7 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
                 type="text"
                 value={group.title}
                 onChange={(e) =>
-                  handleAttributeChange(attributes.findIndex(g => g === group), 'title', undefined, e.target.value)}
+                  handleAttributeChange(attributes.findIndex((g) => g === group), 'title', undefined, e.target.value)}
                 placeholder="Например: Характеристики"
               />
             </div>
@@ -499,12 +520,12 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
                   <input
                     type="text"
                     value={value}
-                    onChange={(e) => handleAttributeChange(attributes.findIndex(g => g === group), 'values', key, e.target.value)}
+                    onChange={(e) => handleAttributeChange(attributes.findIndex((g) => g === group), 'values', key, e.target.value)}
                   />
                 </div>
               ))}
             </div>
-            <button type="button" onClick={() => removeAttributeGroup(attributes.findIndex(g => g === group))}>
+            <button type="button" onClick={() => removeAttributeGroup(attributes.findIndex((g) => g === group))}>
               Удалить группу
             </button>
           </div>
