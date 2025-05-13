@@ -89,14 +89,6 @@ function ProductsList() {
                         {characteristic.value}
                       </span>
                     </div>
-                    <div className={styles['product-actions']}>
-                      <button className={styles['edit-btn']}>
-                        <EditIcon />
-                      </button>
-                      <button className={styles['delete-btn']}>
-                        <DeleteIcon />
-                      </button>
-                    </div>
                   </li>
                 ))}
               </ul>
