@@ -8,7 +8,7 @@ import {
 } from '../../consts';
 import { createProduct, fetchProducts, deleteProduct, fetchProductById } from './products-thunks';
 
-const initialState: ProductsState & { currentProduct?: Product | null, currentProductStatus?: string, currentProductError?: string | null } = {
+const initialState: ProductsState & { currentProduct?: Product | null; currentProductStatus?: string; currentProductError?: string | null } = {
   products: [],
   status: STATUS_IDLE,
   error: null,

@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProduct, uploadFile, updateProduct, fetchProductById, fetchProducts } from '../../store/admin/products-thunks';
-import { Product } from '../../types/admin/state-admin';
+import {Attribute, Product} from '../../types/admin/state-admin';
 import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/create-product-form.module.scss';
 import { fetchCategories } from '../../store/admin/caregories-thunks';
 import SelectEntity from './select-entity';
 import { CrossIcon } from './icons';
-
-type Attribute = {
-  title: string;
-  values: Record<string, string>;
-}
 
 type CreateProductFormProps = {
   onClose: () => void;
@@ -66,13 +61,18 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
+    // eslint-disable-next-line camelcase
     short_description: '',
     description: '',
     price: '',
+    // eslint-disable-next-line camelcase
     category_id: 0,
+    // eslint-disable-next-line camelcase
     is_available: false,
     sku: '',
+    // eslint-disable-next-line camelcase
     available_count: '',
+    // eslint-disable-next-line camelcase
     to_feed: true,
     attributes: [],
   });
@@ -96,13 +96,18 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
 
       setFormData({
         name: productToLoad.name || '',
+        // eslint-disable-next-line camelcase
         short_description: productToLoad.short_description || '',
         description: productToLoad.description || '',
         price: productToLoad.price?.toString() || '',
+        // eslint-disable-next-line camelcase
         category_id: productToLoad.category_id || 0,
+        // eslint-disable-next-line camelcase
         is_available: productToLoad.is_available || false,
         sku: productToLoad.sku || '',
+        // eslint-disable-next-line camelcase
         available_count: productToLoad.available_count?.toString() || '',
+        // eslint-disable-next-line camelcase
         to_feed: productToLoad.to_feed === undefined ? true : productToLoad.to_feed,
         attributes: productToLoad.attributes || [],
       });
@@ -119,14 +124,14 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
 
       if (productToLoad.images && Array.isArray(productToLoad.images)) {
         setImages(
-          productToLoad.images.map(img => {
+          productToLoad.images.map((img) => {
             if (typeof img === 'string') {
               return { id: img, name: 'Существующее изображение', loading: false, error: null };
             } else if (img && typeof img === 'object' && 'original_url' in img && img.original_url) {
               return { id: (img as { id: string; file_name: string }).id, name: (img as { id: string; file_name: string }).file_name, loading: false, error: null };
             }
             return { id: null, name: '', loading: false, error: null };
-          }).filter(img => img.id !== null)
+          }).filter((img) => img.id !== null)
         );
       } else {
         setImages([]);
@@ -139,7 +144,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
         let subgroupIdValue: number | null = productToLoad.category_id;
 
         for (const group of categories) {
-          if (group.child && group.child.some(sub => sub.id === productToLoad.category_id)) {
+          if (group.child && group.child.some((sub) => sub.id === productToLoad.category_id)) {
             parentGroupId = group.id;
             break;
           } else if (group.id === productToLoad.category_id) {
@@ -157,13 +162,18 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     } else {
       setFormData({
         name: '',
+        // eslint-disable-next-line camelcase
         short_description: '',
         description: '',
         price: '',
+        // eslint-disable-next-line camelcase
         category_id: 0,
+        // eslint-disable-next-line camelcase
         is_available: false,
         sku: '',
+        // eslint-disable-next-line camelcase
         available_count: '',
+        // eslint-disable-next-line camelcase
         to_feed: true,
         attributes: [],
       });
@@ -325,6 +335,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     setSelectedSubgroup(null);
     setFormData((prev) => ({
       ...prev,
+      // eslint-disable-next-line camelcase
       category_id: 0
     }));
   };
@@ -336,6 +347,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     setSelectedSubgroup(subgroupId);
     setFormData((prev) => ({
       ...prev,
+      // eslint-disable-next-line camelcase
       category_id: subgroupId || 0
     }));
   };
@@ -358,13 +370,18 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     try {
       const productData: ProductData = {
         name: formData.name,
+        // eslint-disable-next-line camelcase
         short_description: formData.short_description,
         description: formData.description,
         price: parseInt(formData.price, 10) || 0,
+        // eslint-disable-next-line camelcase
         category_id: selectedSubgroup || selectedGroup || formData.category_id || 0,
+        // eslint-disable-next-line camelcase
         is_available: formData.is_available ? 1 : 0,
+        // eslint-disable-next-line camelcase
         available_count: parseInt(formData.available_count, 10) || 0,
         sku: formData.sku,
+        // eslint-disable-next-line camelcase
         to_feed: formData.to_feed,
         attributes: attributes,
       };
@@ -379,8 +396,9 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
         const updatedProductSend = {
           ...productData,
           id: initialProduct.id,
+          // eslint-disable-next-line camelcase
           is_available: formData.is_available,
-        }
+        };
         await dispatch(updateProduct(updatedProductSend as Product)).unwrap();
       } else {
         await dispatch(createProduct(productData as unknown as Product)).unwrap();
@@ -392,11 +410,11 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     }
   };
 
-  const handleDeleteImage = (imageId: string | null, isLogo: boolean = false) => {
+  const handleDeleteImage = (imageId: string | null, isLogo = false) => {
     if (isLogo) {
       setLogo({ id: null, name: '', loading: false, error: null });
     } else {
-      setImages(prev => prev.filter(img => img.id !== imageId));
+      setImages((prev) => prev.filter((img) => img.id !== imageId));
     }
   };
 
