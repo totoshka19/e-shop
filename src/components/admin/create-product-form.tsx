@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProduct, uploadFile } from '../../store/admin/products-thunks';
+import { createProduct, uploadFile, updateProduct, fetchProductById, fetchProducts } from '../../store/admin/products-thunks';
 import { Product } from '../../types/admin/state-admin';
 import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/create-product-form.module.scss';
 import { fetchCategories } from '../../store/admin/caregories-thunks';
 import SelectEntity from './select-entity';
 import { CrossIcon } from './icons';
-import { fetchProducts } from '../../store/admin/products-thunks';
 
 type Attribute = {
   title: string;
@@ -16,6 +15,7 @@ type Attribute = {
 
 type CreateProductFormProps = {
   onClose: () => void;
+  product?: Product;
 }
 
 type FormData = {
@@ -53,24 +53,26 @@ type FileUploadState = {
   error: string | null;
 };
 
-const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
+const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFormProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const categories = useSelector((state: RootState) => state.categories.categories);
+  const currentProduct = useSelector((state: RootState) => state.adminProducts.currentProduct);
+
+  useEffect(() => {
+    if (initialProduct && initialProduct.id) {
+      dispatch(fetchProductById(initialProduct.id));
+    }
+  }, [dispatch, initialProduct]);
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
-    // eslint-disable-next-line camelcase
     short_description: '',
     description: '',
     price: '',
-    // eslint-disable-next-line camelcase
     category_id: 0,
-    // eslint-disable-next-line camelcase
-    is_available: true,
+    is_available: false,
     sku: '',
-    // eslint-disable-next-line camelcase
     available_count: '',
-    // eslint-disable-next-line camelcase
     to_feed: true,
     attributes: [],
   });
@@ -85,6 +87,93 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
+
+  useEffect(() => {
+    const productToUse = currentProduct || initialProduct;
+
+    if (productToUse) {
+      setFormData({
+        name: productToUse.name || '',
+        short_description: productToUse.short_description || '',
+        description: productToUse.description || '',
+        price: productToUse.price?.toString() || '',
+        category_id: productToUse.category_id || 0,
+        is_available: productToUse.is_available || false,
+        sku: productToUse.sku || '',
+        available_count: productToUse.available_count?.toString() || '',
+        to_feed: productToUse.to_feed === undefined ? true : productToUse.to_feed,
+        attributes: productToUse.attributes || [],
+      });
+
+      if (productToUse.logo) {
+        if (typeof productToUse.logo === 'string') {
+          setLogo({ id: productToUse.logo, name: 'Существующее изображение', loading: false, error: null });
+        } else if (typeof productToUse.logo === 'object' && productToUse.logo.original_url) {
+          setLogo({ id: productToUse.logo.id, name: productToUse.logo.file_name, loading: false, error: null });
+        }
+      } else {
+        setLogo({ id: null, name: '', loading: false, error: null });
+      }
+
+      if (productToUse.images && Array.isArray(productToUse.images)) {
+        setImages(
+          productToUse.images.map(img => {
+            if (typeof img === 'string') {
+              return { id: img, name: 'Существующее изображение', loading: false, error: null };
+            } else if (img && typeof img === 'object' && 'original_url' in img && img.original_url) {
+              return { id: img.id, name: img.file_name, loading: false, error: null };
+            }
+            return { id: null, name: '', loading: false, error: null };
+          }).filter(img => img.id !== null)
+        );
+      } else {
+        setImages([]);
+      }
+
+      setAttributes(productToUse.attributes || []);
+
+      if (productToUse.category_id && categories.length > 0) {
+        let parentGroupId: number | null = null;
+        let subgroupIdValue: number | null = productToUse.category_id;
+
+        for (const group of categories) {
+          if (group.child && group.child.some(sub => sub.id === productToUse.category_id)) {
+            parentGroupId = group.id;
+            break;
+          } else if (group.id === productToUse.category_id) { 
+            parentGroupId = group.id;
+            subgroupIdValue = null; 
+            break;
+          }
+        }
+        setSelectedGroup(parentGroupId);
+        setSelectedSubgroup(subgroupIdValue);
+        setFormData(prev => ({ ...prev, category_id: productToUse.category_id || 0 }));
+
+      } else {
+        setSelectedGroup(null);
+        setSelectedSubgroup(null);
+      }
+    } else {
+      setFormData({
+        name: '',
+        short_description: '',
+        description: '',
+        price: '',
+        category_id: 0,
+        is_available: false,
+        sku: '',
+        available_count: '',
+        to_feed: true,
+        attributes: [],
+      });
+      setLogo({ id: null, name: '', loading: false, error: null });
+      setImages([]);
+      setAttributes([]);
+      setSelectedGroup(null);
+      setSelectedSubgroup(null);
+    }
+  }, [currentProduct, initialProduct, categories, dispatch]);
 
   const validateField = (name: string, value: string | number | boolean) => {
     switch (name) {
@@ -109,7 +198,6 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     const { name, value, type } = e.target;
 
     if (name === 'price' || name === 'available_count') {
-      // Разрешаем только цифры
       const numericValue = value.replace(/[^\d]/g, '');
       setFormData((prev) => ({
         ...prev,
@@ -166,7 +254,6 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
       return;
     }
 
-    // Добавляем новые файлы к уже существующим
     const newStates: FileUploadState[] = files.map((f) => ({
       id: null,
       name: f.name,
@@ -176,7 +263,6 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
 
     setImages((prev) => [...prev, ...newStates]);
 
-    // Индекс для новых файлов относительно общего массива
     const startIdx = images.length;
 
     await Promise.all(files.map(async (file, i) => {
@@ -239,7 +325,6 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     setSelectedSubgroup(null);
     setFormData((prev) => ({
       ...prev,
-      // eslint-disable-next-line camelcase
       category_id: 0
     }));
   };
@@ -251,7 +336,6 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     setSelectedSubgroup(subgroupId);
     setFormData((prev) => ({
       ...prev,
-      // eslint-disable-next-line camelcase
       category_id: subgroupId || 0
     }));
   };
@@ -274,20 +358,15 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     try {
       const productData: ProductData = {
         name: formData.name,
-        // eslint-disable-next-line camelcase
         short_description: formData.short_description,
         description: formData.description,
         price: parseInt(formData.price, 10) || 0,
-        // eslint-disable-next-line camelcase
-        category_id: formData.category_id,
-        // eslint-disable-next-line camelcase
+        category_id: selectedSubgroup || selectedGroup || formData.category_id || 0, 
         is_available: formData.is_available ? 1 : 0,
-        // eslint-disable-next-line camelcase
         available_count: parseInt(formData.available_count, 10) || 0,
         sku: formData.sku,
-        // eslint-disable-next-line camelcase
         to_feed: formData.to_feed,
-        attributes: formData.attributes,
+        attributes: attributes, 
       };
       if (logo.id) {
         productData.logo = logo.id;
@@ -295,7 +374,17 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
       if (images.length) {
         productData.images = images.filter((img) => img.id).map((img) => img.id as string);
       }
-      await dispatch(createProduct(productData as unknown as Product)).unwrap();
+
+      if (initialProduct && initialProduct.id) {
+        const updatedProductSend = {
+          ...productData,
+          id: initialProduct.id,
+          is_available: formData.is_available,
+        }
+        await dispatch(updateProduct(updatedProductSend as Product)).unwrap();
+      } else {
+        await dispatch(createProduct(productData as unknown as Product)).unwrap();
+      }
       await dispatch(fetchProducts());
       onClose();
     } catch (error) {
@@ -303,9 +392,18 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
     }
   };
 
+  const handleDeleteImage = (imageId: string | null, isLogo: boolean = false) => {
+    console.log('Изображение удалено');
+    if (isLogo) {
+      setLogo({ id: null, name: '', loading: false, error: null });
+    } else {
+      setImages(prev => prev.filter(img => img.id !== imageId));
+    }
+  };
+
   return (
     <div className={styles['product-manager']}>
-      <h2>Создать товар</h2>
+      <h2>{initialProduct ? 'Редактировать товар' : 'Создать товар'}</h2>
       <form className={styles.form} onSubmit={(e) => {
         void handleSubmit(e);
       }}
@@ -455,7 +553,11 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
             {logo.error && <span style={{ color: 'red' }}>{logo.error}</span>}
             {!logo.loading && !logo.error && logo.name}
             {!logo.loading && !logo.error && logo.name && (
-              <span className={styles.cross}>
+              <span 
+                className={styles.cross}
+                onClick={() => handleDeleteImage(logo.id, true)}
+                style={{ cursor: 'pointer' }}
+              >
                 <CrossIcon />
               </span>
             )}
@@ -484,9 +586,13 @@ const CreateProductForm = ({ onClose }: CreateProductFormProps) => {
               <p key={img.id || img.name} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 {img.loading && `Загрузка: ${img.name}...`}
                 {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
-                {!img.loading && !img.error && img.name}
-                {!img.loading && !img.error && img.name && (
-                  <span className={styles.cross}>
+                {!img.loading && !img.error && (img.name || img.id || 'Существующее изображение')}
+                {!img.loading && !img.error && (img.name || img.id) && (
+                  <span 
+                    className={styles.cross}
+                    onClick={() => handleDeleteImage(img.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <CrossIcon />
                   </span>
                 )}

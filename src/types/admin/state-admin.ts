@@ -24,6 +24,11 @@ export type ProductFile = {
   original_url: string;
 };
 
+export type Attribute = {
+  title: string;
+  values: Record<string, string>;
+}
+
 export type Product = {
   id: number;
   name: string;
@@ -34,7 +39,10 @@ export type Product = {
   available_count: number;
   is_available: boolean;
   to_feed: boolean;
-  logo: string | ProductFile | null; // Может быть null, строкой или объектом ProductFile
+  category_id?: number;
+  attributes?: Attribute[];
+  logo: string | ProductFile | null;
+  images?: (string | ProductFile)[];
 };
 
 export type ProductsState = {

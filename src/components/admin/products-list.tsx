@@ -6,6 +6,7 @@ import { PlusIcon, MinusIcon, EditIcon, DeleteIcon } from './icons';
 import { fetchProducts, deleteProduct } from '../../store/admin/products-thunks';
 import { Product } from '../../types/admin/state-admin';
 import Popup from './popup';
+import CreateProductForm from './create-product-form';
 
 // Вспомогательная функция для отображения логотипа без вложенных тернарников
 const getLogoValue = (logo: Product['logo']) => {
@@ -31,6 +32,7 @@ function ProductsList() {
   const [expandedProducts, setExpandedProducts] = useState<number[]>([]);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -62,6 +64,14 @@ function ProductsList() {
     setProductToDelete(null);
   };
 
+  const handleEditClick = (product: Product) => {
+    setProductToEdit(product);
+  };
+
+  const handleCloseEdit = () => {
+    setProductToEdit(null);
+  };
+
   // Преобразуем поля продукта в массив характеристик
   const getProductCharacteristics = (product: Product) => [
     { id: 0, name: 'ID', value: product.id.toString() },
@@ -81,8 +91,11 @@ function ProductsList() {
 
   return (
     <div className={styles['products-manager']}>
-      <h2>Список товаров</h2>
+      {productToEdit && (
+        <CreateProductForm onClose={handleCloseEdit} product={productToEdit} />
+      )}
 
+      <h2>Список товаров</h2>
       <ul>
         {products.map((product) => {
           const isExpanded = expandedProducts.includes(product.id);
@@ -100,7 +113,7 @@ function ProductsList() {
                 <span className={styles['product-name']}>{product.name}</span>
 
                 <div className={styles['product-actions']}>
-                  <button className={styles['edit-btn']}>
+                  <button className={styles['edit-btn']} onClick={() => handleEditClick(product)}>
                     <EditIcon />
                   </button>
                   <button

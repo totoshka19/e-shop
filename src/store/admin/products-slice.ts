@@ -6,12 +6,15 @@ import {
   STATUS_SUCCEEDED,
   STATUS_FAILED
 } from '../../consts';
-import { createProduct, fetchProducts, deleteProduct } from './products-thunks';
+import { createProduct, fetchProducts, deleteProduct, fetchProductById } from './products-thunks';
 
-const initialState: ProductsState = {
+const initialState: ProductsState & { currentProduct?: Product | null, currentProductStatus?: string, currentProductError?: string | null } = {
   products: [],
   status: STATUS_IDLE,
   error: null,
+  currentProduct: null,
+  currentProductStatus: STATUS_IDLE,
+  currentProductError: null,
 };
 
 const productsSlice = createSlice({
@@ -42,7 +45,6 @@ const productsSlice = createSlice({
       })
       .addCase(createProduct.fulfilled, (state) => {
         state.status = STATUS_SUCCEEDED;
-        // Не добавляем товар локально, ждем fetchProducts
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.status = STATUS_FAILED;
@@ -62,6 +64,22 @@ const productsSlice = createSlice({
       .addCase(deleteProduct.rejected, (state, action) => {
         state.status = STATUS_FAILED;
         state.error = action.payload || 'Ошибка удаления товара';
+      });
+
+    // --- FETCH PRODUCT BY ID ---
+    builder
+      .addCase(fetchProductById.pending, (state) => {
+        state.currentProductStatus = STATUS_LOADING;
+        state.currentProductError = null;
+      })
+      .addCase(fetchProductById.fulfilled, (state, action: PayloadAction<Product>) => {
+        state.currentProductStatus = STATUS_SUCCEEDED;
+        state.currentProduct = action.payload;
+      })
+      .addCase(fetchProductById.rejected, (state, action) => {
+        state.currentProductStatus = STATUS_FAILED;
+        state.currentProductError = action.payload || 'Ошибка получения товара';
+        state.currentProduct = null;
       });
   }
 });

@@ -133,3 +133,55 @@ export const deleteProduct = createAsyncThunk<number, number, { rejectValue: str
     }
   }
 );
+
+export const updateProduct = createAsyncThunk(
+  'adminProducts/updateProduct',
+  async (product: Product) => {
+    const response = await fetch(`${URL_API}/admin/products/${product.id}/update`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('auth-key')}`,
+      },
+      body: JSON.stringify(product),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Ошибка при обновлении товара');
+    }
+
+    return await response.json();
+  }
+);
+
+export const fetchProductById = createAsyncThunk<Product, number, { rejectValue: string }>(
+  'products/fetchProductById',
+  async (productId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return rejectWithValue('Токен отсутствует.');
+      }
+      const response = await fetch(`${URL_API}/admin/products/${productId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      });
+      if (!response.ok) {
+        const errorData = (await response.json()) as { message?: string };
+        return rejectWithValue(errorData.message || 'Ошибка получения товара');
+      }
+      const data = (await response.json()) as { data: Product };
+      if (!data.data) {
+        return rejectWithValue('Некорректный ответ от сервера.');
+      }
+      return data.data;
+    } catch (error) {
+      const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
