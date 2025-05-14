@@ -89,39 +89,41 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
   }, [dispatch]);
 
   useEffect(() => {
-    const productToUse = currentProduct || initialProduct;
+    if (initialProduct) {
+      const productToLoad = (currentProduct && initialProduct.id && currentProduct.id === initialProduct.id)
+        ? currentProduct
+        : initialProduct;
 
-    if (productToUse) {
       setFormData({
-        name: productToUse.name || '',
-        short_description: productToUse.short_description || '',
-        description: productToUse.description || '',
-        price: productToUse.price?.toString() || '',
-        category_id: productToUse.category_id || 0,
-        is_available: productToUse.is_available || false,
-        sku: productToUse.sku || '',
-        available_count: productToUse.available_count?.toString() || '',
-        to_feed: productToUse.to_feed === undefined ? true : productToUse.to_feed,
-        attributes: productToUse.attributes || [],
+        name: productToLoad.name || '',
+        short_description: productToLoad.short_description || '',
+        description: productToLoad.description || '',
+        price: productToLoad.price?.toString() || '',
+        category_id: productToLoad.category_id || 0,
+        is_available: productToLoad.is_available || false,
+        sku: productToLoad.sku || '',
+        available_count: productToLoad.available_count?.toString() || '',
+        to_feed: productToLoad.to_feed === undefined ? true : productToLoad.to_feed,
+        attributes: productToLoad.attributes || [],
       });
 
-      if (productToUse.logo) {
-        if (typeof productToUse.logo === 'string') {
-          setLogo({ id: productToUse.logo, name: 'Существующее изображение', loading: false, error: null });
-        } else if (typeof productToUse.logo === 'object' && productToUse.logo.original_url) {
-          setLogo({ id: productToUse.logo.id, name: productToUse.logo.file_name, loading: false, error: null });
+      if (productToLoad.logo) {
+        if (typeof productToLoad.logo === 'string') {
+          setLogo({ id: productToLoad.logo, name: 'Существующее изображение', loading: false, error: null });
+        } else if (typeof productToLoad.logo === 'object' && 'original_url' in productToLoad.logo && productToLoad.logo.original_url) {
+          setLogo({ id: (productToLoad.logo as { id: string; file_name: string }).id, name: (productToLoad.logo as { id: string; file_name: string }).file_name, loading: false, error: null });
         }
       } else {
         setLogo({ id: null, name: '', loading: false, error: null });
       }
 
-      if (productToUse.images && Array.isArray(productToUse.images)) {
+      if (productToLoad.images && Array.isArray(productToLoad.images)) {
         setImages(
-          productToUse.images.map(img => {
+          productToLoad.images.map(img => {
             if (typeof img === 'string') {
               return { id: img, name: 'Существующее изображение', loading: false, error: null };
             } else if (img && typeof img === 'object' && 'original_url' in img && img.original_url) {
-              return { id: img.id, name: img.file_name, loading: false, error: null };
+              return { id: (img as { id: string; file_name: string }).id, name: (img as { id: string; file_name: string }).file_name, loading: false, error: null };
             }
             return { id: null, name: '', loading: false, error: null };
           }).filter(img => img.id !== null)
@@ -130,26 +132,24 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
         setImages([]);
       }
 
-      setAttributes(productToUse.attributes || []);
+      setAttributes(productToLoad.attributes || []);
 
-      if (productToUse.category_id && categories.length > 0) {
+      if (productToLoad.category_id && categories.length > 0) {
         let parentGroupId: number | null = null;
-        let subgroupIdValue: number | null = productToUse.category_id;
+        let subgroupIdValue: number | null = productToLoad.category_id;
 
         for (const group of categories) {
-          if (group.child && group.child.some(sub => sub.id === productToUse.category_id)) {
+          if (group.child && group.child.some(sub => sub.id === productToLoad.category_id)) {
             parentGroupId = group.id;
             break;
-          } else if (group.id === productToUse.category_id) { 
+          } else if (group.id === productToLoad.category_id) {
             parentGroupId = group.id;
-            subgroupIdValue = null; 
+            subgroupIdValue = null;
             break;
           }
         }
         setSelectedGroup(parentGroupId);
         setSelectedSubgroup(subgroupIdValue);
-        setFormData(prev => ({ ...prev, category_id: productToUse.category_id || 0 }));
-
       } else {
         setSelectedGroup(null);
         setSelectedSubgroup(null);
@@ -361,12 +361,12 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
         short_description: formData.short_description,
         description: formData.description,
         price: parseInt(formData.price, 10) || 0,
-        category_id: selectedSubgroup || selectedGroup || formData.category_id || 0, 
+        category_id: selectedSubgroup || selectedGroup || formData.category_id || 0,
         is_available: formData.is_available ? 1 : 0,
         available_count: parseInt(formData.available_count, 10) || 0,
         sku: formData.sku,
         to_feed: formData.to_feed,
-        attributes: attributes, 
+        attributes: attributes,
       };
       if (logo.id) {
         productData.logo = logo.id;
@@ -393,7 +393,6 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
   };
 
   const handleDeleteImage = (imageId: string | null, isLogo: boolean = false) => {
-    console.log('Изображение удалено');
     if (isLogo) {
       setLogo({ id: null, name: '', loading: false, error: null });
     } else {
@@ -553,7 +552,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
             {logo.error && <span style={{ color: 'red' }}>{logo.error}</span>}
             {!logo.loading && !logo.error && logo.name}
             {!logo.loading && !logo.error && logo.name && (
-              <span 
+              <span
                 className={styles.cross}
                 onClick={() => handleDeleteImage(logo.id, true)}
                 style={{ cursor: 'pointer' }}
@@ -588,7 +587,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
                 {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
                 {!img.loading && !img.error && (img.name || img.id || 'Существующее изображение')}
                 {!img.loading && !img.error && (img.name || img.id) && (
-                  <span 
+                  <span
                     className={styles.cross}
                     onClick={() => handleDeleteImage(img.id)}
                     style={{ cursor: 'pointer' }}

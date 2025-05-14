@@ -6,7 +6,11 @@ import { PlusIcon, MinusIcon, EditIcon, DeleteIcon } from './icons';
 import { fetchProducts, deleteProduct } from '../../store/admin/products-thunks';
 import { Product } from '../../types/admin/state-admin';
 import Popup from './popup';
-import CreateProductForm from './create-product-form';
+
+// Define props for ProductsList
+interface ProductsListProps {
+  onEditRequest: (product: Product) => void;
+}
 
 // Вспомогательная функция для отображения логотипа без вложенных тернарников
 const getLogoValue = (logo: Product['logo']) => {
@@ -26,13 +30,12 @@ const getLogoValue = (logo: Product['logo']) => {
   return logo;
 };
 
-function ProductsList() {
+function ProductsList({ onEditRequest }: ProductsListProps) {
   const dispatch = useDispatch<AppDispatch>();
   const products = useSelector((state: RootState) => state.adminProducts.products);
   const [expandedProducts, setExpandedProducts] = useState<number[]>([]);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -65,11 +68,7 @@ function ProductsList() {
   };
 
   const handleEditClick = (product: Product) => {
-    setProductToEdit(product);
-  };
-
-  const handleCloseEdit = () => {
-    setProductToEdit(null);
+    onEditRequest(product);
   };
 
   // Преобразуем поля продукта в массив характеристик
@@ -91,10 +90,6 @@ function ProductsList() {
 
   return (
     <div className={styles['products-manager']}>
-      {productToEdit && (
-        <CreateProductForm onClose={handleCloseEdit} product={productToEdit} />
-      )}
-
       <h2>Список товаров</h2>
       <ul>
         {products.map((product) => {

@@ -15,12 +15,14 @@ import ProductsList from '../../components/admin/products-list';
 import Settings from '../../components/admin/Settings';
 import styles from '../../styles/admin/admin-page.module.scss';
 import CreateProductForm from '../../components/admin/create-product-form';
+import { Product } from '../../types/admin/state-admin';
 
 function AdminPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { token, status, error } = useAuth();
   const [currentSection, setCurrentSection] = useState<string | null>(null);
-  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showProductForm, setShowProductForm] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
   useEffect(() => {
     if (!token) {
@@ -108,15 +110,36 @@ function AdminPage() {
                 <div id="products">
                   <button
                     className={styles['create-product-btn']}
-                    onClick={() => setShowCreateForm(!showCreateForm)}
+                    onClick={() => {
+                      if (showProductForm) {
+                        setShowProductForm(false);
+                        setProductToEdit(null);
+                      } else {
+                        setProductToEdit(null);
+                        setShowProductForm(true);
+                      }
+                    }}
                   >
-                    {showCreateForm ? 'Скрыть форму' : 'Создать товар'}
+                    {showProductForm ? 'Скрыть форму' : 'Создать товар'}
                   </button>
                   <div className={styles['content']}>
-                    {showCreateForm && <CreateProductForm onClose={() => setShowCreateForm(false)} />}
+                    {showProductForm && (
+                      <CreateProductForm
+                        product={productToEdit || undefined}
+                        onClose={() => {
+                          setShowProductForm(false);
+                          setProductToEdit(null);
+                        }}
+                      />
+                    )}
                   </div>
                   <div className={styles['content']}>
-                    <ProductsList />
+                    <ProductsList
+                      onEditRequest={(product: Product) => {
+                        setProductToEdit(product);
+                        setShowProductForm(true);
+                      }}
+                    />
                   </div>
                 </div>
               )}
