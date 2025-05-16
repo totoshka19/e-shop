@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { uploadFile } from '../store/admin/products-thunks';
+import { uploadFile, deleteProductImage } from '../store/admin/products-thunks';
 import { AppDispatch } from '../store/store';
 import { Product } from '../types/admin/state-admin';
 
@@ -102,13 +102,30 @@ export const useFileUploads = ({ initialLogo, initialImages }: UseFileUploadsPro
     setIsUploadingFiles(false);
   }, [dispatch, images.length]);
 
-  const handleDeleteImage = useCallback((imageId: string | null, isLogo = false) => {
-    if (isLogo) {
-      setLogo({ id: null, name: '', loading: false, error: null });
+  const handleDeleteImage = useCallback(async (imageId: string | null, isLogo = false) => {
+    if (imageId) {
+      try {
+        await dispatch(deleteProductImage(imageId)).unwrap();
+        if (isLogo) {
+          setLogo({ id: null, name: '', loading: false, error: null });
+        } else {
+          setImages((prev) => prev.filter((img) => img.id !== imageId));
+        }
+      } catch (error) {
+        if (isLogo) {
+          setLogo((prev) => ({ ...prev, error: 'Ошибка удаления' }));
+        } else {
+          setImages((prev) => prev.map((img) => img.id === imageId ? { ...img, error: 'Ошибка удаления' } : img));
+        }
+      }
     } else {
-      setImages((prev) => prev.filter((img) => img.id !== imageId));
+      if (isLogo) {
+        setLogo({ id: null, name: '', loading: false, error: null });
+      } else {
+        setImages((prev) => prev.filter((img) => img.id !== imageId));
+      }
     }
-  }, []);
+  }, [dispatch]);
 
   const resetFileUploads = useCallback(() => {
     setLogo({ id: null, name: '', loading: false, error: null });

@@ -206,3 +206,32 @@ export const fetchProductById = createAsyncThunk<Product, number, { rejectValue:
     }
   }
 );
+
+export const deleteProductImage = createAsyncThunk<string, string, { rejectValue: string }>(
+  'products/deleteProductImage',
+  async (fileId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return rejectWithValue('Токен отсутствует.');
+      }
+
+      const response = await fetch(`${URL_API}/admin/file/${fileId}/delete`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { message?: string };
+        return rejectWithValue(errorData.message || 'Ошибка удаления файла');
+      }
+      return fileId;
+    } catch (error) {
+      const errorMessage = (error as Error).message || 'Произошла неожиданная ошибка';
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
