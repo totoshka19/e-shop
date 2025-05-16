@@ -5,10 +5,11 @@ import {Attribute, Product, FormData, ProductData} from '../../types/admin/state
 import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/create-product-form.module.scss';
 import { fetchCategories } from '../../store/admin/caregories-thunks';
-import { CrossIcon } from './icons';
 import { useFileUploads } from '../../hooks/use-file-uploads';
 import AttributesSection from './attributes-section';
 import CategorySelector from './category-selector';
+import ProductFormFields from './product-form-fields';
+import ProductFormFileUploads from './product-form-file-uploads';
 
 type ProductFormProps = {
   onClose: () => void;
@@ -342,51 +343,12 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
       }}
       >
 
-        <div className={styles.field}>
-          <label>Название {validationErrors.name && <span style={{ color: 'red' }}>*</span>}</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className={validationErrors.name ? styles.error : ''}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label>Краткое описание {validationErrors.short_description && <span style={{ color: 'red' }}>*</span>}</label>
-          <textarea
-            name="short_description"
-            value={formData.short_description}
-            onChange={handleChange}
-            required
-            className={validationErrors.short_description ? styles.error : ''}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label>Полное описание {validationErrors.description && <span style={{ color: 'red' }}>*</span>}</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            className={validationErrors.description ? styles.error : ''}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label>Цена, руб.</label>
-          <input
-            type="text"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="0"
-            required
-          />
-        </div>
+        <ProductFormFields
+          formData={formData}
+          handleChange={handleChange}
+          validationErrors={validationErrors}
+          styles={styles}
+        />
 
         <CategorySelector
           categories={categories}
@@ -448,74 +410,14 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
           </label>
         </div>
 
-        <div className={`${styles.field} ${styles['file-field']}`}>
-          <div className={`${styles.field} ${styles['file-field_wrapper']}`}>
-            <label>Заглавная картинка</label>
-            <input
-              type="file"
-              name="logo"
-              onChange={(e) => {
-                void handleLogoUpload(e);
-              }}
-              id="logo-input"
-            />
-            <label htmlFor="logo-input" className={styles['file-button']}>
-              Выбрать файл
-            </label>
-          </div>
-
-          <p className={styles['file-name']} id="logo-name" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {logo.loading && 'Загрузка...'}
-            {logo.error && <span style={{ color: 'red' }}>{logo.error}</span>}
-            {!logo.loading && !logo.error && logo.name}
-            {!logo.loading && !logo.error && logo.name && (
-              <span
-                className={styles.cross}
-                onClick={() => handleDeleteImage(logo.id, true)}
-                style={{ cursor: 'pointer' }}
-              >
-                <CrossIcon />
-              </span>
-            )}
-          </p>
-        </div>
-
-        <div className={`${styles.field} ${styles['file-field']}`}>
-          <div className={`${styles.field} ${styles['file-field_wrapper']}`}>
-            <label>Дополнительные изображения</label>
-            <input
-              type="file"
-              name="images"
-              multiple
-              onChange={(e) => {
-                void handleImagesUpload(e);
-              }}
-              id="images-input"
-            />
-            <label htmlFor="images-input" className={styles['file-button']}>
-              Выбрать файлы
-            </label>
-          </div>
-
-          <div className={styles['file-name']} id="images-name">
-            {images.map((img) => (
-              <p key={img.id || img.name} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {img.loading && `Загрузка: ${img.name}...`}
-                {img.error && <span style={{ color: 'red' }}>{img.name}: {img.error}</span>}
-                {!img.loading && !img.error && (img.name || img.id || 'Существующее изображение')}
-                {!img.loading && !img.error && (img.name || img.id) && (
-                  <span
-                    className={styles.cross}
-                    onClick={() => handleDeleteImage(img.id)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <CrossIcon />
-                  </span>
-                )}
-              </p>
-            ))}
-          </div>
-        </div>
+        <ProductFormFileUploads
+          logo={logo}
+          images={images}
+          handleLogoUpload={handleLogoUpload}
+          handleImagesUpload={handleImagesUpload}
+          handleDeleteImage={handleDeleteImage}
+          styles={styles}
+        />
 
         <AttributesSection
           attributes={attributes}

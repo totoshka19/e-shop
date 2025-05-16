@@ -2,7 +2,14 @@ import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { uploadFile } from '../store/admin/products-thunks';
 import { AppDispatch } from '../store/store';
-import { FileUploadState, Product } from '../types/admin/state-admin';
+import { Product } from '../types/admin/state-admin';
+
+export type FileUploadState = {
+  id: string | null;
+  name: string;
+  loading: boolean;
+  error: string | null;
+};
 
 type UseFileUploadsProps = {
   initialLogo?: Product['logo'];
