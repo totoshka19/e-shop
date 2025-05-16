@@ -134,24 +134,45 @@ export const deleteProduct = createAsyncThunk<number, number, { rejectValue: str
   }
 );
 
-export const updateProduct = createAsyncThunk(
+export const updateProduct = createAsyncThunk<
+  Product,
+  Product,
+  { rejectValue: string }
+>(
   'adminProducts/updateProduct',
-  async (product: Product) => {
-    const response = await fetch(`${URL_API}/admin/products/${product.id}/update`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('auth-key')}`,
-      },
-      body: JSON.stringify(product),
-    });
+  async (product, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return rejectWithValue('Токен отсутствует. Невозможно обновить товар.');
+      }
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Ошибка при обновлении товара');
+      const response = await fetch(`${URL_API}/admin/products/${product.id}/update`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(product),
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { message?: string; errors?: Record<string, string[]> };
+        let errorMessage = 'Ошибка при обновлении товара';
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        } else if (errorData.errors) {
+          errorMessage = Object.values(errorData.errors).flat().join(' ');
+        }
+        return rejectWithValue(errorMessage);
+      }
+
+      const updatedProduct = (await response.json()) as { data: Product };
+      return updatedProduct.data;
+    } catch (error) {
+      const errorMessage = (error as Error).message || 'Произошла непредвиденная ошибка при обновлении товара';
+      return rejectWithValue(errorMessage);
     }
-
-    return await response.json();
   }
 );
 

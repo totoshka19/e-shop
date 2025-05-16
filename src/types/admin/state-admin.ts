@@ -60,3 +60,38 @@ export type FileUploadResponse = {
     original_url: string;
   };
 };
+
+export type FormData = {
+  name: string;
+  short_description: string;
+  description: string;
+  price: string;
+  category_id: number;
+  is_available: boolean;
+  sku: string;
+  available_count: string;
+  to_feed: boolean;
+  attributes: Attribute[];
+}
+
+export type ProductData = {
+  name: string;
+  short_description: string;
+  description: string;
+  price: number;
+  category_id: number;
+  is_available: number;
+  available_count: number;
+  sku: string;
+  to_feed: boolean;
+  attributes: Attribute[];
+  logo?: string;
+  images?: string[];
+}
+
+export type FileUploadState = {
+  id: string | null;
+  name: string;
+  loading: boolean;
+  error: string | null;
+};

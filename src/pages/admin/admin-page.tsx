@@ -14,7 +14,7 @@ import GroupsList from '../../components/admin/groups-list';
 import ProductsList from '../../components/admin/products-list';
 import Settings from '../../components/admin/Settings';
 import styles from '../../styles/admin/admin-page.module.scss';
-import CreateProductForm from '../../components/admin/create-product-form';
+import ProductForm from '../../components/admin/product-form';
 import { Product } from '../../types/admin/state-admin';
 
 function AdminPage() {
@@ -22,7 +22,7 @@ function AdminPage() {
   const { token, status, error } = useAuth();
   const [currentSection, setCurrentSection] = useState<string | null>(null);
   const [showProductForm, setShowProductForm] = useState(false);
-  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
+  const [productToEdit, setProductToEdit] = useState<Product | undefined>(undefined);
 
   useEffect(() => {
     if (!token) {
@@ -113,9 +113,9 @@ function AdminPage() {
                     onClick={() => {
                       if (showProductForm) {
                         setShowProductForm(false);
-                        setProductToEdit(null);
+                        setProductToEdit(undefined);
                       } else {
-                        setProductToEdit(null);
+                        setProductToEdit(undefined);
                         setShowProductForm(true);
                       }
                     }}
@@ -124,11 +124,11 @@ function AdminPage() {
                   </button>
                   <div className={styles['content']}>
                     {showProductForm && (
-                      <CreateProductForm
-                        product={productToEdit || undefined}
+                      <ProductForm
+                        product={productToEdit}
                         onClose={() => {
                           setShowProductForm(false);
-                          setProductToEdit(null);
+                          setProductToEdit(undefined);
                         }}
                       />
                     )}

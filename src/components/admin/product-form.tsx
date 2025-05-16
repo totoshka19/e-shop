@@ -1,63 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProduct, uploadFile, updateProduct, fetchProductById, fetchProducts } from '../../store/admin/products-thunks';
-import {Attribute, Product} from '../../types/admin/state-admin';
+import { createProduct, updateProduct, fetchProductById, fetchProducts } from '../../store/admin/products-thunks';
+import {Attribute, Product, FormData, ProductData} from '../../types/admin/state-admin';
 import { AppDispatch, RootState } from '../../store/store';
 import styles from '../../styles/admin/create-product-form.module.scss';
 import { fetchCategories } from '../../store/admin/caregories-thunks';
-import SelectEntity from './select-entity';
 import { CrossIcon } from './icons';
+import { useFileUploads } from '../../hooks/use-file-uploads';
+import AttributesSection from './attributes-section';
+import CategorySelector from './category-selector';
 
-type CreateProductFormProps = {
+type ProductFormProps = {
   onClose: () => void;
   product?: Product;
 }
 
-type FormData = {
-  name: string;
-  short_description: string;
-  description: string;
-  price: string;
-  category_id: number;
-  is_available: boolean;
-  sku: string;
-  available_count: string;
-  to_feed: boolean;
-  attributes: Attribute[];
-}
-
-type ProductData = {
-  name: string;
-  short_description: string;
-  description: string;
-  price: number;
-  category_id: number;
-  is_available: number;
-  available_count: number;
-  sku: string;
-  to_feed: boolean;
-  attributes: Attribute[];
-  logo?: string;
-  images?: string[];
-}
-
-type FileUploadState = {
-  id: string | null;
-  name: string;
-  loading: boolean;
-  error: string | null;
-};
-
-const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFormProps) => {
+function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
   const dispatch = useDispatch<AppDispatch>();
   const categories = useSelector((state: RootState) => state.categories.categories);
   const currentProduct = useSelector((state: RootState) => state.adminProducts.currentProduct);
+
+  const {
+    logo,
+    images,
+    isUploadingFiles,
+    handleLogoChange: hookHandleLogoChange,
+    handleImagesChange: hookHandleImagesChange,
+    handleDeleteImage,
+    resetFileUploads,
+    setInitialFiles,
+  } = useFileUploads();
 
   useEffect(() => {
     if (initialProduct && initialProduct.id) {
       dispatch(fetchProductById(initialProduct.id));
     }
-  }, [dispatch, initialProduct]);
+    if (!initialProduct) {
+      resetFileUploads();
+    }
+  }, [dispatch, initialProduct, resetFileUploads]);
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -80,8 +61,6 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [selectedSubgroup, setSelectedSubgroup] = useState<number | null>(null);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
-  const [logo, setLogo] = useState<FileUploadState>({ id: null, name: '', loading: false, error: null });
-  const [images, setImages] = useState<FileUploadState[]>([]);
   const [validationErrors, setValidationErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -112,31 +91,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
         attributes: productToLoad.attributes || [],
       });
 
-      if (productToLoad.logo) {
-        if (typeof productToLoad.logo === 'string') {
-          setLogo({ id: productToLoad.logo, name: 'Существующее изображение', loading: false, error: null });
-        } else if (typeof productToLoad.logo === 'object' && 'original_url' in productToLoad.logo && productToLoad.logo.original_url) {
-          setLogo({ id: (productToLoad.logo as { id: string; file_name: string }).id, name: (productToLoad.logo as { id: string; file_name: string }).file_name, loading: false, error: null });
-        }
-      } else {
-        setLogo({ id: null, name: '', loading: false, error: null });
-      }
-
-      if (productToLoad.images && Array.isArray(productToLoad.images)) {
-        setImages(
-          productToLoad.images.map((img) => {
-            if (typeof img === 'string') {
-              return { id: img, name: 'Существующее изображение', loading: false, error: null };
-            } else if (img && typeof img === 'object' && 'original_url' in img && img.original_url) {
-              return { id: (img as { id: string; file_name: string }).id, name: (img as { id: string; file_name: string }).file_name, loading: false, error: null };
-            }
-            return { id: null, name: '', loading: false, error: null };
-          }).filter((img) => img.id !== null)
-        );
-      } else {
-        setImages([]);
-      }
-
+      setInitialFiles(productToLoad.logo, productToLoad.images);
       setAttributes(productToLoad.attributes || []);
 
       if (productToLoad.category_id && categories.length > 0) {
@@ -177,13 +132,11 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
         to_feed: true,
         attributes: [],
       });
-      setLogo({ id: null, name: '', loading: false, error: null });
-      setImages([]);
       setAttributes([]);
       setSelectedGroup(null);
       setSelectedSubgroup(null);
     }
-  }, [currentProduct, initialProduct, categories, dispatch]);
+  }, [currentProduct, initialProduct, categories, dispatch, setInitialFiles, resetFileUploads]);
 
   const validateField = (name: string, value: string | number | boolean) => {
     switch (name) {
@@ -240,58 +193,18 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     }));
   };
 
-  const handleLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) {
-      setLogo({ id: null, name: '', loading: false, error: null });
+  const handleLogoUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const result = await hookHandleLogoChange(e);
+    if (result?.error) {
       setValidationErrors((prev) => ({ ...prev, logo: true }));
-      return;
-    }
-    setLogo({ id: null, name: file.name, loading: true, error: null });
-    try {
-      const id = await dispatch(uploadFile(file)).unwrap();
-      setLogo({ id, name: file.name, loading: false, error: null });
+    } else {
       setValidationErrors((prev) => ({ ...prev, logo: false }));
-    } catch {
-      setLogo({ id: null, name: file.name, loading: false, error: 'Ошибка загрузки' });
-      setValidationErrors((prev) => ({ ...prev, logo: true }));
     }
-  };
+  }, [hookHandleLogoChange]);
 
-  const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) {
-      return;
-    }
-
-    const newStates: FileUploadState[] = files.map((f) => ({
-      id: null,
-      name: f.name,
-      loading: true,
-      error: null,
-    }));
-
-    setImages((prev) => [...prev, ...newStates]);
-
-    const startIdx = images.length;
-
-    await Promise.all(files.map(async (file, i) => {
-      try {
-        const id = await dispatch(uploadFile(file)).unwrap();
-        setImages((prev) => {
-          const copy = [...prev];
-          copy[startIdx + i] = { id, name: file.name, loading: false, error: null };
-          return copy;
-        });
-      } catch {
-        setImages((prev) => {
-          const copy = [...prev];
-          copy[startIdx + i] = { id: null, name: file.name, loading: false, error: 'Ошибка загрузки' };
-          return copy;
-        });
-      }
-    }));
-  };
+  const handleImagesUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await hookHandleImagesChange(e);
+  }, [hookHandleImagesChange]);
 
   const handleAttributeChange = (
     index: number,
@@ -316,7 +229,8 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
   };
 
   const addAttributeGroup = () => {
-    setAttributes([...attributes, { title: '', values: {} }]);
+    const newAttribute: Attribute = { title: '', values: {} };
+    setAttributes([...attributes, newAttribute]);
   };
 
   const removeAttributeGroup = (index: number) => {
@@ -352,8 +266,6 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     }));
   };
 
-  const isUploading = logo.loading || images.some((img) => img.loading);
-
   const isFormValid = () => (
     formData.name.trim() !== '' &&
       formData.short_description.trim() !== '' &&
@@ -362,7 +274,9 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
       formData.category_id > 0 &&
       formData.sku.trim() !== '' &&
       logo.id !== null &&
-      images.length > 0 && images.every((img) => img.id !== null)
+      images.length > 0 && images.every((img) => img.id !== null) &&
+      !images.some((img) => img.error) &&
+      !logo.error
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -410,12 +324,14 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
     }
   };
 
-  const handleDeleteImage = (imageId: string | null, isLogo = false) => {
-    if (isLogo) {
-      setLogo({ id: null, name: '', loading: false, error: null });
-    } else {
-      setImages((prev) => prev.filter((img) => img.id !== imageId));
+  const getSubmitButtonText = () => {
+    if (isUploadingFiles) {
+      return 'Загрузка файлов...';
     }
+    if (initialProduct) {
+      return 'Сохранить изменения';
+    }
+    return 'Создать товар';
   };
 
   return (
@@ -472,32 +388,15 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
           />
         </div>
 
-        <div className={styles.field}>
-          <label>Группа {validationErrors.category_id && <span style={{ color: 'red' }}>*</span>}</label>
-          <SelectEntity
-            options={categories.map((group) => group.name)}
-            value={categories.find((g) => g.id === selectedGroup)?.name || ''}
-            onChange={handleGroupChange}
-            placeholder="Выберите группу"
-            className={validationErrors.category_id ? styles.error : ''}
-          />
-        </div>
-
-        {selectedGroup && (
-          <div className={styles.field}>
-            <label>Подгруппа</label>
-            <SelectEntity
-              options={categories
-                .find((group) => group.id === selectedGroup)
-                ?.child.map((subgroup) => subgroup.name) || []}
-              value={categories
-                .find((group) => group.id === selectedGroup)
-                ?.child.find((subgroup) => subgroup.id === selectedSubgroup)?.name || ''}
-              onChange={handleSubgroupChange}
-              placeholder="Выберите подгруппу"
-            />
-          </div>
-        )}
+        <CategorySelector
+          categories={categories}
+          selectedGroup={selectedGroup}
+          selectedSubgroup={selectedSubgroup}
+          onGroupChange={handleGroupChange}
+          onSubgroupChange={handleSubgroupChange}
+          validationError={validationErrors.category_id}
+          styles={styles}
+        />
 
         <div className={styles.field}>
           <label>Артикул (SKU) {validationErrors.sku && <span style={{ color: 'red' }}>*</span>}</label>
@@ -556,7 +455,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
               type="file"
               name="logo"
               onChange={(e) => {
-                void handleLogoChange(e);
+                void handleLogoUpload(e);
               }}
               id="logo-input"
             />
@@ -589,7 +488,7 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
               name="images"
               multiple
               onChange={(e) => {
-                void handleImagesChange(e);
+                void handleImagesUpload(e);
               }}
               id="images-input"
             />
@@ -618,56 +517,24 @@ const CreateProductForm = ({ onClose, product: initialProduct }: CreateProductFo
           </div>
         </div>
 
-
-        {attributes.length > 0 && <h4>Атрибуты товара</h4>}
-        {attributes.map((group) => (
-          <div key={group.title || JSON.stringify(group.values)} className={styles.attributeGroup}>
-            <div className={styles.field}>
-              <label>Заголовок группы атрибутов</label>
-              <input
-                type="text"
-                value={group.title}
-                onChange={(e) =>
-                  handleAttributeChange(attributes.findIndex((g) => g === group), 'title', undefined, e.target.value)}
-                placeholder="Например: Характеристики"
-              />
-            </div>
-            <div className={styles.values}>
-              {Object.entries(group.values).map(([key, value]) => (
-                <div key={key} className={styles.attributePair}>
-                  <input
-                    type="text"
-                    value={key}
-                    readOnly
-                  />
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => handleAttributeChange(attributes.findIndex((g) => g === group), 'values', key, e.target.value)}
-                  />
-                </div>
-              ))}
-            </div>
-            <button type="button" onClick={() => removeAttributeGroup(attributes.findIndex((g) => g === group))}>
-              Удалить группу
-            </button>
-          </div>
-        ))}
-
-        <button type="button" onClick={addAttributeGroup} className={styles.addFieldBtn}>
-          Добавить группу атрибутов
-        </button>
+        <AttributesSection
+          attributes={attributes}
+          onAttributeChange={handleAttributeChange}
+          onAddAttributeGroup={addAttributeGroup}
+          onRemoveAttributeGroup={removeAttributeGroup}
+          styles={styles}
+        />
 
         <button
           type="submit"
-          className={`${styles['submit-btn']} ${(!isFormValid() || isUploading) ? styles.disabled : ''}`}
+          className={`${styles['submit-btn']} ${(!isFormValid() || isUploadingFiles) ? styles.disabled : ''}`}
         >
-          {isUploading ? 'Загрузка файлов...' : 'Создать товар'}
+          {getSubmitButtonText()}
         </button>
       </form>
     </div>
 
   );
-};
+}
 
-export default CreateProductForm;
+export default ProductForm;
