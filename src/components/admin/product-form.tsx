@@ -213,19 +213,28 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
     key?: string,
     value?: string
   ) => {
-    const updated = [...attributes];
-    if (field === 'title' && value !== undefined) {
-      updated[index].title = value;
-    } else if (field === 'values' && key !== undefined && value !== undefined) {
-      updated[index].values = {
-        ...updated[index].values,
-        [key]: value,
-      };
-    }
-    setAttributes(updated);
+    setAttributes((prevAttributes) => {
+      const updated = [...prevAttributes];
+      if (field === 'title' && value !== undefined) {
+        updated[index] = {
+          ...updated[index],
+          title: value
+        };
+      } else if (field === 'values' && key !== undefined && value !== undefined) {
+        updated[index] = {
+          ...updated[index],
+          values: {
+            ...updated[index].values,
+            [key]: value,
+          }
+        };
+      }
+      return updated;
+    });
+
     setFormData((prev) => ({
       ...prev,
-      attributes: updated,
+      attributes: attributes
     }));
   };
 

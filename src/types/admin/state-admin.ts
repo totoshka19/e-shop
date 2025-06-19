@@ -40,6 +40,7 @@ export type Product = {
   is_available: boolean;
   to_feed: boolean;
   category_id?: number;
+  category?: Category;
   attributes?: Attribute[];
   logo: string | ProductFile | null;
   images?: (string | ProductFile)[];
