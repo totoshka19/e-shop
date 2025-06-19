@@ -43,18 +43,13 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
-    // eslint-disable-next-line camelcase
     short_description: '',
     description: '',
     price: '',
-    // eslint-disable-next-line camelcase
     category_id: 0,
-    // eslint-disable-next-line camelcase
     is_available: false,
     sku: '',
-    // eslint-disable-next-line camelcase
     available_count: '',
-    // eslint-disable-next-line camelcase
     to_feed: true,
     attributes: [],
   });
@@ -76,60 +71,29 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
 
       setFormData({
         name: productToLoad.name || '',
-        // eslint-disable-next-line camelcase
         short_description: productToLoad.short_description || '',
         description: productToLoad.description || '',
         price: productToLoad.price?.toString() || '',
-        // eslint-disable-next-line camelcase
-        category_id: productToLoad.category_id || 0,
-        // eslint-disable-next-line camelcase
+        category_id: productToLoad.category?.id || productToLoad.category_id || 0,
         is_available: productToLoad.is_available || false,
         sku: productToLoad.sku || '',
-        // eslint-disable-next-line camelcase
         available_count: productToLoad.available_count?.toString() || '',
-        // eslint-disable-next-line camelcase
         to_feed: productToLoad.to_feed === undefined ? true : productToLoad.to_feed,
         attributes: productToLoad.attributes || [],
       });
 
       setInitialFiles(productToLoad.logo, productToLoad.images);
       setAttributes(productToLoad.attributes || []);
-
-      if (productToLoad.category_id && categories.length > 0) {
-        let parentGroupId: number | null = null;
-        let subgroupIdValue: number | null = productToLoad.category_id;
-
-        for (const group of categories) {
-          if (group.child && group.child.some((sub) => sub.id === productToLoad.category_id)) {
-            parentGroupId = group.id;
-            break;
-          } else if (group.id === productToLoad.category_id) {
-            parentGroupId = group.id;
-            subgroupIdValue = null;
-            break;
-          }
-        }
-        setSelectedGroup(parentGroupId);
-        setSelectedSubgroup(subgroupIdValue);
-      } else {
-        setSelectedGroup(null);
-        setSelectedSubgroup(null);
-      }
     } else {
       setFormData({
         name: '',
-        // eslint-disable-next-line camelcase
         short_description: '',
         description: '',
         price: '',
-        // eslint-disable-next-line camelcase
         category_id: 0,
-        // eslint-disable-next-line camelcase
         is_available: false,
         sku: '',
-        // eslint-disable-next-line camelcase
         available_count: '',
-        // eslint-disable-next-line camelcase
         to_feed: true,
         attributes: [],
       });
@@ -137,7 +101,33 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
       setSelectedGroup(null);
       setSelectedSubgroup(null);
     }
-  }, [currentProduct, initialProduct, categories, dispatch, setInitialFiles, resetFileUploads]);
+  }, [currentProduct, initialProduct, setInitialFiles]);
+
+  useEffect(() => {
+    const productToLoad = (currentProduct && initialProduct?.id === currentProduct.id)
+      ? currentProduct
+      : initialProduct;
+
+    const categoryId = productToLoad?.category?.id;
+
+    if (categoryId && categories.length > 0) {
+      let parentGroupId: number | null = null;
+      let subgroupIdValue: number | null = categoryId;
+
+      for (const group of categories) {
+        if (group.child && group.child.some((sub) => sub.id === categoryId)) {
+          parentGroupId = group.id;
+          break;
+        } else if (group.id === categoryId) {
+          parentGroupId = group.id;
+          subgroupIdValue = null;
+          break;
+        }
+      }
+      setSelectedGroup(parentGroupId);
+      setSelectedSubgroup(subgroupIdValue);
+    }
+  }, [currentProduct, initialProduct, categories]);
 
   const validateField = (name: string, value: string | number | boolean) => {
     switch (name) {
@@ -259,8 +249,7 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
     setSelectedSubgroup(null);
     setFormData((prev) => ({
       ...prev,
-      // eslint-disable-next-line camelcase
-      category_id: 0
+      category_id: groupId || 0
     }));
   };
 
@@ -271,41 +260,41 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
     setSelectedSubgroup(subgroupId);
     setFormData((prev) => ({
       ...prev,
-      // eslint-disable-next-line camelcase
       category_id: subgroupId || 0
     }));
   };
 
   const isFormValid = () => (
     formData.name.trim() !== '' &&
-      formData.short_description.trim() !== '' &&
-      formData.description.trim() !== '' &&
-      formData.price.trim() !== '' &&
-      formData.category_id > 0 &&
-      formData.sku.trim() !== '' &&
-      logo.id !== null &&
-      images.length > 0 && images.every((img) => img.id !== null) &&
-      !images.some((img) => img.error) &&
-      !logo.error
+    formData.short_description.trim() !== '' &&
+    formData.description.trim() !== '' &&
+    formData.price.trim() !== '' &&
+    (selectedSubgroup !== null || selectedGroup !== null) &&
+    formData.sku.trim() !== '' &&
+    logo.id !== null &&
+    images.length > 0 && images.every((img) => img.id !== null) &&
+    !images.some((img) => img.error) &&
+    !logo.error
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const finalCategoryId = selectedSubgroup ?? selectedGroup;
+      if (!finalCategoryId) {
+        setValidationErrors((prev) => ({...prev, category_id: true}));
+        return;
+      }
+
       const productData: ProductData = {
         name: formData.name,
-        // eslint-disable-next-line camelcase
         short_description: formData.short_description,
         description: formData.description,
         price: parseInt(formData.price, 10) || 0,
-        // eslint-disable-next-line camelcase
-        category_id: selectedSubgroup || selectedGroup || formData.category_id || 0,
-        // eslint-disable-next-line camelcase
+        category_id: finalCategoryId,
         is_available: formData.is_available ? 1 : 0,
-        // eslint-disable-next-line camelcase
         available_count: parseInt(formData.available_count, 10) || 0,
         sku: formData.sku,
-        // eslint-disable-next-line camelcase
         to_feed: formData.to_feed,
         attributes: attributes,
       };
@@ -320,7 +309,6 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
         const updatedProductSend = {
           ...productData,
           id: initialProduct.id,
-          // eslint-disable-next-line camelcase
           is_available: formData.is_available,
         };
         await dispatch(updateProduct(updatedProductSend as Product)).unwrap();
@@ -368,56 +356,6 @@ function ProductForm ({ onClose, product: initialProduct }: ProductFormProps) {
           validationError={validationErrors.category_id}
           styles={styles}
         />
-
-        <div className={styles.field}>
-          <label>Артикул (SKU) {validationErrors.sku && <span style={{ color: 'red' }}>*</span>}</label>
-          <input
-            type="text"
-            name="sku"
-            value={formData.sku}
-            onChange={handleChange}
-            required
-            className={validationErrors.sku ? styles.error : ''}
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label>Доступное количество</label>
-          <input
-            type="text"
-            name="available_count"
-            value={formData.available_count}
-            onChange={handleChange}
-            placeholder="0"
-            required
-          />
-        </div>
-
-        <div className={styles.field}>
-          <label className={styles.customCheckbox}>
-            <input
-              type="checkbox"
-              name="is_available"
-              checked={formData.is_available}
-              onChange={handleChange}
-            />
-            <span className={styles.checkmark}></span>
-            В наличии
-          </label>
-        </div>
-
-        <div className={styles.field}>
-          <label className={styles.customCheckbox}>
-            <input
-              type="checkbox"
-              name="to_feed"
-              checked={formData.to_feed}
-              onChange={handleChange}
-            />
-            <span className={styles.checkmark}></span>
-            Отправить в Яндекс товары
-          </label>
-        </div>
 
         <ProductFormFileUploads
           logo={logo}
